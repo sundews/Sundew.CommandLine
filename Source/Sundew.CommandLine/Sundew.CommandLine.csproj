@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.3</TargetFramework>
-    <Version>4.0.1</Version>
+    <Version>4.0.2</Version>
 	  <LangVersion>8</LangVersion>
     <Nullable>enable</Nullable>
     <Authors>Kim Hugener-Ohlsen</Authors>
@@ -21,6 +21,10 @@ Features:
 3.0 - Improved nesting support</PackageReleaseNotes>
     <AssemblyVersion>4.0.0.0</AssemblyVersion>
     <FileVersion>4.0.0.0</FileVersion>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/hugener/Sundew.CommandLine</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <Copyright>Kim Hugener-Ohlsen</Copyright>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
