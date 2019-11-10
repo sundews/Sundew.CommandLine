@@ -13,5 +13,5 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-- script: dotnet build ./Source/Sundew.CommandLine.sln --configuration $(buildConfiguration) -p:'SbpSourceName=$(Build.SourceBranch)' -p:'SbpProductionSource=refs/heads/master|https://api.nuget.org/v3/index.json'
+- script: dotnet build ./Source/Sundew.CommandLine.sln --configuration $(buildConfiguration) -p:'SbpSourceName=$(Build.SourceBranch)' -p:'SbpProductionSource=refs/heads/master|https://api.nuget.org/v3/index.json' -p:'SbpApiKey=$(SbpApiKey)'
   displayName: 'dotnet build $(buildConfiguration)'
