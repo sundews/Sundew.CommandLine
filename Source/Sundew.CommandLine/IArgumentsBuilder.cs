@@ -66,7 +66,7 @@ namespace Sundew.CommandLine
         /// <param name="getDefault">The get default.</param>
         /// <param name="setOptions">The set options.</param>
         /// <param name="helpText">The help text.</param>
-        void AddRequired<TOptions>(string name, string alias, TOptions options, Func<TOptions> getDefault, Action<TOptions> setOptions, string helpText)
+        void AddRequired<TOptions>(string name, string alias, TOptions? options, Func<TOptions> getDefault, Action<TOptions?> setOptions, string helpText)
             where TOptions : class, IArguments;
 
         /// <summary>
@@ -135,7 +135,7 @@ namespace Sundew.CommandLine
         /// <param name="getDefault">The get default.</param>
         /// <param name="setOptions">The set options.</param>
         /// <param name="helpText">The help text.</param>
-        void AddOptional<TOptions>(string name, string alias, TOptions options, Func<TOptions> getDefault, Action<TOptions> setOptions, string helpText)
+        void AddOptional<TOptions>(string name, string alias, TOptions? options, Func<TOptions> getDefault, Action<TOptions?> setOptions, string helpText)
             where TOptions : class, IArguments;
 
         /// <summary>

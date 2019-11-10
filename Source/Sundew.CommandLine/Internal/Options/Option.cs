@@ -54,7 +54,7 @@ namespace Sundew.CommandLine.Internal.Options
 
         public Separators Separators { get; }
 
-        public Result<GeneratorError> SerializeTo(StringBuilder stringBuilder, Settings settings, bool useAliases)
+        public Result.IfError<GeneratorError> SerializeTo(StringBuilder stringBuilder, Settings settings, bool useAliases)
         {
             var serializedValue = this.SerializeValue(settings);
             if (serializedValue.IsEmpty)
@@ -77,7 +77,7 @@ namespace Sundew.CommandLine.Internal.Options
             return Result.Success();
         }
 
-        public Result<ParserError> DeserializeFrom(
+        public Result.IfError<ParserError> DeserializeFrom(
             CommandLineArgumentsParser commandLineArgumentsParser,
             ArgumentList argumentList,
             ReadOnlySpan<char> value,

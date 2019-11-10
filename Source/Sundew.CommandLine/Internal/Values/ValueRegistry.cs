@@ -10,7 +10,6 @@ namespace Sundew.CommandLine.Internal.Values
     using System;
     using System.Collections;
     using System.Collections.Generic;
-    using System.Globalization;
     using System.Linq;
     using System.Text;
     using Sundew.Base.Computation;
@@ -43,9 +42,9 @@ namespace Sundew.CommandLine.Internal.Values
             this.values.Add(value);
         }
 
-        public Result<ParserError> DeserializeFrom(ArgumentsBuilder argumentsBuilder, ArgumentList argumentList, Settings settings)
+        public Result.IfError<ParserError> DeserializeFrom(ArgumentsBuilder argumentsBuilder, ArgumentList argumentList, Settings settings)
         {
-            Result<ParserError> result = Result.Success();
+            Result.IfError<ParserError> result = Result.Success();
             var valueIndex = 0;
             foreach (var argument in argumentList)
             {
@@ -66,9 +65,9 @@ namespace Sundew.CommandLine.Internal.Values
             return result;
         }
 
-        public Result<GeneratorError> SerializeTo(StringBuilder stringBuilder, Settings settings)
+        public Result.IfError<GeneratorError> SerializeTo(StringBuilder stringBuilder, Settings settings)
         {
-            Result<GeneratorError> result = Result.Success();
+            Result.IfError<GeneratorError> result = Result.Success();
             foreach (var value in this.values)
             {
                 result = value.SerializeTo(stringBuilder, settings);

@@ -44,7 +44,7 @@ namespace Sundew.CommandLine.Internal.Values
 
         public bool IsNesting { get; } = false;
 
-        public Result<ParserError> DeserializeFrom(ReadOnlySpan<char> argument, Settings settings)
+        public Result.IfError<ParserError> DeserializeFrom(ReadOnlySpan<char> argument, Settings settings)
         {
             if (this.hasBeenSet)
             {
@@ -57,14 +57,14 @@ namespace Sundew.CommandLine.Internal.Values
             }
             catch (Exception e)
             {
-                throw new SerializationException(null, string.Format(CultureInfo.InvariantCulture, Constants.ListDeserializationErrorFormat, argument.ToString()), e);
+                throw new SerializationException(null, string.Format(settings.CultureInfo, Constants.ListDeserializationErrorFormat, argument.ToString()), e);
             }
 
             this.hasBeenSet = true;
             return Result.Success();
         }
 
-        public Result<GeneratorError> SerializeTo(StringBuilder stringBuilder, Settings settings)
+        public Result.IfError<GeneratorError> SerializeTo(StringBuilder stringBuilder, Settings settings)
         {
             var serializedValue = this.SerializeValue(settings);
             if (serializedValue.IsEmpty)

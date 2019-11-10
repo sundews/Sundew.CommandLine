@@ -12,7 +12,7 @@ namespace Sundew.CommandLine.Internal
 
     internal class CommandLineArgumentsGenerator
     {
-        public static Result<GeneratorError> Generate(IArguments arguments, StringBuilder stringBuilder, Settings settings, bool useAliases)
+        public static Result.IfError<GeneratorError> Generate(IArguments arguments, StringBuilder stringBuilder, Settings settings, bool useAliases)
         {
             var argumentsBuilder = new ArgumentsBuilder { Separators = settings.Separators };
             arguments.Configure(argumentsBuilder);

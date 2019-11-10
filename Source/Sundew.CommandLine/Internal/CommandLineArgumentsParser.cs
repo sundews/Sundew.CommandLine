@@ -18,7 +18,7 @@ namespace Sundew.CommandLine.Internal
     {
         private const string HelpRequestedText = "Help requested";
 
-        public Result<ParserError> Parse<TArguments>(
+        public Result.IfError<ParserError> Parse<TArguments>(
             Settings settings,
             ArgumentList argumentList,
             TArguments argumentsDefinition)
@@ -28,7 +28,7 @@ namespace Sundew.CommandLine.Internal
             argumentsDefinition.Configure(argumentsBuilder);
             try
             {
-                Result<ParserError>? currentResult = null;
+                Result.IfError<ParserError>? currentResult = null;
                 foreach (var argument in argumentList)
                 {
                     if (argument[0] == Constants.ArgumentStartCharacter)
@@ -59,7 +59,7 @@ namespace Sundew.CommandLine.Internal
                             {
                                 return Result.Error(new ParserError(
                                     ParserErrorType.OptionArgumentMissing,
-                                    string.Format(CultureInfo.InvariantCulture, Constants.OptionArgumentMissingFormat, option.Usage)));
+                                    string.Format(settings.CultureInfo, Constants.OptionArgumentMissingFormat, option.Usage)));
                             }
 
                             var deserializedResult = option.DeserializeFrom(this, argumentList, argumentValue, settings);
@@ -136,7 +136,7 @@ namespace Sundew.CommandLine.Internal
             return span;
         }
 
-        private static Result<ParserError> CreateRequiredOptionMissingResult(ArgumentsBuilder argumentsBuilder)
+        private static Result.IfError<ParserError> CreateRequiredOptionMissingResult(ArgumentsBuilder argumentsBuilder)
         {
             return Result.Error(
                 new ParserError(

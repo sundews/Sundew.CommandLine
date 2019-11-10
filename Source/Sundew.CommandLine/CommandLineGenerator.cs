@@ -68,7 +68,7 @@ namespace Sundew.CommandLine
             }
 
             return CommandLineArgumentsGenerator.Generate(verb, stringBuilder, this.Settings, useAliases)
-                .ConvertValue(value => stringBuilder.ToString());
+                .WithValue(stringBuilder.ToString());
         }
 
         /// <summary>Generates the specified verb.</summary>
@@ -87,7 +87,7 @@ namespace Sundew.CommandLine
         {
             var stringBuilder = new StringBuilder();
             return CommandLineArgumentsGenerator.Generate(arguments, stringBuilder, this.Settings, useAliases)
-                .ConvertValue(value => stringBuilder.ToString());
+                .WithValue(stringBuilder.ToString());
         }
     }
 }

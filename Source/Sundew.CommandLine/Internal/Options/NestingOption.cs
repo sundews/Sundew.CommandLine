@@ -14,16 +14,16 @@ namespace Sundew.CommandLine.Internal.Options
     using Sundew.CommandLine.Internal.Helpers;
 
     internal class NestingOption<TOptions> : IOption
-        where TOptions : IArguments
+        where TOptions : class, IArguments
     {
-        private readonly TOptions options;
+        private readonly TOptions? options;
         private readonly Func<TOptions> getDefault;
         private readonly Action<TOptions> setOptions;
 
         public NestingOption(
             string name,
             string alias,
-            TOptions options,
+            TOptions? options,
             Func<TOptions> getDefault,
             Action<TOptions> setOptions,
             bool isRequired,
@@ -54,35 +54,41 @@ namespace Sundew.CommandLine.Internal.Options
         public string HelpText { get; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2208:Instantiate argument exceptions correctly", Justification = "It's the proposed way of handling missing cases for enum switches.")]
-        public Result<GeneratorError> SerializeTo(StringBuilder stringBuilder, Settings settings, bool useAliases)
+        public Result.IfError<GeneratorError> SerializeTo(StringBuilder stringBuilder, Settings settings, bool useAliases)
         {
-            SerializationHelper.AppendNameOrAlias(stringBuilder, this.Name, this.Alias, useAliases);
-            stringBuilder.Append(Constants.SpaceText);
-            var result = this.SerializeValue(this.options, stringBuilder, settings, useAliases);
-
-            if (result)
+            var actualOption = this.options == null && this.IsRequired ? this.getDefault() : this.options;
+            if (actualOption != null)
             {
-                return result;
+                SerializationHelper.AppendNameOrAlias(stringBuilder, this.Name, this.Alias, useAliases);
+                stringBuilder.Append(Constants.SpaceText);
+                var result = this.SerializeValue(actualOption, stringBuilder, settings, useAliases);
+
+                if (result)
+                {
+                    return result;
+                }
+
+                var error = result.Error;
+                switch (error.Type)
+                {
+                    case GeneratorErrorType.SerializationException:
+                        throw new SerializationException(
+                            this,
+                            string.Format(settings.CultureInfo, Constants.NestedArgumentSerializationFormat, this.Usage, this.options, error.SerializationException),
+                            error.SerializationException!);
+                    case GeneratorErrorType.RequiredOptionMissing:
+                    case GeneratorErrorType.InnerGeneratorError:
+                        return result.ConvertError(innerGeneratorError => new GeneratorError(this, innerGeneratorError));
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(error.Type), error.Type, string.Format(settings.CultureInfo, Constants.ErrorTypeNotSupportedFormat, error.Type));
+                }
             }
 
-            var error = result.Error;
-            switch (error.Type)
-            {
-                case GeneratorErrorType.SerializationException:
-                    throw new SerializationException(
-                        this,
-                        string.Format(CultureInfo.InvariantCulture, Constants.NestedArgumentSerializationFormat, this.Usage, this.options, error.SerializationException),
-                        error.SerializationException!);
-                case GeneratorErrorType.RequiredOptionMissing:
-                case GeneratorErrorType.InnerGeneratorError:
-                    return result.Convert((isSuccess, innerGeneratorError) => new GeneratorError(this, innerGeneratorError));
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(error.Type), error.Type, string.Format(CultureInfo.InvariantCulture, Constants.ErrorTypeNotSupportedFormat, error.Type));
-            }
+            return Result.Success();
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2208:Instantiate argument exceptions correctly", Justification = "It's the proposed way of handling missing cases for enum switches.")]
-        public Result<ParserError> DeserializeFrom(
+        public Result.IfError<ParserError> DeserializeFrom(
             CommandLineArgumentsParser commandLineArgumentsParser,
             ArgumentList argumentList,
             ReadOnlySpan<char> value,
@@ -101,15 +107,15 @@ namespace Sundew.CommandLine.Internal.Options
             switch (error.Type)
             {
                 case ParserErrorType.Info:
-                    return result.Convert(ignored => true, innerParserError => new ParserError(innerParserError, string.Format(CultureInfo.InvariantCulture, Constants.InnerInfoErrorFormat, this.Usage, argumentText)));
+                    return result.ConvertError(innerParserError => new ParserError(innerParserError, string.Format(settings.CultureInfo, Constants.InnerInfoErrorFormat, this.Usage, argumentText)));
                 case ParserErrorType.InnerParserError:
-                    return result.Convert(ignored => true, innerParserError => new ParserError(innerParserError, string.Format(CultureInfo.InvariantCulture, Constants.InnerParserErrorFormat, this.Usage, argumentText)));
+                    return result.ConvertError(innerParserError => new ParserError(innerParserError, string.Format(settings.CultureInfo, Constants.InnerParserErrorFormat, this.Usage, argumentText)));
                 case ParserErrorType.RequiredArgumentMissing:
-                    return result.Convert(ignored => true, innerParserError => new ParserError(innerParserError, string.Format(CultureInfo.InvariantCulture, Constants.InnerRequiredErrorFormat, this.Usage, argumentText)));
+                    return result.ConvertError(innerParserError => new ParserError(innerParserError, string.Format(settings.CultureInfo, Constants.InnerRequiredErrorFormat, this.Usage, argumentText)));
                 case ParserErrorType.OptionArgumentMissing:
-                    return result.Convert(ignored => true, innerParserError => new ParserError(innerParserError, string.Format(CultureInfo.InvariantCulture, Constants.InnerOptionArgumentErrorFormat, this.Usage, argumentText)));
+                    return result.ConvertError(innerParserError => new ParserError(innerParserError, string.Format(settings.CultureInfo, Constants.InnerOptionArgumentErrorFormat, this.Usage, argumentText)));
                 case ParserErrorType.UnknownOption:
-                    return result.Convert(ignored => true, innerParserError => new ParserError(innerParserError, string.Format(CultureInfo.InvariantCulture, Constants.InnerInvalidOptionFormat, this.Usage, argumentText)));
+                    return result.ConvertError(innerParserError => new ParserError(innerParserError, string.Format(settings.CultureInfo, Constants.InnerInvalidOptionFormat, this.Usage, argumentText)));
                 case ParserErrorType.OnlySingleValueAllowed:
                     return result;
                 case ParserErrorType.HelpRequested:
@@ -137,7 +143,7 @@ namespace Sundew.CommandLine.Internal.Options
         {
             HelpTextHelper.AppendHelpText(stringBuilder, settings, this, maxName, maxAlias, maxHelpText, indent, false);
             var argumentsBuilder = new ArgumentsBuilder { Separators = settings.Separators };
-            var defaultOptions = this.options == null ? this.getDefault() : this.options;
+            var defaultOptions = this.options ?? this.getDefault();
             defaultOptions.Configure(argumentsBuilder);
             CommandLineHelpGenerator.AppendCommandLineHelpText(argumentsBuilder, stringBuilder, indent + 1, maxName, maxAlias, isForVerb, settings);
         }
@@ -159,12 +165,12 @@ namespace Sundew.CommandLine.Internal.Options
             stringBuilder.AppendLine(Constants.DefaultText + Constants.SeeBelowText);
         }
 
-        private Result<GeneratorError> SerializeValue(TOptions options, StringBuilder stringBuilder, Settings settings, bool useAliases)
+        private Result.IfError<GeneratorError> SerializeValue(TOptions options, StringBuilder stringBuilder, Settings settings, bool useAliases)
         {
             return CommandLineArgumentsGenerator.Generate(options, stringBuilder, settings, useAliases);
         }
 
-        private Result<ParserError> DeserializeValue(CommandLineArgumentsParser commandLineArgumentsParser, ArgumentList argumentList, TOptions options, Settings settings)
+        private Result.IfError<ParserError> DeserializeValue(CommandLineArgumentsParser commandLineArgumentsParser, ArgumentList argumentList, TOptions options, Settings settings)
         {
             return commandLineArgumentsParser.Parse(settings, argumentList, options);
         }

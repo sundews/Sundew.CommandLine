@@ -55,7 +55,7 @@ namespace Sundew.CommandLine.Internal.Values
 
         public bool IsNesting { get; } = false;
 
-        public Result<GeneratorError> SerializeTo(StringBuilder stringBuilder, Settings settings)
+        public Result.IfError<GeneratorError> SerializeTo(StringBuilder stringBuilder, Settings settings)
         {
             var wasSerialized = SerializationHelper.SerializeTo(this, stringBuilder, settings);
             if (!wasSerialized && this.IsRequired)
@@ -66,7 +66,7 @@ namespace Sundew.CommandLine.Internal.Values
             return Result.Success();
         }
 
-        public Result<ParserError> DeserializeFrom(ReadOnlySpan<char> argument, Settings settings)
+        public Result.IfError<ParserError> DeserializeFrom(ReadOnlySpan<char> argument, Settings settings)
         {
             SerializationHelper.DeserializeTo(this.List, this.deserialize, argument, settings);
             return Result.Success();

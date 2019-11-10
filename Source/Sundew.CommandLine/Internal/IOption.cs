@@ -16,9 +16,9 @@ namespace Sundew.CommandLine.Internal
     {
         bool IsRequired { get; }
 
-        Result<GeneratorError> SerializeTo(StringBuilder stringBuilder, Settings settings, bool useAliases);
+        Result.IfError<GeneratorError> SerializeTo(StringBuilder stringBuilder, Settings settings, bool useAliases);
 
-        Result<ParserError> DeserializeFrom(CommandLineArgumentsParser commandLineArgumentsParser, ArgumentList argumentList, ReadOnlySpan<char> value, Settings settings);
+        Result.IfError<ParserError> DeserializeFrom(CommandLineArgumentsParser commandLineArgumentsParser, ArgumentList argumentList, ReadOnlySpan<char> value, Settings settings);
 
         void AppendDefaultText(StringBuilder stringBuilder, Settings settings, bool isNested);
 

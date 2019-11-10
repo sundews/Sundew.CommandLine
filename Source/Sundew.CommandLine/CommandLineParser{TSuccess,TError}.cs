@@ -112,7 +112,7 @@ namespace Sundew.CommandLine
         {
             if (startIndex < 0)
             {
-                return Result.FromError(new ParserError<TError>(ParserErrorType.InvalidStartIndex, $"StartIndex must be greater than 0 (Actual: {startIndex})."));
+                return Result.Error(new ParserError<TError>(ParserErrorType.InvalidStartIndex, $"StartIndex must be greater than 0 (Actual: {startIndex})."));
             }
 
             var argumentList = new ArgumentList(arguments, startIndex);
@@ -143,12 +143,12 @@ namespace Sundew.CommandLine
             {
                 if (this.verbRegistry.HasVerbs)
                 {
-                    return Result.FromError(new ParserError<TError>(
+                    return Result.Error(new ParserError<TError>(
                         ParserErrorType.ArgumentsNotConfiguredOrUnknownVerb,
                         ArgumentsWereNotConfiguredOrAnUnknownVerbWasUsedText));
                 }
 
-                return Result.FromError(new ParserError<TError>(
+                return Result.Error(new ParserError<TError>(
                     ParserErrorType.ArgumentsAndVerbsAreNotConfigured, ArgumentsOrVerbsWereNotConfiguredText));
             }
 
@@ -214,7 +214,7 @@ namespace Sundew.CommandLine
             var result = this.commandLineArgumentsParser.Parse(this.Settings, argumentList, argumentsDefinition);
             if (!result)
             {
-                return result.Convert(value => default(TSuccess)!, parserError => new ParserError<TError>(parserError));
+                return result.Convert(default(TSuccess)!, parserError => new ParserError<TError>(parserError));
             }
 
             return argumentsHandler(argumentsDefinition);

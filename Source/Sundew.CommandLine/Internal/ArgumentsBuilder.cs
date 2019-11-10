@@ -59,7 +59,7 @@ namespace Sundew.CommandLine.Internal
             this.AddOption(option, actualSeparator);
         }
 
-        public void AddRequired<TOptions>(string name, string alias, TOptions options, Func<TOptions> getDefault, Action<TOptions> setOptions, string helpText)
+        public void AddRequired<TOptions>(string name, string alias, TOptions? options, Func<TOptions> getDefault, Action<TOptions> setOptions, string helpText)
             where TOptions : class, IArguments
         {
             var option = new NestingOption<TOptions>(
@@ -122,7 +122,7 @@ namespace Sundew.CommandLine.Internal
             this.AddOption(option, actualSeparator);
         }
 
-        public void AddOptional<TOptions>(string name, string alias, TOptions options, Func<TOptions> getDefault, Action<TOptions> setOptions, string helpText)
+        public void AddOptional<TOptions>(string name, string alias, TOptions? options, Func<TOptions> getDefault, Action<TOptions> setOptions, string helpText)
             where TOptions : class, IArguments
         {
             var option = new NestingOption<TOptions>(
