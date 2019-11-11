@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.3</TargetFramework>
-    <Version>4.0.2</Version>
+    <Version>4.0.3</Version>
 	  <LangVersion>8</LangVersion>
     <Nullable>enable</Nullable>
     <Authors>Kim Hugener-Ohlsen</Authors>
@@ -67,7 +67,7 @@ Features:
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Sundew.Base" Version="4.0.0" />
-    <PackageReference Include="Sundew.Build.Publish" Version="1.0.1">
+    <PackageReference Include="Sundew.Build.Publish" Version="1.0.2">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

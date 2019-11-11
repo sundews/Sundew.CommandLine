@@ -4,7 +4,9 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
 
 trigger:
-- master
+  branches:
+    include:
+    - '*' 
 
 pool:
   vmImage: 'ubuntu-latest'
@@ -13,5 +15,5 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-- script: dotnet build ./Source/Sundew.CommandLine.sln --configuration $(buildConfiguration) -p:'SbpSourceName=$(Build.SourceBranch)' -p:'SbpProductionSource=refs/heads/master|https://api.nuget.org/v3/index.json' -p:'SbpApiKey=$(SbpApiKey)'
+- script: dotnet build ./Source/Sundew.CommandLine.sln --configuration $(buildConfiguration) -p:'SbpSourceName=$(Build.SourceBranch)' -p:'SbpProductionSource=refs/heads/master|https://api.nuget.org/v3/index.json' -p:'SbpApiKey=$(SbpApiKey)' -p:'SbpAllowLocalSource=false'
   displayName: 'dotnet build $(buildConfiguration)'
