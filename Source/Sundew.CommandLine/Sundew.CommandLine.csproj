@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.3</TargetFramework>
-    <Version>4.0.3</Version>
+    <Version>4.0.4</Version>
 	  <LangVersion>8</LangVersion>
     <Nullable>enable</Nullable>
     <Authors>Kim Hugener-Ohlsen</Authors>
@@ -19,8 +19,8 @@ Features:
 - Nested arguments for argument grouping and reuse</Description>
     <PackageReleaseNotes>4.0 - Support nested verbs
 3.0 - Improved nesting support</PackageReleaseNotes>
-    <AssemblyVersion>4.0.0.0</AssemblyVersion>
-    <FileVersion>4.0.0.0</FileVersion>
+    <AssemblyVersion>4.0.4.0</AssemblyVersion>
+    <FileVersion>4.0.4.0</FileVersion>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/hugener/Sundew.CommandLine</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
