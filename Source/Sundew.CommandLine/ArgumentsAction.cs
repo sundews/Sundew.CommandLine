@@ -8,11 +8,17 @@
 namespace Sundew.CommandLine
 {
     using System;
+    using System.Threading.Tasks;
     using Sundew.Base.Computation;
 
     internal class ArgumentsAction<TSuccess, TError>
     {
         public ArgumentsAction(IArguments arguments, Func<IArguments, Result<TSuccess, ParserError<TError>>> handler)
+         : this(arguments, arguments => new ValueTask<Result<TSuccess, ParserError<TError>>>(handler(arguments)))
+        {
+        }
+
+        public ArgumentsAction(IArguments arguments, Func<IArguments, ValueTask<Result<TSuccess, ParserError<TError>>>> handler)
         {
             this.Arguments = arguments;
             this.Handler = handler;
@@ -20,6 +26,6 @@ namespace Sundew.CommandLine
 
         public IArguments Arguments { get; }
 
-        public Func<IArguments, Result<TSuccess, ParserError<TError>>> Handler { get; }
+        public Func<IArguments, ValueTask<Result<TSuccess, ParserError<TError>>>> Handler { get; }
     }
 }

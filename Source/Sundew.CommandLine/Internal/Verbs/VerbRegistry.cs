@@ -10,6 +10,7 @@ namespace Sundew.CommandLine.Internal.Verbs
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
     using Sundew.Base.Computation;
 
     internal class VerbRegistry<TSuccess, TError> : IVerbBuilder<TSuccess, TError>, IVerbRegistry<TSuccess, TError>
@@ -17,7 +18,7 @@ namespace Sundew.CommandLine.Internal.Verbs
         private readonly Dictionary<string, VerbRegistry<TSuccess, TError>> verbRegistries =
             new Dictionary<string, VerbRegistry<TSuccess, TError>>();
 
-        public VerbRegistry(IVerb verb, Func<IVerb, Result<TSuccess, ParserError<TError>>> handler, Action<IVerbBuilder<TSuccess, TError>>? verbBuilderAction)
+        public VerbRegistry(IVerb verb, Func<IVerb, ValueTask<Result<TSuccess, ParserError<TError>>>> handler, Action<IVerbBuilder<TSuccess, TError>>? verbBuilderAction)
         {
             this.Verb = verb;
             this.Handler = handler;
@@ -30,7 +31,7 @@ namespace Sundew.CommandLine.Internal.Verbs
 
         public IVerb Verb { get; }
 
-        public Func<IVerb, Result<TSuccess, ParserError<TError>>> Handler { get; }
+        public Func<IVerb, ValueTask<Result<TSuccess, ParserError<TError>>>> Handler { get; }
 
         public TVerb AddVerb<TVerb>(
             TVerb verb,
@@ -43,7 +44,29 @@ namespace Sundew.CommandLine.Internal.Verbs
 
         public TVerb AddVerb<TVerb>(
             TVerb verb,
+            Func<TVerb, ValueTask<Result<TSuccess, ParserError<TError>>>> verbHandler)
+            where TVerb : IVerb
+        {
+            this.AddVerb(verb, verbHandler, null);
+            return verb;
+        }
+
+        public TVerb AddVerb<TVerb>(
+            TVerb verb,
             Func<TVerb, Result<TSuccess, ParserError<TError>>> verbHandler,
+            Action<IVerbBuilder<TSuccess, TError>>? verbBuilderAction)
+            where TVerb : IVerb
+        {
+            this.AddVerb(
+                verb,
+                parsedVerb => new ValueTask<Result<TSuccess, ParserError<TError>>>(verbHandler(parsedVerb)),
+                verbBuilderAction);
+            return verb;
+        }
+
+        public TVerb AddVerb<TVerb>(
+            TVerb verb,
+            Func<TVerb, ValueTask<Result<TSuccess, ParserError<TError>>>> verbHandler,
             Action<IVerbBuilder<TSuccess, TError>>? verbBuilderAction)
             where TVerb : IVerb
         {

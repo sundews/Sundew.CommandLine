@@ -8,6 +8,7 @@
 namespace Sundew.CommandLine
 {
     using System;
+    using System.Threading.Tasks;
     using Sundew.Base.Computation;
 
     /// <summary>
@@ -44,6 +45,35 @@ namespace Sundew.CommandLine
         /// <param name="argumentsHandler">The arguments handler.</param>
         /// <returns>The arguments.</returns>
         TArguments WithArguments<TArguments>(TArguments arguments, Func<TArguments, Result<TSuccess, ParserError<TError>>> argumentsHandler)
+            where TArguments : IArguments;
+
+        /// <summary>
+        /// Adds the verb.
+        /// </summary>
+        /// <typeparam name="TVerb">The type of the verb.</typeparam>
+        /// <param name="verb">The verb.</param>
+        /// <param name="verbHandler">The verb handler.</param>
+        /// <returns>The verb.</returns>
+        TVerb AddVerb<TVerb>(TVerb verb, Func<TVerb, ValueTask<Result<TSuccess, ParserError<TError>>>> verbHandler)
+            where TVerb : IVerb;
+
+        /// <summary>Adds the verb.</summary>
+        /// <typeparam name="TVerb">The type of the verb.</typeparam>
+        /// <param name="verb">The verb.</param>
+        /// <param name="verbHandler">The verb handler.</param>
+        /// <param name="verbBuilderAction">The verb builder function.</param>
+        /// <returns>The verb.</returns>
+        TVerb AddVerb<TVerb>(TVerb verb, Func<TVerb, ValueTask<Result<TSuccess, ParserError<TError>>>> verbHandler, Action<IVerbBuilder<TSuccess, TError>>? verbBuilderAction)
+            where TVerb : IVerb;
+
+        /// <summary>
+        /// Specifies the default arguments for parsing (non verb mode).
+        /// </summary>
+        /// <typeparam name="TArguments">The type of the arguments.</typeparam>
+        /// <param name="arguments">The arguments.</param>
+        /// <param name="argumentsHandler">The arguments handler.</param>
+        /// <returns>The arguments.</returns>
+        TArguments WithArguments<TArguments>(TArguments arguments, Func<TArguments, ValueTask<Result<TSuccess, ParserError<TError>>>> argumentsHandler)
             where TArguments : IArguments;
     }
 }

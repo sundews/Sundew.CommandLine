@@ -11,6 +11,7 @@ namespace Sundew.CommandLine
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
+    using System.Threading.Tasks;
     using Sundew.Base.Computation;
     using Sundew.CommandLine.Internal;
     using Sundew.CommandLine.Internal.Extensions;
@@ -79,6 +80,32 @@ namespace Sundew.CommandLine
         }
 
         /// <summary>
+        /// Adds the verb.
+        /// </summary>
+        /// <typeparam name="TVerb">The type of the verb.</typeparam>
+        /// <param name="verb">The verb.</param>
+        /// <param name="verbHandler">The verb handler.</param>
+        /// <returns>The verb.</returns>
+        public TVerb AddVerb<TVerb>(TVerb verb, Func<TVerb, ValueTask<Result<TSuccess, ParserError<TError>>>> verbHandler)
+            where TVerb : IVerb
+        {
+            return this.AddVerb(verb, verbHandler, null);
+        }
+
+        /// <summary>Adds the verb.</summary>
+        /// <typeparam name="TVerb">The type of the verb.</typeparam>
+        /// <param name="verb">The verb.</param>
+        /// <param name="verbHandler">The verb handler.</param>
+        /// <param name="verbBuilderAction">The verb builder function.</param>
+        /// <returns>The verb.</returns>
+        public TVerb AddVerb<TVerb>(TVerb verb, Func<TVerb, ValueTask<Result<TSuccess, ParserError<TError>>>> verbHandler, Action<IVerbBuilder<TSuccess, TError>>? verbBuilderAction)
+            where TVerb : IVerb
+        {
+            this.verbRegistry.AddVerb(verb, verbHandler, verbBuilderAction);
+            return verb;
+        }
+
+        /// <summary>
         /// Specifies the default arguments for parsing (non verb mode).
         /// </summary>
         /// <typeparam name="TArguments">The type of the arguments.</typeparam>
@@ -93,13 +120,47 @@ namespace Sundew.CommandLine
         }
 
         /// <summary>
+        /// Specifies the default arguments for parsing (non verb mode).
+        /// </summary>
+        /// <typeparam name="TArguments">The type of the arguments.</typeparam>
+        /// <param name="arguments">The arguments.</param>
+        /// <param name="argumentsHandler">The arguments handler.</param>
+        /// <returns>The arguments.</returns>
+        public TArguments WithArguments<TArguments>(TArguments arguments, Func<TArguments, ValueTask<Result<TSuccess, ParserError<TError>>>> argumentsHandler)
+            where TArguments : IArguments
+        {
+            this.argumentsAction = new ArgumentsAction<TSuccess, TError>(arguments, x => argumentsHandler((TArguments)x));
+            return arguments;
+        }
+
+        /// <summary>
         /// Parses the specified arguments.
         /// </summary>
         /// <param name="arguments">The arguments.</param>
         /// <returns>The parser result.</returns>
-        public Result<TSuccess, ParserError<TError>> Parse(IReadOnlyList<string> arguments)
+        public ValueTask<Result<TSuccess, ParserError<TError>>> ParseAsync(IReadOnlyList<string> arguments)
         {
-            return this.Parse(arguments, 0);
+            return this.ParseAsync(arguments, 0);
+        }
+
+        /// <summary>Parses the specified arguments.</summary>
+        /// <param name="arguments">The arguments.</param>
+        /// <returns>The parser result.</returns>
+        public ValueTask<Result<TSuccess, ParserError<TError>>> ParseAsync(string arguments)
+        {
+            return this.ParseAsync(arguments, 0);
+        }
+
+        /// <summary>
+        /// Parses the specified arguments.
+        /// </summary>
+        /// <param name="arguments">The arguments.</param>
+        /// <param name="startIndex">The argument index at which to start parsing.</param>
+        /// <returns>The parser result.</returns>
+        public ValueTask<Result<TSuccess, ParserError<TError>>> ParseAsync(string arguments, int startIndex)
+        {
+            var argumentArray = arguments.AsMemory().SplitBasedCommandLineTokenizer().ToArray();
+            return this.ParseAsync(argumentArray, startIndex);
         }
 
         /// <summary>
@@ -108,7 +169,7 @@ namespace Sundew.CommandLine
         /// <param name="arguments">The arguments.</param>
         /// <param name="startIndex">The start index.</param>
         /// <returns>The parser result.</returns>
-        public Result<TSuccess, ParserError<TError>> Parse(IReadOnlyList<string> arguments, int startIndex)
+        public async ValueTask<Result<TSuccess, ParserError<TError>>> ParseAsync(IReadOnlyList<string> arguments, int startIndex)
         {
             if (startIndex < 0)
             {
@@ -134,7 +195,7 @@ namespace Sundew.CommandLine
                     if (currentVerbAction != null)
                     {
                         var verbResult = this.ParseArguments(argumentList, currentVerbAction.Verb, currentVerbAction.Handler);
-                        return CheckResultForHelpRequestedError(verbResult, currentVerbAction, null, this.Settings);
+                        return await CheckResultForHelpRequestedErrorAsync(verbResult, currentVerbAction, null, this.Settings);
                     }
                 }
             }
@@ -153,7 +214,17 @@ namespace Sundew.CommandLine
             }
 
             var result = this.ParseArguments(argumentList, this.argumentsAction.Arguments, this.argumentsAction.Handler);
-            return CheckResultForHelpRequestedError(result, this.verbRegistry, this.argumentsAction, this.Settings);
+            return await CheckResultForHelpRequestedErrorAsync(result, this.verbRegistry, this.argumentsAction, this.Settings);
+        }
+
+        /// <summary>
+        /// Parses the specified arguments.
+        /// </summary>
+        /// <param name="arguments">The arguments.</param>
+        /// <returns>The parser result.</returns>
+        public Result<TSuccess, ParserError<TError>> Parse(IReadOnlyList<string> arguments)
+        {
+            return this.Parse(arguments, 0);
         }
 
         /// <summary>Parses the specified arguments.</summary>
@@ -177,6 +248,19 @@ namespace Sundew.CommandLine
         }
 
         /// <summary>
+        /// Parses the specified arguments.
+        /// </summary>
+        /// <param name="arguments">The arguments.</param>
+        /// <param name="startIndex">The start index.</param>
+        /// <returns>The parser result.</returns>
+        public Result<TSuccess, ParserError<TError>> Parse(IReadOnlyList<string> arguments, int startIndex)
+        {
+            var parseTask = this.ParseAsync(arguments, startIndex).AsTask();
+            parseTask.Wait();
+            return parseTask.Result;
+        }
+
+        /// <summary>
         /// Creates the help text.
         /// </summary>
         /// <returns>The help text.</returns>
@@ -185,12 +269,13 @@ namespace Sundew.CommandLine
             return CommandLineHelpGenerator.CreateHelpText(this.verbRegistry, this.argumentsAction, this.Settings);
         }
 
-        private static Result<TSuccess, ParserError<TError>> CheckResultForHelpRequestedError(
-            Result<TSuccess, ParserError<TError>> result,
+        private static async ValueTask<Result<TSuccess, ParserError<TError>>> CheckResultForHelpRequestedErrorAsync(
+            ValueTask<Result<TSuccess, ParserError<TError>>> resultTask,
             VerbRegistry<TSuccess, TError> verbRegistry,
             ArgumentsAction<TSuccess, TError>? argumentsAction,
             Settings settings)
         {
+            var result = await resultTask.ConfigureAwait(false);
             if (!result)
             {
                 if (result.Error.Type == ParserErrorType.HelpRequested)
@@ -205,10 +290,10 @@ namespace Sundew.CommandLine
             return result;
         }
 
-        private Result<TSuccess, ParserError<TError>> ParseArguments<TArguments>(
+        private ValueTask<Result<TSuccess, ParserError<TError>>> ParseArguments<TArguments>(
             ArgumentList argumentList,
             TArguments argumentsDefinition,
-            Func<TArguments, Result<TSuccess, ParserError<TError>>> argumentsHandler)
+            Func<TArguments, ValueTask<Result<TSuccess, ParserError<TError>>>> argumentsHandler)
             where TArguments : IArguments
         {
             var result = this.commandLineArgumentsParser.Parse(this.Settings, argumentList, argumentsDefinition);
