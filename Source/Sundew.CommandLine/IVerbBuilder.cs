@@ -8,6 +8,7 @@
 namespace Sundew.CommandLine
 {
     using System;
+    using System.Threading.Tasks;
     using Sundew.Base.Computation;
 
     /// <summary>Interface for building verbs.</summary>
@@ -32,6 +33,28 @@ namespace Sundew.CommandLine
         /// <param name="verbBuilderAction">The verb builder action.</param>
         /// <returns>The verb.</returns>
         TVerb AddVerb<TVerb>(TVerb verb, Func<TVerb, Result<TSuccess, ParserError<TError>>> verbHandler, Action<IVerbBuilder<TSuccess, TError>> verbBuilderAction)
+            where TVerb : IVerb;
+
+        /// <summary>Adds the verb.</summary>
+        /// <typeparam name="TVerb">The type of the verb.</typeparam>
+        /// <param name="verb">The verb.</param>
+        /// <param name="verbHandler">The verb handler.</param>
+        /// <returns>The verb.</returns>
+        TVerb AddVerb<TVerb>(
+            TVerb verb,
+            Func<TVerb, ValueTask<Result<TSuccess, ParserError<TError>>>> verbHandler)
+            where TVerb : IVerb;
+
+        /// <summary>Adds the verb.</summary>
+        /// <typeparam name="TVerb">The type of the verb.</typeparam>
+        /// <param name="verb">The verb.</param>
+        /// <param name="verbHandler">The verb handler.</param>
+        /// <param name="verbBuilderAction">The verb builder action.</param>
+        /// <returns>The verb.</returns>
+        TVerb AddVerb<TVerb>(
+            TVerb verb,
+            Func<TVerb, ValueTask<Result<TSuccess, ParserError<TError>>>> verbHandler,
+            Action<IVerbBuilder<TSuccess, TError>>? verbBuilderAction)
             where TVerb : IVerb;
     }
 }

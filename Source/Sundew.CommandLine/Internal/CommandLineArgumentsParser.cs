@@ -9,7 +9,6 @@ namespace Sundew.CommandLine.Internal
 {
     using System;
     using System.Collections.Generic;
-    using System.Globalization;
     using System.Linq;
     using System.Text;
     using Sundew.Base.Computation;
@@ -18,16 +17,15 @@ namespace Sundew.CommandLine.Internal
     {
         private const string HelpRequestedText = "Help requested";
 
-        public Result.IfError<ParserError> Parse<TArguments>(
+        public Result.IfError<ParserError> Parse(
+            ArgumentsBuilder argumentsBuilder,
             Settings settings,
-            ArgumentList argumentList,
-            TArguments argumentsDefinition)
-            where TArguments : IArguments
+            ArgumentList argumentList)
         {
-            var argumentsBuilder = new ArgumentsBuilder { Separators = settings.Separators };
-            argumentsDefinition.Configure(argumentsBuilder);
             try
             {
+                argumentsBuilder.CultureInfo = settings.CultureInfo;
+                argumentsBuilder.Separators = settings.Separators;
                 Result.IfError<ParserError>? currentResult = null;
                 foreach (var argument in argumentList)
                 {

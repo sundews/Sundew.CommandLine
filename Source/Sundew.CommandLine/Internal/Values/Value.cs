@@ -20,16 +20,18 @@ namespace Sundew.CommandLine.Internal.Values
         private readonly Serialize serialize;
         private readonly Deserialize deserialize;
         private readonly bool useDoubleQuotes;
+        private readonly string defaultValue;
         private bool hasBeenSet = false;
 
-        public Value(string name, Serialize serialize, Deserialize deserialize, bool isRequired, string helpText, bool useDoubleQuotes)
+        public Value(string name, Serialize serialize, Deserialize deserialize, bool isRequired, string helpText, bool useDoubleQuotes, CultureInfo cultureInfo)
         {
             this.serialize = serialize;
             this.deserialize = deserialize;
-            this.Name = name.Uncapitalize(CultureInfo.InvariantCulture);
+            this.Name = name.Uncapitalize(cultureInfo);
             this.HelpText = helpText;
             this.useDoubleQuotes = useDoubleQuotes;
             this.IsRequired = isRequired;
+            this.defaultValue = this.serialize(cultureInfo).ToString();
         }
 
         public bool IsRequired { get; }
@@ -43,6 +45,11 @@ namespace Sundew.CommandLine.Internal.Values
         public string HelpText { get; }
 
         public bool IsNesting { get; } = false;
+
+        public void ResetToDefault(CultureInfo cultureInfo)
+        {
+            this.deserialize(this.defaultValue.AsSpan(), cultureInfo);
+        }
 
         public Result.IfError<ParserError> DeserializeFrom(ReadOnlySpan<char> argument, Settings settings)
         {

@@ -19,6 +19,7 @@ namespace Sundew.CommandLine.Internal.Options
         private readonly TOptions? options;
         private readonly Func<TOptions> getDefault;
         private readonly Action<TOptions> setOptions;
+        private readonly ArgumentsBuilder argumentsBuilder = new ArgumentsBuilder();
 
         public NestingOption(
             string name,
@@ -148,6 +149,11 @@ namespace Sundew.CommandLine.Internal.Options
             CommandLineHelpGenerator.AppendCommandLineHelpText(argumentsBuilder, stringBuilder, indent + 1, maxName, maxAlias, isForVerb, settings);
         }
 
+        public void ResetToDefault(CultureInfo cultureInfo)
+        {
+            this.setOptions(this.getDefault());
+        }
+
         public void AppendDefaultText(StringBuilder stringBuilder, Settings settings, bool isNested)
         {
             if (this.IsRequired)
@@ -172,7 +178,8 @@ namespace Sundew.CommandLine.Internal.Options
 
         private Result.IfError<ParserError> DeserializeValue(CommandLineArgumentsParser commandLineArgumentsParser, ArgumentList argumentList, TOptions options, Settings settings)
         {
-            return commandLineArgumentsParser.Parse(settings, argumentList, options);
+            this.argumentsBuilder.PrepareBuilder(options, true);
+            return commandLineArgumentsParser.Parse(this.argumentsBuilder, settings, argumentList);
         }
     }
 }

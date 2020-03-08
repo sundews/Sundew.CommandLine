@@ -10,6 +10,8 @@ namespace Sundew.CommandLine.Internal
     using System;
     using System.Collections.Generic;
     using System.Globalization;
+    using System.Linq;
+    using Sundew.Base.Collections;
     using Sundew.CommandLine.Internal.Options;
     using Sundew.CommandLine.Internal.Values;
 
@@ -17,6 +19,7 @@ namespace Sundew.CommandLine.Internal
     {
         private readonly Dictionary<string, IOption> options = new Dictionary<string, IOption>();
         private readonly Dictionary<string, Switch> switches = new Dictionary<string, Switch>();
+        private bool isConfigured;
 
         public ArgumentsBuilder()
         {
@@ -33,6 +36,8 @@ namespace Sundew.CommandLine.Internal
         public ValueRegistry Values { get; } = new ValueRegistry();
 
         public Separators Separators { get; set; } = Separators.Create();
+
+        public CultureInfo CultureInfo { get; set; } = CultureInfo.CurrentCulture;
 
         public void AddRequired(string name, string alias, Func<string> serialize, Action<string> deserialize, string helpText, bool useDoubleQuotes = false, Separators separators = default)
         {
@@ -55,7 +60,8 @@ namespace Sundew.CommandLine.Internal
                 true,
                 helpText,
                 useDoubleQuotes,
-                actualSeparator);
+                actualSeparator,
+                this.CultureInfo);
             this.AddOption(option, actualSeparator);
         }
 
@@ -118,7 +124,8 @@ namespace Sundew.CommandLine.Internal
                false,
                helpText,
                useDoubleQuotes,
-               actualSeparator);
+               actualSeparator,
+               this.CultureInfo);
             this.AddOption(option, actualSeparator);
         }
 
@@ -190,7 +197,7 @@ namespace Sundew.CommandLine.Internal
 
         public void AddRequiredValue(string name, Serialize serialize, Deserialize deserialize, string helpText, bool useDoubleQuotes = false)
         {
-            this.AddValue(new Value(name, serialize, deserialize, true, helpText, useDoubleQuotes));
+            this.AddValue(new Value(name, serialize, deserialize, true, helpText, useDoubleQuotes, this.CultureInfo));
         }
 
         public void AddOptionalValue(string name, Func<string> serialize, Action<string> deserialize, string helpText, bool useDoubleQuotes = false)
@@ -205,7 +212,7 @@ namespace Sundew.CommandLine.Internal
 
         public void AddOptionalValue(string name, Serialize serialize, Deserialize deserialize, string helpText, bool useDoubleQuotes = false)
         {
-            this.AddValue(new Value(name, serialize, deserialize, false, helpText, useDoubleQuotes));
+            this.AddValue(new Value(name, serialize, deserialize, false, helpText, useDoubleQuotes, this.CultureInfo));
         }
 
         public void AddRequiredValues<TValue>(string name, IList<TValue> values, Func<TValue, CultureInfo, string> serialize, Func<string, CultureInfo, TValue> deserialize, string helpText, bool useDoubleQuotes = false)
@@ -252,12 +259,32 @@ namespace Sundew.CommandLine.Internal
             this.AddOptionalValues(name, values, (value, ci) => value, (value, ci) => value, helpText, useDoubleQuotes);
         }
 
+        public void PrepareBuilder(IArguments arguments, bool allowReset)
+        {
+            if (!this.isConfigured)
+            {
+                arguments.Configure(this);
+                this.isConfigured = true;
+            }
+            else if (allowReset)
+            {
+                this.ResetToDefault();
+            }
+        }
+
         private static void VerifyNameAndAlias(bool isNameNullOrEmpty, bool isAliasNullOrEmpty)
         {
             if (isNameNullOrEmpty && isAliasNullOrEmpty)
             {
                 throw new NotSupportedException("Both name and alias cannot be null or empty.");
             }
+        }
+
+        private void ResetToDefault()
+        {
+            this.options.Values.Distinct().ForEach(x => x.ResetToDefault(this.CultureInfo));
+            this.switches.Values.Distinct().ForEach(x => x.ResetToDefault(this.CultureInfo));
+            this.Values.ResetToDefault(this.CultureInfo);
         }
 
         private void AddOption(IOption option, Separators separators)

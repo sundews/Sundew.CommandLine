@@ -184,5 +184,23 @@ namespace Sundew.CommandLine.AcceptanceTests.Samples.Aupli
 
             result.Should().Be(expectedText);
         }
+
+        [Fact]
+        public void Given_a_commandline_When_parsing_twice_Then_ResultErrorToString_should_be_the_expected_text()
+        {
+            const string expectedLogPath = @"c:\temp\log2.txt";
+            const int expectedMaxFiles = 10;
+            var commandLine = $@"-lp ""c:\temp\log.txt"" --max-size {ExpectedMaxLogFileSizeInBytes} --max-files 2";
+
+            var commandLineParser = new CommandLineParser<FileLogOptions, int>();
+            commandLineParser.WithArguments(new FileLogOptions(null), options => Result.Success(options));
+            commandLineParser.Parse(commandLine);
+
+            var result = commandLineParser.Parse($@"-lp ""{expectedLogPath}""");
+
+            result.Value.LogPath.Should().Be(expectedLogPath);
+            result.Value.MaxLogFileSizeInBytes.Should().NotBe(ExpectedMaxLogFileSizeInBytes);
+            result.Value.MaxNumberOfLogFiles.Should().Be(expectedMaxFiles);
+        }
     }
 }

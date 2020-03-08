@@ -10,6 +10,7 @@ namespace Sundew.CommandLine.Internal.Values
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Text;
     using Sundew.Base.Computation;
@@ -98,6 +99,11 @@ namespace Sundew.CommandLine.Internal.Values
         IEnumerator IEnumerable.GetEnumerator()
         {
             return this.GetEnumerator();
+        }
+
+        public void ResetToDefault(CultureInfo cultureInfo)
+        {
+            this.values.ForEach(x => x.ResetToDefault(cultureInfo));
         }
     }
 }

@@ -10,7 +10,9 @@ namespace Sundew.CommandLine.Internal.Values
     using System;
     using System.Collections.Generic;
     using System.Globalization;
+    using System.Linq;
     using System.Text;
+    using Sundew.Base.Collections;
     using Sundew.Base.Computation;
     using Sundew.Base.Text;
     using Sundew.CommandLine.Internal.Helpers;
@@ -35,6 +37,7 @@ namespace Sundew.CommandLine.Internal.Values
             this.IsRequired = isRequired;
             this.HelpText = helpText;
             this.UseDoubleQuotes = useDoubleQuotes;
+            this.DefaultList = this.List.ToList();
         }
 
         public string Name { get; }
@@ -55,9 +58,17 @@ namespace Sundew.CommandLine.Internal.Values
 
         public bool IsNesting { get; } = false;
 
+        public List<TValue> DefaultList { get; }
+
+        public void ResetToDefault(CultureInfo cultureInfo)
+        {
+            this.List.Clear();
+            this.List.AddRange(this.DefaultList);
+        }
+
         public Result.IfError<GeneratorError> SerializeTo(StringBuilder stringBuilder, Settings settings)
         {
-            var wasSerialized = SerializationHelper.SerializeTo(this, stringBuilder, settings);
+            var wasSerialized = SerializationHelper.SerializeTo(this, this.List, stringBuilder, settings);
             if (!wasSerialized && this.IsRequired)
             {
                 return Result.Error(new GeneratorError(GeneratorErrorType.RequiredValuesMissing));

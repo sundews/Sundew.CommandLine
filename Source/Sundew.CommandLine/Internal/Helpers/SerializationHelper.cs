@@ -9,6 +9,7 @@ namespace Sundew.CommandLine.Internal.Helpers
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Text;
     using Sundew.CommandLine.Internal.Extensions;
 
@@ -26,14 +27,8 @@ namespace Sundew.CommandLine.Internal.Helpers
             }
         }
 
-        public static bool SerializeTo<TItem>(IListSerializationInfo<TItem> listSerializationInfo, StringBuilder stringBuilder, Settings settings)
+        public static bool SerializeTo<TItem>(IListSerializationInfo<TItem> listSerializationInfo, IList<TItem> list, StringBuilder stringBuilder, Settings settings)
         {
-            var list = listSerializationInfo.List;
-            if (list == null)
-            {
-                return false;
-            }
-
             if (list.Count > 0)
             {
                 var value = SerializeValue(listSerializationInfo.Serialize, list, 0, settings);
@@ -57,7 +52,7 @@ namespace Sundew.CommandLine.Internal.Helpers
                 AppendValue(stringBuilder, value, listSerializationInfo.UseDoubleQuotes);
             }
 
-            return true;
+            return list.Any();
         }
 
         public static bool AppendNameOrAlias(StringBuilder stringBuilder, string name, string alias, bool preferAliases)

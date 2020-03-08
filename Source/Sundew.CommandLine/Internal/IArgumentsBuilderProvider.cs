@@ -1,18 +1,14 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ICredentials.cs" company="Hukano">
+// <copyright file="IArgumentsBuilderProvider.cs" company="Hukano">
 // Copyright (c) Hukano. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.AcceptanceTests.Samples.KuandoBusylightForTeamCity
+namespace Sundew.CommandLine.Internal
 {
-    using System.Security;
-
-    public interface ICredentials
+    internal interface IArgumentsBuilderProvider
     {
-        string UserName { get; }
-
-        SecureString Password { get; }
+        ArgumentsBuilder Builder { get; }
     }
 }

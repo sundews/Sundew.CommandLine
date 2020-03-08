@@ -9,7 +9,6 @@ namespace Sundew.CommandLine
 {
     using System;
     using System.Collections.Generic;
-    using System.Globalization;
     using System.Linq;
     using System.Threading.Tasks;
     using Sundew.Base.Computation;
@@ -44,6 +43,7 @@ namespace Sundew.CommandLine
         /// </summary>
         /// <param name="settings">The settings.</param>
         public CommandLineParser(Settings settings)
+            : this()
         {
             this.Settings = settings;
         }
@@ -194,8 +194,8 @@ namespace Sundew.CommandLine
 
                     if (currentVerbAction != null)
                     {
-                        var verbResult = this.ParseArguments(argumentList, currentVerbAction.Verb, currentVerbAction.Handler);
-                        return await CheckResultForHelpRequestedErrorAsync(verbResult, currentVerbAction, null, this.Settings);
+                        var verbResult = this.ParseArguments(argumentList, currentVerbAction, currentVerbAction.Verb, currentVerbAction.Handler);
+                        return await CheckResultForHelpRequestedErrorAsync(verbResult, currentVerbAction, this.argumentsAction, this.Settings);
                     }
                 }
             }
@@ -213,7 +213,7 @@ namespace Sundew.CommandLine
                     ParserErrorType.ArgumentsAndVerbsAreNotConfigured, ArgumentsOrVerbsWereNotConfiguredText));
             }
 
-            var result = this.ParseArguments(argumentList, this.argumentsAction.Arguments, this.argumentsAction.Handler);
+            var result = this.ParseArguments(argumentList, this.argumentsAction, this.argumentsAction.Arguments, this.argumentsAction.Handler);
             return await CheckResultForHelpRequestedErrorAsync(result, this.verbRegistry, this.argumentsAction, this.Settings);
         }
 
@@ -280,10 +280,7 @@ namespace Sundew.CommandLine
             {
                 if (result.Error.Type == ParserErrorType.HelpRequested)
                 {
-                    return Result.Error(
-                        new ParserError<TError>(
-                            ParserErrorType.HelpRequested,
-                            CommandLineHelpGenerator.CreateHelpText(verbRegistry, argumentsAction, settings)));
+                    return Result.Error(new ParserError<TError>(ParserErrorType.HelpRequested, CommandLineHelpGenerator.CreateHelpText(verbRegistry, argumentsAction, settings)));
                 }
             }
 
@@ -292,11 +289,15 @@ namespace Sundew.CommandLine
 
         private ValueTask<Result<TSuccess, ParserError<TError>>> ParseArguments<TArguments>(
             ArgumentList argumentList,
+            IArgumentsBuilderProvider argumentsBuilderProvider,
             TArguments argumentsDefinition,
             Func<TArguments, ValueTask<Result<TSuccess, ParserError<TError>>>> argumentsHandler)
             where TArguments : IArguments
         {
-            var result = this.commandLineArgumentsParser.Parse(this.Settings, argumentList, argumentsDefinition);
+            var argumentsBuilder = argumentsBuilderProvider.Builder;
+            argumentsBuilder.PrepareBuilder(argumentsDefinition, true);
+
+            var result = this.commandLineArgumentsParser.Parse(argumentsBuilder, this.Settings, argumentList);
             if (!result)
             {
                 return result.Convert(default(TSuccess)!, parserError => new ParserError<TError>(parserError));

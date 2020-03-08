@@ -8,6 +8,7 @@
 namespace Sundew.CommandLine.Internal.Options
 {
     using System;
+    using System.Globalization;
     using System.Text;
     using Sundew.Base.Computation;
     using Sundew.CommandLine.Internal.Extensions;
@@ -18,6 +19,7 @@ namespace Sundew.CommandLine.Internal.Options
         private readonly Deserialize deserialize;
         private readonly Serialize serialize;
         private readonly bool useDoubleQuotes;
+        private readonly string defaultValue;
 
         public Option(
             string name,
@@ -27,7 +29,8 @@ namespace Sundew.CommandLine.Internal.Options
             bool isRequired,
             string helpText,
             bool useDoubleQuotes,
-            Separators separators)
+            Separators separators,
+            CultureInfo cultureInfo)
         {
             this.Name = name;
             this.Alias = alias;
@@ -38,6 +41,7 @@ namespace Sundew.CommandLine.Internal.Options
             this.HelpText = helpText;
             this.Separators = separators;
             this.Usage = HelpTextHelper.GetUsage(name, alias);
+            this.defaultValue = this.serialize(cultureInfo).ToString();
         }
 
         public string Name { get; }
@@ -102,6 +106,11 @@ namespace Sundew.CommandLine.Internal.Options
             HelpTextHelper.AppendHelpText(stringBuilder, settings, this, maxName, maxAlias, maxHelpText, indent, isForVerb);
         }
 
+        public void ResetToDefault(CultureInfo cultureInfo)
+        {
+            this.deserialize(this.defaultValue.AsSpan(), cultureInfo);
+        }
+
         public void AppendDefaultText(StringBuilder stringBuilder, Settings settings, bool isNested)
         {
             if (this.IsRequired && !isNested)
@@ -110,8 +119,7 @@ namespace Sundew.CommandLine.Internal.Options
                 return;
             }
 
-            var @default = this.SerializeValue(settings);
-            if (@default.IsEmpty)
+            if (this.defaultValue.Length == 0)
             {
                 if (this.IsRequired)
                 {
@@ -125,7 +133,7 @@ namespace Sundew.CommandLine.Internal.Options
             }
 
             stringBuilder.Append(Constants.DefaultText);
-            stringBuilder.AppendLine(@default);
+            stringBuilder.AppendLine(this.defaultValue);
         }
 
         private ReadOnlySpan<char> SerializeValue(Settings settings)

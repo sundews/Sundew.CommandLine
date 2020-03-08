@@ -25,6 +25,8 @@ namespace Sundew.CommandLine.Internal.Verbs
             verbBuilderAction?.Invoke(this);
         }
 
+        public ArgumentsBuilder Builder { get; } = new ArgumentsBuilder();
+
         public bool HasVerbs => this.verbRegistries.Any();
 
         public IEnumerable<VerbRegistry<TSuccess, TError>> VerbRegistries => this.verbRegistries.Values;

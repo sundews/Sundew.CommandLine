@@ -7,6 +7,8 @@
 
 namespace Sundew.CommandLine
 {
+    using System.Globalization;
+
     /// <summary>
     /// Interface for implementing getting argument info.
     /// </summary>
@@ -31,5 +33,9 @@ namespace Sundew.CommandLine
         /// <c>true</c> if this instance is nesting; otherwise, <c>false</c>.
         /// </value>
         bool IsNesting { get; }
+
+        /// <summary>Resets to default.</summary>
+        /// <param name="cultureInfo">The culture information.</param>
+        void ResetToDefault(CultureInfo cultureInfo);
     }
 }

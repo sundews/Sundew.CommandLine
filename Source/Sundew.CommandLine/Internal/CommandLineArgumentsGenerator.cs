@@ -14,7 +14,12 @@ namespace Sundew.CommandLine.Internal
     {
         public static Result.IfError<GeneratorError> Generate(IArguments arguments, StringBuilder stringBuilder, Settings settings, bool useAliases)
         {
-            var argumentsBuilder = new ArgumentsBuilder { Separators = settings.Separators };
+            var argumentsBuilder = new ArgumentsBuilder
+            {
+                Separators = settings.Separators,
+                CultureInfo = settings.CultureInfo,
+            };
+
             arguments.Configure(argumentsBuilder);
             try
             {

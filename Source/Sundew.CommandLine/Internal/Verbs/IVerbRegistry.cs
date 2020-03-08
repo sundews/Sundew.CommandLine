@@ -9,7 +9,7 @@ namespace Sundew.CommandLine.Internal.Verbs
 {
     using System.Collections.Generic;
 
-    internal interface IVerbRegistry<TSuccess, TError>
+    internal interface IVerbRegistry<TSuccess, TError> : IArgumentsBuilderProvider
     {
         bool HasVerbs { get; }
 

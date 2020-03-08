@@ -10,7 +10,6 @@ namespace Sundew.CommandLine.UnitTests.Internals
     using System;
     using System.Linq;
     using FluentAssertions;
-    using Sundew.CommandLine.Internal;
     using Sundew.CommandLine.Internal.Extensions;
     using Xunit;
 

@@ -10,7 +10,9 @@ namespace Sundew.CommandLine.Internal.Options
     using System;
     using System.Collections.Generic;
     using System.Globalization;
+    using System.Linq;
     using System.Text;
+    using Sundew.Base.Collections;
     using Sundew.Base.Computation;
     using Sundew.CommandLine.Internal.Helpers;
 
@@ -31,6 +33,7 @@ namespace Sundew.CommandLine.Internal.Options
             this.Name = name;
             this.Alias = alias;
             this.List = list;
+            this.DefaultList = this.List.ToList();
             this.Serialize = serialize;
             this.deserialize = deserialize;
             this.UseDoubleQuotes = useDoubleQuotes;
@@ -46,6 +49,8 @@ namespace Sundew.CommandLine.Internal.Options
         public Separators Separators => default;
 
         public IList<TValue> List { get; }
+
+        public IList<TValue> DefaultList { get; }
 
         public Serialize<TValue> Serialize { get; }
 
@@ -63,7 +68,7 @@ namespace Sundew.CommandLine.Internal.Options
         {
             SerializationHelper.AppendNameOrAlias(stringBuilder, this.Name, this.Alias, useAliases);
             stringBuilder.Append(Constants.SpaceText);
-            var wasSerialized = SerializationHelper.SerializeTo(this, stringBuilder, settings);
+            var wasSerialized = SerializationHelper.SerializeTo(this, this.List, stringBuilder, settings);
             if (!wasSerialized && this.IsRequired)
             {
                 return Result.Error(new GeneratorError(this, GeneratorErrorType.RequiredOptionMissing));
@@ -101,6 +106,12 @@ namespace Sundew.CommandLine.Internal.Options
             HelpTextHelper.AppendHelpText(stringBuilder, settings, this, maxName, maxAlias, maxHelpText, indent, isForVerb);
         }
 
+        public void ResetToDefault(CultureInfo cultureInfo)
+        {
+            this.List.Clear();
+            this.List.AddRange(this.DefaultList);
+        }
+
         public void AppendDefaultText(StringBuilder stringBuilder, Settings settings, bool isNested)
         {
             if (this.IsRequired)
@@ -110,7 +121,7 @@ namespace Sundew.CommandLine.Internal.Options
             }
 
             stringBuilder.Append(Constants.DefaultText);
-            if (!this.SerializeTo(stringBuilder, settings, true))
+            if (!SerializationHelper.SerializeTo(this, this.DefaultList, stringBuilder, settings))
             {
                 stringBuilder.AppendLine(Constants.NoneText);
             }

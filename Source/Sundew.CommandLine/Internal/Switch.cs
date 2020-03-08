@@ -21,7 +21,7 @@ namespace Sundew.CommandLine.Internal
         {
             this.Name = name;
             this.Alias = alias;
-            this.IsSet = isSet;
+            this.DefaultValue = this.IsSet = isSet;
             this.setValue = setValue;
             this.HelpText = helpText;
             this.Usage = HelpTextHelper.GetUsage(name, alias);
@@ -39,12 +39,21 @@ namespace Sundew.CommandLine.Internal
 
         public bool IsNesting => false;
 
-        public bool IsSet { get; }
+        public bool IsSet { get; private set; }
+
+        public bool DefaultValue { get; }
+
+        public void ResetToDefault(CultureInfo cultureInfo)
+        {
+            this.IsSet = this.DefaultValue;
+            this.setValue(this.DefaultValue);
+        }
 
         public void Set()
         {
             try
             {
+                this.IsSet = true;
                 this.setValue(true);
             }
             catch (Exception e)

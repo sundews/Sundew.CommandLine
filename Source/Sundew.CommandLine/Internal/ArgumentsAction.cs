@@ -5,13 +5,13 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine
+namespace Sundew.CommandLine.Internal
 {
     using System;
     using System.Threading.Tasks;
     using Sundew.Base.Computation;
 
-    internal class ArgumentsAction<TSuccess, TError>
+    internal class ArgumentsAction<TSuccess, TError> : IArgumentsBuilderProvider
     {
         public ArgumentsAction(IArguments arguments, Func<IArguments, Result<TSuccess, ParserError<TError>>> handler)
          : this(arguments, arguments => new ValueTask<Result<TSuccess, ParserError<TError>>>(handler(arguments)))
@@ -23,6 +23,8 @@ namespace Sundew.CommandLine
             this.Arguments = arguments;
             this.Handler = handler;
         }
+
+        public ArgumentsBuilder Builder { get; } = new ArgumentsBuilder();
 
         public IArguments Arguments { get; }
 

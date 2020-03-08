@@ -35,7 +35,6 @@ namespace Sundew.CommandLine.Internal
             int verbMaxName,
             Settings settings)
         {
-            var argumentsBuilder = new ArgumentsBuilder { Separators = settings.Separators };
             if (verbRegistry != null)
             {
                 if (verbRegistry.Verb != NullVerb.Instance)
@@ -46,8 +45,10 @@ namespace Sundew.CommandLine.Internal
                         $" {HelpTextHelper.GetIndentation(indent)}{{0,{-verbMaxName}}} | {verbRegistry.Verb.HelpText}",
                         verbRegistry.Verb.Name);
                     stringBuilder.AppendLine();
-                    verbRegistry.Verb.Configure(argumentsBuilder);
-                    AppendCommandLineHelpText(argumentsBuilder, stringBuilder, indent, 0, 0, true, settings);
+
+                    verbRegistry.Builder.PrepareBuilder(verbRegistry.Verb, false);
+
+                    AppendCommandLineHelpText(verbRegistry.Builder, stringBuilder, indent, 0, 0, true, settings);
                 }
 
                 if (verbRegistry.HasVerbs)
@@ -67,7 +68,9 @@ namespace Sundew.CommandLine.Internal
 
             if (argumentsAction != null)
             {
-                argumentsAction.Arguments.Configure(argumentsBuilder);
+                var argumentsBuilder = argumentsAction.Builder;
+                argumentsBuilder.PrepareBuilder(argumentsAction.Arguments, false);
+
                 if (argumentsBuilder.Options.Any() || argumentsBuilder.Switches.Any() || argumentsBuilder.Values.HasValues)
                 {
                     if (indent == 0)
@@ -96,7 +99,7 @@ namespace Sundew.CommandLine.Internal
                 maxName = Math.Max(argumentInfos.Max(x => (x.Name?.Length ?? 0) + (x.Separators.NameSeparator != Constants.SpaceCharacter ? 1 : 0) + (x.IsNesting ? 1 : 0)) + Constants.DashText.Length, maxName);
                 maxAlias = Math.Max(Math.Max(argumentInfos.Max(x => (x.Alias?.Length ?? 0) + (x.Separators.AliasSeparator != Constants.SpaceCharacter ? 1 : 0) + (x.IsNesting ? 1 : 0)) + Constants.DoubleDashText.Length, maxAlias), maxValues - maxName - Constants.HelpSeparator.Length);
                 maxValues = maxName + maxAlias + Constants.HelpSeparator.Length;
-                var maxHelpText = argumentsBuilder.Options.Max(x => x.HelpText.Length);
+                var maxHelpText = argumentsBuilder.Options.Any() ? argumentsBuilder.Options.Max(x => x.HelpText.Length) : 0;
                 foreach (var option in argumentsBuilder.Options.OrderByDescending(x => x.IsRequired))
                 {
                     option.AppendHelpText(stringBuilder, settings, maxName, maxAlias, maxHelpText, indent, isVerbArgument);
