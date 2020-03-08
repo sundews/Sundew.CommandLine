@@ -18,7 +18,7 @@ namespace Sundew.CommandLine
         /// <typeparam name="TError">The type of the error.</typeparam>
         /// <param name="result">The result.</param>
         /// <returns>A value indicating whether help could be useful.</returns>
-        public static bool Print<TValue, TError>(this Result<TValue, ParserError<TError>> result)
+        public static bool WriteToConsole<TValue, TError>(this Result<TValue, ParserError<TError>> result)
         {
             if (result)
             {
