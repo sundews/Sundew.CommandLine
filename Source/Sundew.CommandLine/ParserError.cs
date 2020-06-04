@@ -109,6 +109,9 @@ namespace Sundew.CommandLine
                 case ParserErrorType.UnknownVerb:
                     stringBuilder.AppendLine($"{new string(SpaceCharacter, indent)}The verb {parserError.Message} is unknown.");
                     break;
+                case ParserErrorType.UnknownOption:
+                    stringBuilder.Append(new string(SpaceCharacter, indent)).AppendLine(parserError.Message);
+                    break;
                 case ParserErrorType.RequiredArgumentMissing:
                     stringBuilder.AppendLine($"{new string(SpaceCharacter, indent)}The required options were missing: {parserError.Message}.");
                     break;

@@ -195,7 +195,7 @@ namespace Sundew.CommandLine
                     if (currentVerbAction != null)
                     {
                         var verbResult = this.ParseArguments(argumentList, currentVerbAction, currentVerbAction.Verb, currentVerbAction.Handler);
-                        return await CheckResultForHelpRequestedErrorAsync(verbResult, currentVerbAction, this.argumentsAction, this.Settings);
+                        return await CheckResultForHelpRequestedErrorAsync(verbResult, currentVerbAction, this.argumentsAction, this.Settings).ConfigureAwait(false);
                     }
                 }
             }
@@ -214,7 +214,7 @@ namespace Sundew.CommandLine
             }
 
             var result = this.ParseArguments(argumentList, this.argumentsAction, this.argumentsAction.Arguments, this.argumentsAction.Handler);
-            return await CheckResultForHelpRequestedErrorAsync(result, this.verbRegistry, this.argumentsAction, this.Settings);
+            return await CheckResultForHelpRequestedErrorAsync(result, this.verbRegistry, this.argumentsAction, this.Settings).ConfigureAwait(false);
         }
 
         /// <summary>

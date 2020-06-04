@@ -62,7 +62,7 @@ namespace Sundew.CommandLine.Internal.Options
             {
                 SerializationHelper.AppendNameOrAlias(stringBuilder, this.Name, this.Alias, useAliases);
                 stringBuilder.Append(Constants.SpaceText);
-                var result = this.SerializeValue(actualOption, stringBuilder, settings, useAliases);
+                var result = SerializeValue(actualOption, stringBuilder, settings, useAliases);
 
                 if (result)
                 {
@@ -171,7 +171,7 @@ namespace Sundew.CommandLine.Internal.Options
             stringBuilder.AppendLine(Constants.DefaultText + Constants.SeeBelowText);
         }
 
-        private Result.IfError<GeneratorError> SerializeValue(TOptions options, StringBuilder stringBuilder, Settings settings, bool useAliases)
+        private static Result.IfError<GeneratorError> SerializeValue(TOptions options, StringBuilder stringBuilder, Settings settings, bool useAliases)
         {
             return CommandLineArgumentsGenerator.Generate(options, stringBuilder, settings, useAliases);
         }

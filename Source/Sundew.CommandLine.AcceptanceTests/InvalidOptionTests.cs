@@ -25,6 +25,7 @@ namespace Sundew.CommandLine.AcceptanceTests
 
             result.IsSuccess.Should().BeFalse();
             result.Error.Type.Should().Be(ParserErrorType.UnknownOption);
+            result.Error.Message.Should().Be(@"The option does not exist: -d");
         }
 
         private class Arguments : IArguments

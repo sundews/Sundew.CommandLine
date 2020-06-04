@@ -10,7 +10,7 @@ namespace Sundew.CommandLine.Internal
     using System.Text;
     using Sundew.Base.Computation;
 
-    internal class CommandLineArgumentsGenerator
+    internal static class CommandLineArgumentsGenerator
     {
         public static Result.IfError<GeneratorError> Generate(IArguments arguments, StringBuilder stringBuilder, Settings settings, bool useAliases)
         {

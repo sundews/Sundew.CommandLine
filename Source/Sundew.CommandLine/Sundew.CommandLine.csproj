@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard1.3</TargetFramework>
-    <Version>4.2.1</Version>
+    <Version>4.2.2</Version>
 	  <LangVersion>8</LangVersion>
     <Nullable>enable</Nullable>
     <Authors>Kim Hugener-Ohlsen</Authors>
@@ -21,8 +21,8 @@ Features:
 4.1 - Async support
 4.0 - Support nested verbs
 3.0 - Improved nesting support</PackageReleaseNotes>
-    <AssemblyVersion>4.2.1.0</AssemblyVersion>
-    <FileVersion>4.2.1.0</FileVersion>
+    <AssemblyVersion>4.2.2.0</AssemblyVersion>
+    <FileVersion>4.2.2.0</FileVersion>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/hugener/Sundew.CommandLine</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
@@ -56,7 +56,7 @@ Features:
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="2.9.8">
+    <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -68,7 +68,7 @@ Features:
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Sundew.Base" Version="4.1.0" />
+    <PackageReference Include="Sundew.Base" Version="4.2.0" />
     <PackageReference Include="Sundew.Build.Publish" Version="2.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
