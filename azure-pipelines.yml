@@ -21,5 +21,5 @@ steps:
 - script: dotnet test '**/bin/$(buildConfiguration)/**/*Tests.dll' --configuration $(buildConfiguration) 
   displayName: 'dotnet test $(buildConfiguration)'
 
-- script: dotnet nuget push '$(Build.ArtifactStagingDirectory)/*.nupkg' --configuration $(buildConfiguration) 
-  displayName: 'dotnet nuget push $(buildConfiguration)'
+- script: dotnet nuget push '$(Build.ArtifactStagingDirectory)/*.nupkg'
+  displayName: 'dotnet nuget push 
