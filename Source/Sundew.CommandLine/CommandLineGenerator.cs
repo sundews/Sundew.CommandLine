@@ -59,12 +59,12 @@ namespace Sundew.CommandLine
 
             var stringBuilder = new StringBuilder();
             stringBuilder.Append(verb.Name);
-            stringBuilder.Append(Constants.SpaceText);
+            stringBuilder.Append(Constants.SpaceCharacter);
             while (verb.NextVerb != null)
             {
                 verb = verb.NextVerb;
                 stringBuilder.Append(verb.Name);
-                stringBuilder.Append(Constants.SpaceText);
+                stringBuilder.Append(Constants.SpaceCharacter);
             }
 
             return CommandLineArgumentsGenerator.Generate(verb, stringBuilder, this.Settings, useAliases)

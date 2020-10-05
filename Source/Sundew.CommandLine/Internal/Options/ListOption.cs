@@ -67,7 +67,7 @@ namespace Sundew.CommandLine.Internal.Options
         public Result.IfError<GeneratorError> SerializeTo(StringBuilder stringBuilder, Settings settings, bool useAliases)
         {
             SerializationHelper.AppendNameOrAlias(stringBuilder, this.Name, this.Alias, useAliases);
-            stringBuilder.Append(Constants.SpaceText);
+            stringBuilder.Append(Constants.SpaceCharacter);
             var wasSerialized = SerializationHelper.SerializeTo(this, this.List, stringBuilder, settings);
             if (!wasSerialized && this.IsRequired)
             {
