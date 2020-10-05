@@ -18,7 +18,7 @@ steps:
 - script: dotnet build ./Source/Sundew.CommandLine.sln --configuration $(buildConfiguration) -p:'SbpSourceName=$(Build.SourceBranch)' -p:'SbpProductionSource=refs/heads/master|https://api.nuget.org/v3/index.json' -p:'SbpIntegrationSource=refs/heads/release/.+|https://api.nuget.org/v3/index.json' -p:'SbpApiKey=$(SbpApiKey)' -p:'SbpAllowLocalSource=false' -p:'SbpEnablePublish=false'
   displayName: 'dotnet build $(buildConfiguration)'
 
-- script: dotnet test '**/*Tests.dll' --configuration $(buildConfiguration) 
+- script: dotnet test '**/bin/$(buildConfiguration)/**/*Tests.dll' --configuration $(buildConfiguration) 
   displayName: 'dotnet test $(buildConfiguration)'
 
 - script: dotnet nuget push '$(Build.ArtifactStagingDirectory)/*.nupkg' --configuration $(buildConfiguration) 
