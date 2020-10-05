@@ -108,18 +108,21 @@ namespace Sundew.CommandLine
             switch (parserError.Type)
             {
                 case ParserErrorType.UnknownVerb:
-                    stringBuilder.AppendLine($"{new string(SpaceCharacter, indent)}The verb {parserError.Message} is unknown.");
+                    stringBuilder.Append(SpaceCharacter, indent);
+                    stringBuilder.AppendLine($"The verb {parserError.Message} is unknown.");
                     break;
                 case ParserErrorType.UnknownOption:
-                    stringBuilder.Append(new string(SpaceCharacter, indent)).AppendLine(parserError.Message);
+                    stringBuilder.Append(SpaceCharacter, indent);
+                    stringBuilder.AppendLine(parserError.Message);
                     break;
                 case ParserErrorType.RequiredArgumentMissing:
-                    stringBuilder.AppendLine($"{new string(SpaceCharacter, indent)}The required options were missing: {parserError.Message}.");
+                    stringBuilder.Append(SpaceCharacter, indent);
+                    stringBuilder.AppendLine($"The required options were missing: {parserError.Message}.");
                     break;
                 case ParserErrorType.SerializationException:
-                    stringBuilder.Append(new string(SpaceCharacter, indent));
+                    stringBuilder.Append(SpaceCharacter, indent);
                     stringBuilder.AppendLine(parserError.Message);
-                    stringBuilder.Append(new string(SpaceCharacter, indent));
+                    stringBuilder.Append(SpaceCharacter, indent);
                     stringBuilder.AppendLine(parserError.SerializationException!.ToString());
                     break;
                 case ParserErrorType.HelpRequested:
@@ -128,32 +131,32 @@ namespace Sundew.CommandLine
                 case ParserErrorType.Info:
                     return false;
                 case ParserErrorType.OptionArgumentMissing:
-                    stringBuilder.Append(new string(SpaceCharacter, indent));
+                    stringBuilder.Append(SpaceCharacter, indent);
                     stringBuilder.AppendLine(parserError.Message);
                     break;
                 case ParserErrorType.InnerParserError:
                     if (parserError.InnerParserError != null)
                     {
-                        stringBuilder.Append(new string(SpaceCharacter, indent));
+                        stringBuilder.Append(SpaceCharacter, indent);
                         stringBuilder.AppendLine(parserError.Message);
                         AppendParserErrorText(stringBuilder, parserError.InnerParserError, indent + 2);
                     }
 
                     break;
                 case ParserErrorType.InvalidStartIndex:
-                    stringBuilder.Append(new string(SpaceCharacter, indent));
+                    stringBuilder.Append(SpaceCharacter, indent);
                     stringBuilder.AppendLine(parserError.Message);
                     break;
                 case ParserErrorType.ArgumentsAndVerbsAreNotConfigured:
-                    stringBuilder.Append(new string(SpaceCharacter, indent));
+                    stringBuilder.Append(SpaceCharacter, indent);
                     stringBuilder.AppendLine(parserError.Message);
                     break;
                 case ParserErrorType.ArgumentsNotConfiguredOrUnknownVerb:
-                    stringBuilder.Append(new string(SpaceCharacter, indent));
+                    stringBuilder.Append(SpaceCharacter, indent);
                     stringBuilder.AppendLine(parserError.Message);
                     break;
                 default:
-                    stringBuilder.Append(new string(SpaceCharacter, indent));
+                    stringBuilder.Append(SpaceCharacter, indent);
                     stringBuilder.AppendLine(UnknownErrorText);
                     break;
             }
