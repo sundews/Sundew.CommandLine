@@ -5,10 +5,9 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-using System;
-
 namespace Sundew.CommandLine
 {
+    using System;
     using System.Text;
     using Sundew.CommandLine.Internal;
 
