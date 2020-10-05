@@ -84,7 +84,7 @@ namespace Sundew.CommandLine
                 }
             }
 
-            return stringBuilder.ToString(0, stringBuilder.Length - 2);
+            return stringBuilder.ToString(0, stringBuilder.Length - Environment.NewLine.Length);
         }
     }
 }

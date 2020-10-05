@@ -5,6 +5,8 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
+using System;
+
 namespace Sundew.CommandLine
 {
     using System.Text;
@@ -99,7 +101,7 @@ namespace Sundew.CommandLine
         {
             var stringBuilder = new StringBuilder();
             AppendParserErrorText(stringBuilder, this, 2);
-            return stringBuilder.ToString(0, stringBuilder.Length - 2);
+            return stringBuilder.ToString(0, stringBuilder.Length - Environment.NewLine.Length);
         }
 
         internal static bool AppendParserErrorText(StringBuilder stringBuilder, ParserError parserError, int indent)
