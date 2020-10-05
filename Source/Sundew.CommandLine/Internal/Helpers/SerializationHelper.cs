@@ -47,7 +47,7 @@ namespace Sundew.CommandLine.Internal.Helpers
                     continue;
                 }
 
-                stringBuilder.Append(Constants.SpaceText);
+                stringBuilder.Append(Constants.SpaceCharacter);
 
                 AppendValue(stringBuilder, value, listSerializationInfo.UseDoubleQuotes);
             }
@@ -73,7 +73,7 @@ namespace Sundew.CommandLine.Internal.Helpers
         {
             if (useDoubleQuotes)
             {
-                stringBuilder.Append(Constants.DoubleQuotes);
+                stringBuilder.Append(Constants.DoubleQuotesCharacter);
             }
         }
 

@@ -22,10 +22,10 @@ namespace Sundew.CommandLine.Internal
         public const char SlashCharacter = '/';
         public const char ArgumentStartCharacter = '-';
         public const char NullCharacter = '\0';
+        public const char DoubleQuotesCharacter = '"';
         public const string DashText = "-";
         public const string DoubleDashText = "--";
         public const string EqualSignText = "=";
-        public const string DoubleQuotes = @"""";
         public const string HelpText = "Help";
         public const string DefaultText = "Default: ";
         public const string ArgumentsText = " Arguments:";

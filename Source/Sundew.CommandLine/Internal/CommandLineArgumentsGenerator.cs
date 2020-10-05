@@ -31,7 +31,7 @@ namespace Sundew.CommandLine.Internal
                         return serializeResult;
                     }
 
-                    stringBuilder.Append(Constants.SpaceText);
+                    stringBuilder.Append(Constants.SpaceCharacter);
                 }
 
                 foreach (var @switch in argumentsBuilder.Switches)
@@ -39,7 +39,7 @@ namespace Sundew.CommandLine.Internal
                     if (@switch.IsSet)
                     {
                         @switch.SerializeTo(stringBuilder, useAliases);
-                        stringBuilder.Append(Constants.SpaceText);
+                        stringBuilder.Append(Constants.SpaceCharacter);
                     }
                 }
 

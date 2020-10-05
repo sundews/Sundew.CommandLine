@@ -21,7 +21,7 @@ namespace Sundew.CommandLine.Internal.Values
         private readonly Deserialize deserialize;
         private readonly bool useDoubleQuotes;
         private readonly string defaultValue;
-        private bool hasBeenSet = false;
+        private bool hasBeenSet;
 
         public Value(string name, Serialize serialize, Deserialize deserialize, bool isRequired, string helpText, bool useDoubleQuotes, CultureInfo cultureInfo)
         {
@@ -44,7 +44,7 @@ namespace Sundew.CommandLine.Internal.Values
 
         public string HelpText { get; }
 
-        public bool IsNesting { get; } = false;
+        public bool IsNesting { get; }
 
         public void ResetToDefault(CultureInfo cultureInfo)
         {

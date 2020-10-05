@@ -56,7 +56,7 @@ namespace Sundew.CommandLine.Internal.Values
 
         public string HelpText { get; }
 
-        public bool IsNesting { get; } = false;
+        public bool IsNesting { get; }
 
         public List<TValue> DefaultList { get; }
 
