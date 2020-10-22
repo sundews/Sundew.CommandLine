@@ -22,4 +22,4 @@ steps:
   displayName: 'dotnet test $(buildConfiguration)'
 
 - script: dotnet nuget push '$(Build.ArtifactStagingDirectory)/*.nupkg'
-  displayName: 'dotnet nuget push 
+  displayName: 'dotnet nuget push'
