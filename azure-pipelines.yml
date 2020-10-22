@@ -22,5 +22,5 @@ steps:
 - script: dotnet test '**/bin/$(buildConfiguration)/**/*Tests.dll' --configuration $(buildConfiguration) 
   displayName: 'dotnet test $(buildConfiguration)'
 
-- script: dotnet nuget push '$(Build.ArtifactStagingDirectory)/*.nupkg' -s '$(source)' -k '$(SbpApiKey)'
+- script: dotnet nuget push '$(Build.ArtifactStagingDirectory)/**/*.nupkg' -s '$(source)' -k '$(SbpApiKey)'
   displayName: 'dotnet nuget push'
