@@ -22,5 +22,10 @@ steps:
 - script: dotnet test '**/bin/$(buildConfiguration)/**/*Tests.dll' --configuration $(buildConfiguration) 
   displayName: 'dotnet test $(buildConfiguration)'
 
+- task: CopyFiles@2
+  inputs:
+    Contents: '**/*.nupkg'
+    TargetFolder: $(Build.ArtifactStagingDirectory)
+
 - script: dotnet nuget push '$(Build.ArtifactStagingDirectory)/**/*.nupkg' -s '$(source)' -k '$(SbpApiKey)'
   displayName: 'dotnet nuget push'
