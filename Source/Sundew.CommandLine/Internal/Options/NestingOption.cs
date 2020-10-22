@@ -61,7 +61,7 @@ namespace Sundew.CommandLine.Internal.Options
             if (actualOption != null)
             {
                 SerializationHelper.AppendNameOrAlias(stringBuilder, this.Name, this.Alias, useAliases);
-                stringBuilder.Append(Constants.SpaceText);
+                stringBuilder.Append(Constants.SpaceCharacter);
                 var result = SerializeValue(actualOption, stringBuilder, settings, useAliases);
 
                 if (result)

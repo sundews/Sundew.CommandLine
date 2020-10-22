@@ -77,7 +77,7 @@ namespace Sundew.CommandLine.Internal.Values
                     return result;
                 }
 
-                stringBuilder.Append(Constants.SpaceText);
+                stringBuilder.Append(Constants.SpaceCharacter);
             }
 
             return result;

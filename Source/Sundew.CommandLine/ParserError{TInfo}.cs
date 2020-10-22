@@ -9,6 +9,7 @@ namespace Sundew.CommandLine
 {
     using System;
     using System.Text;
+    using Sundew.CommandLine.Internal;
 
     /// <summary>
     /// Provides information when a parser error occurs.
@@ -76,7 +77,8 @@ namespace Sundew.CommandLine
             {
                 if (infoFunc == null)
                 {
-                    stringBuilder.AppendLine($"{new string(' ', indent)}Error info: {this.Info}");
+                    stringBuilder.Append(Constants.SpaceCharacter, indent);
+                    stringBuilder.AppendLine($"Error info: {this.Info}");
                 }
                 else
                 {
@@ -84,7 +86,7 @@ namespace Sundew.CommandLine
                 }
             }
 
-            return stringBuilder.ToString(0, stringBuilder.Length - 2);
+            return stringBuilder.ToString(0, stringBuilder.Length - Environment.NewLine.Length);
         }
     }
 }
