@@ -16,7 +16,7 @@ variables:
   source: 'https://api.nuget.org/v3/index.json'
 
 steps:
-- script: dotnet build ./Source/Sundew.CommandLine.sln --configuration $(buildConfiguration) -p:'SbpSourceName=$(Build.SourceBranch)' -p:'SbpProductionSource=refs/heads/master|$(source)' -p:'SbpIntegrationSource=refs/heads/release/.+|$(source)' -p:'SbpApiKey=$(SbpApiKey)' -p:'SbpAllowLocalSource=false' -p:'SbpEnablePublish=false'
+- script: dotnet build ./Source/Sundew.CommandLine.sln --configuration $(buildConfiguration) -p:'SbpSourceName=$(Build.SourceBranch)' -p:'SbpProductionSource=refs/heads/master|$(source)' -p:'SbpIntegrationSource=refs/heads/release/.+|$(source)' -p:'SbpAllowLocalSource=false' -p:'SbpEnablePublish=false' -p:'SbpPublishLogFormats=##vso[task.setvariable variable=pushSource]{2}'
   displayName: 'dotnet build $(buildConfiguration)'
 
 - script: dotnet test '**/bin/$(buildConfiguration)/**/*Tests.dll' --configuration $(buildConfiguration) 
@@ -27,5 +27,5 @@ steps:
     Contents: '**/*.nupkg'
     TargetFolder: $(Build.ArtifactStagingDirectory)
 
-- script: dotnet nuget push '$(Build.ArtifactStagingDirectory)/**/*.nupkg' -s '$(source)' -k '$(SbpApiKey)'
+- script: dotnet nuget push '$(Build.ArtifactStagingDirectory)/**/*.nupkg' -s '$(pushSource)' -k '$(SbpApiKey)'
   displayName: 'dotnet nuget push'
