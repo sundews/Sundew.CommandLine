@@ -5,7 +5,8 @@
 	  <LangVersion>8</LangVersion>
     <Nullable>enable</Nullable>
     <Authors>Kim Hugener-Ohlsen</Authors>
-    <Company>Hukano</Company>
+    <Company>Hukano</Company
+    <DocumentationFile>$(OutputPath)/$(AssemblyName).xml</DocumentationFile>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Description>Simple library for creating a command line.
 Features:
