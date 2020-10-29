@@ -1,0 +1,7 @@
+<Project>
+ <PropertyGroup>
+   <Deterministic>true</Deterministic>
+   <Version>4.2.5</Version>
+   <OutputPath>bin/$(Configuration)</OutputPath>
+ </PropertyGroup>
+</Project>
