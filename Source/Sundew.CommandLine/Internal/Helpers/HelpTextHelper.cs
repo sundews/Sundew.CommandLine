@@ -52,7 +52,7 @@ namespace Sundew.CommandLine.Internal.Helpers
             return Constants.SpaceCharacter.Repeat(indent * 2);
         }
 
-        public static string GetUsage(string name, string alias, Separators separators = default)
+        public static string GetUsage(string? name, string alias, Separators separators = default)
         {
             var stringBuilder = new StringBuilder();
             if (!string.IsNullOrEmpty(name))

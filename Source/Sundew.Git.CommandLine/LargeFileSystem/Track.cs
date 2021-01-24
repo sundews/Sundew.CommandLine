@@ -20,18 +20,18 @@ namespace Sundew.Git.CommandLine.LargeFileSystem
 
         /// <summary>Initializes a new instance of the <see cref="Track"/> class.</summary>
         /// <param name="pattern">The pattern.</param>
-        public Track(string pattern)
+        public Track(string? pattern)
         {
             this.Pattern = pattern;
         }
 
         /// <summary>Gets the pattern.</summary>
         /// <value>The pattern.</value>
-        public string Pattern { get; private set; }
+        public string? Pattern { get; private set; }
 
         /// <summary>Gets the next verb.</summary>
         /// <value>The next verb.</value>
-        public IVerb NextVerb => null;
+        public IVerb? NextVerb => null;
 
         /// <summary>Gets the help text.</summary>
         /// <value>The help text.</value>

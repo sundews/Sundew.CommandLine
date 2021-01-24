@@ -13,6 +13,7 @@ namespace Sundew.CommandLine.AcceptanceTests.Verbs
 
         public ExecuteVerb()
         {
+            this.testsVerb = default!;
         }
 
         public ExecuteVerb(TestsVerb testsVerb)
@@ -20,11 +21,11 @@ namespace Sundew.CommandLine.AcceptanceTests.Verbs
             this.testsVerb = testsVerb;
         }
 
-        public IVerb NextVerb => null;
+        public IVerb? NextVerb => null;
 
         public string Name { get; } = "execute";
 
-        public string HelpText { get; }
+        public string HelpText { get; } = string.Empty;
 
         public void Configure(IArgumentsBuilder argumentsBuilder)
         {

@@ -68,7 +68,7 @@ namespace Sundew.CommandLine.Internal.Values
 
         public Result.IfError<GeneratorError> SerializeTo(StringBuilder stringBuilder, Settings settings)
         {
-            var wasSerialized = SerializationHelper.SerializeTo(this, this.List, stringBuilder, settings);
+            var wasSerialized = SerializationHelper.SerializeTo(this, this.List, stringBuilder, settings, null);
             if (!wasSerialized && this.IsRequired)
             {
                 return Result.Error(new GeneratorError(GeneratorErrorType.RequiredValuesMissing));
@@ -77,9 +77,18 @@ namespace Sundew.CommandLine.Internal.Values
             return Result.Success();
         }
 
-        public Result.IfError<ParserError> DeserializeFrom(ReadOnlySpan<char> argument, Settings settings)
+        public Result.IfError<ParserError> DeserializeFrom(ReadOnlySpan<char> value, ArgumentList argumentList, Settings settings)
         {
-            SerializationHelper.DeserializeTo(this.List, this.deserialize, argument, settings);
+            this.List.Clear();
+            SerializationHelper.DeserializeTo(this.List, this.deserialize, value, settings);
+            if (argumentList.TryMoveNext(out _))
+            {
+                foreach (var argument in argumentList)
+                {
+                    SerializationHelper.DeserializeTo(this.List, this.deserialize, CommandLineArgumentsParser.RemoveValueEscapeIfNeeded(argument.AsSpan()), settings);
+                }
+            }
+
             return Result.Success();
         }
     }

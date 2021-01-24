@@ -18,6 +18,9 @@ namespace Sundew.Git.CommandLine.LargeFileSystem
         public Lfs(ILfsVerb lfsVerb)
         {
             this.NextVerb = lfsVerb;
+            this.Install = default!;
+            this.Track = default!;
+            this.Untrack = default!;
         }
 
         /// <summary>Initializes a new instance of the <see cref="Lfs"/> class.</summary>
@@ -30,7 +33,7 @@ namespace Sundew.Git.CommandLine.LargeFileSystem
 
         /// <summary>Gets the next verb.</summary>
         /// <value>The next verb.</value>
-        public IVerb NextVerb { get; }
+        public IVerb? NextVerb { get; }
 
         /// <summary>Gets the install.</summary>
         /// <value>The install.</value>

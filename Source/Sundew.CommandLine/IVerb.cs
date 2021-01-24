@@ -15,7 +15,7 @@ namespace Sundew.CommandLine
     {
         /// <summary>Gets the next verb.</summary>
         /// <value>The next verb.</value>
-        IVerb NextVerb { get; }
+        IVerb? NextVerb { get; }
 
         /// <summary>Gets the name.</summary>
         /// <value>The name.</value>

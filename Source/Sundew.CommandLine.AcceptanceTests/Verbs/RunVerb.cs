@@ -30,7 +30,7 @@ namespace Sundew.CommandLine.AcceptanceTests.Verbs
             this.tasks = tasks;
         }
 
-        public IVerb NextVerb => null;
+        public IVerb? NextVerb => null;
 
         public IReadOnlyList<string> Tasks => this.tasks;
 

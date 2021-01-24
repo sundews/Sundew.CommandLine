@@ -21,7 +21,7 @@ namespace Sundew.CommandLine.AcceptanceTests.Git.LargeFileSystem
             const int expectedResult = 2;
             var commandLineGenerator = new CommandLineGenerator();
             var commandLineParser = new CommandLineParser<int, int>();
-            Track track = null;
+            Track? track = null;
             commandLineParser.AddVerb(new Lfs(), lfsVerb => Result.Success(0), builder =>
             {
                 builder.AddVerb(new Install(), install => Result.Success(1));
@@ -34,7 +34,7 @@ namespace Sundew.CommandLine.AcceptanceTests.Git.LargeFileSystem
 
             parseResult.IsSuccess.Should().BeTrue();
             parseResult.Value.Should().Be(expectedResult);
-            track.Pattern.Should().Be(expectedPattern);
+            track?.Pattern.Should().Be(expectedPattern);
         }
 
         [Fact]

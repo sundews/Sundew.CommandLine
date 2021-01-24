@@ -15,7 +15,7 @@ namespace Sundew.CommandLine.Internal
         /// <value>
         /// The name.
         /// </value>
-        string Name { get; }
+        string? Name { get; }
 
         /// <summary>
         /// Gets the alias.

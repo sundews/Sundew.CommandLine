@@ -21,22 +21,22 @@ namespace Sundew.Git.CommandLine
 
         /// <summary>Initializes a new instance of the <see cref="Init"/> class.</summary>
         /// <param name="directoryPath">The directory path.</param>
-        public Init(string directoryPath)
+        public Init(string? directoryPath)
         {
             this.DirectoryPath = directoryPath;
         }
 
         /// <summary>Gets the next verb.</summary>
         /// <value>The next verb.</value>
-        public IVerb NextVerb => null;
+        public IVerb? NextVerb => null;
 
         /// <summary>Gets the directory path.</summary>
         /// <value>The directory path.</value>
-        public string DirectoryPath { get; private set; }
+        public string? DirectoryPath { get; private set; }
 
         /// <summary>Gets or sets the template directory.</summary>
         /// <value>The template directory.</value>
-        public string TemplateDirectory { get; set; }
+        public string? TemplateDirectory { get; set; }
 
         /// <summary>Gets or sets a value indicating whether this <see cref="Init"/> is bare.</summary>
         /// <value>

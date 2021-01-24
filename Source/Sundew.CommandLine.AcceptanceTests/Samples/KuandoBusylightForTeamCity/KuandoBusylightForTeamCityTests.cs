@@ -26,15 +26,15 @@ namespace Sundew.CommandLine.AcceptanceTests.Samples.KuandoBusylightForTeamCity
         {
             var commandLine = $@"-h {ExpectedHost} -b {ExpectedBuildTypeId} -c -u {ExpectedUserName} -p {ExpectedPassword} -d ""\{ExpectedDevice}""";
             var testee = new CommandLineParser<RunOptions, int>();
-            testee.WithArguments(new RunOptions(null, null), options => Result.Success(options));
+            testee.WithArguments(new RunOptions(), options => Result.Success(options));
 
             var result = testee.Parse(commandLine);
 
             result.IsSuccess.Should().BeTrue();
             result.Value.HostName.Should().Be(ExpectedHost);
             result.Value.BuildTypeId.Should().Be(ExpectedBuildTypeId);
-            result.Value.Credentials.UserName.Should().Be(ExpectedUserName);
-            new NetworkCredential(string.Empty, result.Value.Credentials.Password).Password.Should().Be(ExpectedPassword);
+            result.Value.Credentials?.UserName.Should().Be(ExpectedUserName);
+            new NetworkCredential(string.Empty, result.Value.Credentials?.Password).Password.Should().Be(ExpectedPassword);
             result.Value.HidDeviceIds.First().Should().Be(ExpectedDevice);
         }
 
@@ -53,7 +53,7 @@ namespace Sundew.CommandLine.AcceptanceTests.Samples.KuandoBusylightForTeamCity
 ";
 
             var testee = new CommandLineParser<RunOptions, int>();
-            testee.WithArguments(new RunOptions(null, null), options => Result.Success(options));
+            testee.WithArguments(new RunOptions(), options => Result.Success(options));
 
             var result = testee.CreateHelpText();
 
@@ -65,7 +65,7 @@ namespace Sundew.CommandLine.AcceptanceTests.Samples.KuandoBusylightForTeamCity
         {
             var commandLine = $@"-h {ExpectedHost} -b {ExpectedBuildTypeId} -c -u {ExpectedUserName} -p {ExpectedPassword} -d ""\{ExpectedDevice}""";
             var testee = new CommandLineParser<RunOptions, int>();
-            testee.WithArguments(new RunOptions(null, null), options => Result.Success(options));
+            testee.WithArguments(new RunOptions(), options => Result.Success(options));
             var expectedResult = testee.CreateHelpText();
             testee.Parse(commandLine);
 
@@ -81,7 +81,7 @@ namespace Sundew.CommandLine.AcceptanceTests.Samples.KuandoBusylightForTeamCity
         {
             var commandLine = $@"-h {ExpectedHost} -b {ExpectedBuildTypeId} -c -u {ExpectedUserName} -p {ExpectedPassword} -d ""\{ExpectedDevice}""";
             var testee = new CommandLineParser<int, int>();
-            testee.WithArguments(new RunOptions(null, null), options =>
+            testee.WithArguments(new RunOptions(), options =>
             {
                 if (isSuccess)
                 {

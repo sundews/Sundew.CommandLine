@@ -19,7 +19,7 @@ namespace Sundew.CommandLine.Internal
 
         string Name { get; }
 
-        Result.IfError<ParserError> DeserializeFrom(ReadOnlySpan<char> argument, Settings settings);
+        Result.IfError<ParserError> DeserializeFrom(ReadOnlySpan<char> argument, ArgumentList argumentList, Settings settings);
 
         Result.IfError<GeneratorError> SerializeTo(StringBuilder stringBuilder, Settings settings);
     }

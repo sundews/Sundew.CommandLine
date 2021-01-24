@@ -19,7 +19,7 @@ namespace Sundew.CommandLine.AcceptanceTests.Samples.Aupli
         /// <param name="allowShutdown">if set to <c>true</c> [allow shutdown].</param>
         /// <param name="isLoggingToConsole">if set to <c>true</c> [is logging to console].</param>
         /// <param name="fileLogOptions">The file log options.</param>
-        public Options(bool allowShutdown, bool isLoggingToConsole, FileLogOptions fileLogOptions = null)
+        public Options(bool allowShutdown, bool isLoggingToConsole, FileLogOptions? fileLogOptions = null)
         {
             this.AllowShutdown = allowShutdown;
             this.IsLoggingToConsole = isLoggingToConsole;
@@ -48,7 +48,7 @@ namespace Sundew.CommandLine.AcceptanceTests.Samples.Aupli
         /// <value>
         /// The file log options.
         /// </value>
-        public FileLogOptions FileLogOptions { get; private set; }
+        public FileLogOptions? FileLogOptions { get; private set; }
 
         /// <summary>
         /// Configures the specified arguments builder.
@@ -74,7 +74,7 @@ namespace Sundew.CommandLine.AcceptanceTests.Samples.Aupli
                 "fl",
                 "file-log",
                 this.FileLogOptions,
-                () => new FileLogOptions(null),
+                () => new FileLogOptions(default!),
                 value => this.FileLogOptions = value,
                 "Specifies whether to use a File logger and it's options");
         }

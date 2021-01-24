@@ -10,14 +10,13 @@ namespace Sundew.CommandLine.Internal
     using System;
     using System.Globalization;
     using System.Text;
-    using Sundew.Base.Text;
     using Sundew.CommandLine.Internal.Helpers;
 
     internal sealed class Switch : INamedArgumentInfo
     {
         private readonly Action<bool> setValue;
 
-        public Switch(string name, string alias, bool isSet, Action<bool> setValue, string helpText)
+        public Switch(string? name, string alias, bool isSet, Action<bool> setValue, string helpText)
         {
             this.Name = name;
             this.Alias = alias;
@@ -27,7 +26,7 @@ namespace Sundew.CommandLine.Internal
             this.Usage = HelpTextHelper.GetUsage(name, alias);
         }
 
-        public string Name { get; }
+        public string? Name { get; }
 
         public string Alias { get; }
 

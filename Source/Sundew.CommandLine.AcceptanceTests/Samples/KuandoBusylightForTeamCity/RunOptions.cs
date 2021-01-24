@@ -15,7 +15,12 @@ namespace Sundew.CommandLine.AcceptanceTests.Samples.KuandoBusylightForTeamCity
     {
         private readonly List<string> hidDeviceIds;
 
-        public RunOptions(string hostName, string buildTypeId, CredentialOptions credentials = null, TimeSpan? refreshInterval = null, List<string> hidDeviceIds = null)
+        public RunOptions()
+        : this(default!, default!)
+        {
+        }
+
+        public RunOptions(string hostName, string buildTypeId, CredentialOptions? credentials = null, TimeSpan? refreshInterval = null, List<string>? hidDeviceIds = null)
         {
             this.HostName = hostName;
             this.BuildTypeId = buildTypeId;
@@ -28,9 +33,9 @@ namespace Sundew.CommandLine.AcceptanceTests.Samples.KuandoBusylightForTeamCity
 
         public string BuildTypeId { get; private set; }
 
-        public CredentialOptions Credentials { get; private set; }
+        public CredentialOptions? Credentials { get; private set; }
 
-        ICredentials IRunOptions.Credentials => this.Credentials;
+        ICredentials? IRunOptions.Credentials => this.Credentials;
 
         public TimeSpan RefreshInterval { get; private set; }
 
@@ -40,7 +45,7 @@ namespace Sundew.CommandLine.AcceptanceTests.Samples.KuandoBusylightForTeamCity
         {
             argumentsBuilder.AddRequired("h", "host-name", () => this.HostName, hostName => this.HostName = hostName, "Specifies the TeamCity host name");
             argumentsBuilder.AddRequired("b", "build-type-id", () => this.BuildTypeId, buildId => this.BuildTypeId = buildId, "Specifies the TeamCity build type id");
-            argumentsBuilder.AddOptional("c", "credentials", this.Credentials, () => new CredentialOptions(null, null), options => this.Credentials = options, "Specifies the credentials to connect to TeamCity");
+            argumentsBuilder.AddOptional("c", "credentials", this.Credentials, () => new CredentialOptions(), options => this.Credentials = options, "Specifies the credentials to connect to TeamCity");
             var refreshIntervalRange = new Interval<TimeSpan>(TimeSpan.FromMilliseconds(200), TimeSpan.FromMinutes(10));
             argumentsBuilder.AddOptional(
                 "ri",

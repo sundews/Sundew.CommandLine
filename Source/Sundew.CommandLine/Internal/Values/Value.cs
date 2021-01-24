@@ -51,7 +51,7 @@ namespace Sundew.CommandLine.Internal.Values
             this.deserialize(this.defaultValue.AsSpan(), cultureInfo);
         }
 
-        public Result.IfError<ParserError> DeserializeFrom(ReadOnlySpan<char> argument, Settings settings)
+        public Result.IfError<ParserError> DeserializeFrom(ReadOnlySpan<char> argument, ArgumentList argumentList, Settings settings)
         {
             if (this.hasBeenSet)
             {

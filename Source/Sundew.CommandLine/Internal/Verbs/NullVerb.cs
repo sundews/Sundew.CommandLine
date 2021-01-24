@@ -13,9 +13,10 @@ namespace Sundew.CommandLine.Internal.Verbs
 
         private NullVerb()
         {
+            this.NextVerb = default;
         }
 
-        public IVerb NextVerb { get; } = default!;
+        public IVerb? NextVerb { get; }
 
         public string Name { get; } = default!;
 

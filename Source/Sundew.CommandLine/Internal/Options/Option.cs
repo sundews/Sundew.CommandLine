@@ -22,7 +22,7 @@ namespace Sundew.CommandLine.Internal.Options
         private readonly string defaultValue;
 
         public Option(
-            string name,
+            string? name,
             string alias,
             Serialize serialize,
             Deserialize deserialize,
@@ -44,7 +44,7 @@ namespace Sundew.CommandLine.Internal.Options
             this.defaultValue = this.serialize(cultureInfo).ToString();
         }
 
-        public string Name { get; }
+        public string? Name { get; }
 
         public string Alias { get; }
 
@@ -58,7 +58,7 @@ namespace Sundew.CommandLine.Internal.Options
 
         public Separators Separators { get; }
 
-        public Result.IfError<GeneratorError> SerializeTo(StringBuilder stringBuilder, Settings settings, bool useAliases)
+        public Result<bool, GeneratorError> SerializeTo(StringBuilder stringBuilder, Settings settings, bool useAliases)
         {
             var serializedValue = this.SerializeValue(settings);
             if (serializedValue.IsEmpty)
@@ -68,7 +68,7 @@ namespace Sundew.CommandLine.Internal.Options
                     return Result.Error(new GeneratorError(this, GeneratorErrorType.RequiredOptionMissing));
                 }
 
-                return Result.Success();
+                return Result.Success(false);
             }
 
             var usedAlias = SerializationHelper.AppendNameOrAlias(stringBuilder, this.Name, this.Alias, useAliases);
@@ -78,7 +78,7 @@ namespace Sundew.CommandLine.Internal.Options
             stringBuilder.Append(serializedValue);
             SerializationHelper.AppendQuotes(stringBuilder, this.useDoubleQuotes);
 
-            return Result.Success();
+            return Result.Success(true);
         }
 
         public Result.IfError<ParserError> DeserializeFrom(

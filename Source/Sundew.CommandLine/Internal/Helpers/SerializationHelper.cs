@@ -27,13 +27,14 @@ namespace Sundew.CommandLine.Internal.Helpers
             }
         }
 
-        public static bool SerializeTo<TItem>(IListSerializationInfo<TItem> listSerializationInfo, IList<TItem> list, StringBuilder stringBuilder, Settings settings)
+        public static bool SerializeTo<TItem>(IListSerializationInfo<TItem> listSerializationInfo, IList<TItem> list, StringBuilder stringBuilder, Settings settings, Action? prependAction)
         {
             if (list.Count > 0)
             {
                 var value = SerializeValue(listSerializationInfo.Serialize, list, 0, settings);
                 if (!value.IsEmpty)
                 {
+                    prependAction?.Invoke();
                     AppendValue(stringBuilder, value, listSerializationInfo.UseDoubleQuotes);
                 }
             }
@@ -55,7 +56,7 @@ namespace Sundew.CommandLine.Internal.Helpers
             return list.Any();
         }
 
-        public static bool AppendNameOrAlias(StringBuilder stringBuilder, string name, string alias, bool preferAliases)
+        public static bool AppendNameOrAlias(StringBuilder stringBuilder, string? name, string alias, bool preferAliases)
         {
             if (string.IsNullOrEmpty(name) || (preferAliases && !string.IsNullOrEmpty(alias)))
             {

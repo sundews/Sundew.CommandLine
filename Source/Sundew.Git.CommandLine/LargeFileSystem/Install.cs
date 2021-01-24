@@ -15,7 +15,7 @@ namespace Sundew.Git.CommandLine.LargeFileSystem
     {
         /// <summary>Gets the next verb.</summary>
         /// <value>The next verb.</value>
-        public IVerb NextVerb => null;
+        public IVerb? NextVerb => null;
 
         /// <summary>Gets the help text.</summary>
         /// <value>The help text.</value>

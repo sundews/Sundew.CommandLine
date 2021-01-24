@@ -41,7 +41,7 @@ namespace Sundew.CommandLine.AcceptanceTests.Verbs
 
         string IVerb.Name => "run";
 
-        public IVerb NextVerb => null;
+        public IVerb? NextVerb => null;
 
         string IVerb.HelpText => "Runs the generator";
 

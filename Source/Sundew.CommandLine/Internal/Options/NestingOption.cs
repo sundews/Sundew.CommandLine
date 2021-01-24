@@ -22,7 +22,7 @@ namespace Sundew.CommandLine.Internal.Options
         private readonly ArgumentsBuilder argumentsBuilder = new ArgumentsBuilder();
 
         public NestingOption(
-            string name,
+            string? name,
             string alias,
             TOptions? options,
             Func<TOptions> getDefault,
@@ -40,7 +40,7 @@ namespace Sundew.CommandLine.Internal.Options
             this.Usage = HelpTextHelper.GetUsage(name, alias);
         }
 
-        public string Name { get; }
+        public string? Name { get; }
 
         public string Alias { get; }
 
@@ -55,7 +55,7 @@ namespace Sundew.CommandLine.Internal.Options
         public string HelpText { get; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2208:Instantiate argument exceptions correctly", Justification = "It's the proposed way of handling missing cases for enum switches.")]
-        public Result.IfError<GeneratorError> SerializeTo(StringBuilder stringBuilder, Settings settings, bool useAliases)
+        public Result<bool, GeneratorError> SerializeTo(StringBuilder stringBuilder, Settings settings, bool useAliases)
         {
             var actualOption = this.options == null && this.IsRequired ? this.getDefault() : this.options;
             if (actualOption != null)
@@ -66,7 +66,7 @@ namespace Sundew.CommandLine.Internal.Options
 
                 if (result)
                 {
-                    return result;
+                    return result.WithValue(true);
                 }
 
                 var error = result.Error;
@@ -79,13 +79,13 @@ namespace Sundew.CommandLine.Internal.Options
                             error.SerializationException!);
                     case GeneratorErrorType.RequiredOptionMissing:
                     case GeneratorErrorType.InnerGeneratorError:
-                        return result.ConvertError(innerGeneratorError => new GeneratorError(this, innerGeneratorError));
+                        return result.Convert(false, innerGeneratorError => new GeneratorError(this, innerGeneratorError));
                     default:
                         throw new ArgumentOutOfRangeException(nameof(error.Type), error.Type, string.Format(settings.CultureInfo, Constants.ErrorTypeNotSupportedFormat, error.Type));
                 }
             }
 
-            return Result.Success();
+            return Result.Success(false);
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2208:Instantiate argument exceptions correctly", Justification = "It's the proposed way of handling missing cases for enum switches.")]

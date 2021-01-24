@@ -28,10 +28,13 @@ namespace Sundew.CommandLine.Internal
                     var serializeResult = option.SerializeTo(stringBuilder, settings, useAliases);
                     if (!serializeResult)
                     {
-                        return serializeResult;
+                        return Result.Error(serializeResult.Error);
                     }
 
-                    stringBuilder.Append(Constants.SpaceCharacter);
+                    if (serializeResult.Value)
+                    {
+                        stringBuilder.Append(Constants.SpaceCharacter);
+                    }
                 }
 
                 foreach (var @switch in argumentsBuilder.Switches)

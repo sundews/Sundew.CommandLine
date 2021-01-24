@@ -9,7 +9,7 @@ namespace Sundew.CommandLine.AcceptanceTests.Verbs
 {
     public class ParameterLessVerb : IVerb
     {
-        public IVerb NextVerb => null;
+        public IVerb? NextVerb => null;
 
         public string HelpText => "Runs something";
 

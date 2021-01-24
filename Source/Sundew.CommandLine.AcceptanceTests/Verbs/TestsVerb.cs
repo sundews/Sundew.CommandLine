@@ -9,9 +9,9 @@ namespace Sundew.CommandLine.AcceptanceTests.Verbs
 {
     public class TestsVerb : IVerb
     {
-        public IVerb NextVerb => null;
+        public IVerb? NextVerb => null;
 
-        public string HelpText { get; }
+        public string HelpText { get; } = string.Empty;
 
         public string Name => "tests";
 

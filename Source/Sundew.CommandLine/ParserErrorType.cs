@@ -54,7 +54,7 @@ namespace Sundew.CommandLine
         Info,
 
         /// <summary>
-        /// The inner parser error
+        /// The inner parser error.
         /// </summary>
         InnerParserError,
 
@@ -66,7 +66,7 @@ namespace Sundew.CommandLine
         /// </summary>
         UnknownOption,
 
-        /// <summary>The invalid start index</summary>
+        /// <summary>The invalid start index.</summary>
         InvalidStartIndex,
     }
 }

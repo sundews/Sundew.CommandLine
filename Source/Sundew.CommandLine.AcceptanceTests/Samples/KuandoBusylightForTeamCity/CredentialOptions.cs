@@ -12,6 +12,11 @@ namespace Sundew.CommandLine.AcceptanceTests.Samples.KuandoBusylightForTeamCity
 
     public class CredentialOptions : IArguments, ICredentials
     {
+        public CredentialOptions()
+        : this(default!, default!)
+        {
+        }
+
         public CredentialOptions(string userName, SecureString password)
         {
             this.UserName = userName;

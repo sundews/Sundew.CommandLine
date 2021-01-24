@@ -1,25 +1,13 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="IRunOptions.cs" company="Hukano">
+// <copyright file="PackageId.cs" company="Hukano">
 // Copyright (c) Hukano. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.AcceptanceTests.Samples.KuandoBusylightForTeamCity
+namespace Sundew.CommandLine.AcceptanceTests.Sbu
 {
     using System;
-    using System.Collections.Generic;
 
-    public interface IRunOptions
-    {
-        string HostName { get; }
-
-        string BuildTypeId { get; }
-
-        ICredentials? Credentials { get; }
-
-        TimeSpan RefreshInterval { get; }
-
-        IReadOnlyList<string> HidDeviceIds { get; }
-    }
+    public record PackageId(string Id, Version? Version);
 }

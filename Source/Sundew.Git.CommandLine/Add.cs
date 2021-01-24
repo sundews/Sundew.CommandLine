@@ -16,6 +16,7 @@ namespace Sundew.Git.CommandLine
         /// <summary>Initializes a new instance of the <see cref="Add"/> class.</summary>
         public Add()
         {
+            this.DirectoryOrFilePath = default!;
         }
 
         /// <summary>Initializes a new instance of the <see cref="Add"/> class.</summary>
@@ -27,7 +28,7 @@ namespace Sundew.Git.CommandLine
 
         /// <summary>Gets the next verb.</summary>
         /// <value>The next verb.</value>
-        public IVerb NextVerb => null;
+        public IVerb? NextVerb => null;
 
         /// <summary>Gets the directory or file path.</summary>
         /// <value>The directory or file path.</value>

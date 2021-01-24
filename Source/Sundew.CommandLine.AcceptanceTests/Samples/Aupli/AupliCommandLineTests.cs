@@ -30,8 +30,8 @@ namespace Sundew.CommandLine.AcceptanceTests.Samples.Aupli
             result.IsSuccess.Should().BeTrue();
             result.Value.AllowShutdown.Should().BeTrue();
             result.Value.IsLoggingToConsole.Should().BeTrue();
-            result.Value.FileLogOptions.LogPath.Should().Be(ExpectedLogPath);
-            result.Value.FileLogOptions.MaxLogFileSizeInBytes.Should().Be(ExpectedMaxLogFileSizeInBytes);
+            result.Value.FileLogOptions?.LogPath.Should().Be(ExpectedLogPath);
+            result.Value.FileLogOptions?.MaxLogFileSizeInBytes.Should().Be(ExpectedMaxLogFileSizeInBytes);
         }
 
         [Fact]
@@ -47,7 +47,7 @@ namespace Sundew.CommandLine.AcceptanceTests.Samples.Aupli
 
             result.IsSuccess.Should().BeFalse();
             result.Error.Type.Should().Be(ParserErrorType.InnerParserError);
-            result.Error.InnerParserError.Type.Should().Be(ParserErrorType.RequiredArgumentMissing);
+            result.Error.InnerParserError!.Type.Should().Be(ParserErrorType.RequiredArgumentMissing);
         }
 
         [Fact]
@@ -177,7 +177,7 @@ namespace Sundew.CommandLine.AcceptanceTests.Samples.Aupli
             string expectedText = $@"Error:
   The argument for the option: -lp/--log-path is missing.";
             var commandLineParser = new CommandLineParser<FileLogOptions, int>();
-            commandLineParser.WithArguments(new FileLogOptions(null), options => Result.Success(options));
+            commandLineParser.WithArguments(new FileLogOptions(string.Empty), options => Result.Success(options));
             var parserResult = commandLineParser.Parse($@"-lp """);
 
             var result = parserResult.Error.ToString();
@@ -193,7 +193,7 @@ namespace Sundew.CommandLine.AcceptanceTests.Samples.Aupli
             var commandLine = $@"-lp ""c:\temp\log.txt"" --max-size {ExpectedMaxLogFileSizeInBytes} --max-files 2";
 
             var commandLineParser = new CommandLineParser<FileLogOptions, int>();
-            commandLineParser.WithArguments(new FileLogOptions(null), options => Result.Success(options));
+            commandLineParser.WithArguments(new FileLogOptions(string.Empty), options => Result.Success(options));
             commandLineParser.Parse(commandLine);
 
             var result = commandLineParser.Parse($@"-lp ""{expectedLogPath}""");

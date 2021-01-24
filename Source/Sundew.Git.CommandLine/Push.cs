@@ -16,6 +16,7 @@ namespace Sundew.Git.CommandLine
         /// <summary>Initializes a new instance of the <see cref="Push"/> class.</summary>
         public Push()
         {
+            this.Repository = default!;
         }
 
         /// <summary>Initializes a new instance of the <see cref="Push"/> class.</summary>
@@ -27,7 +28,7 @@ namespace Sundew.Git.CommandLine
 
         /// <summary>Gets the next verb.</summary>
         /// <value>The next verb.</value>
-        public IVerb NextVerb => null;
+        public IVerb? NextVerb => null;
 
         /// <summary>Gets the help text.</summary>
         /// <value>The help text.</value>
@@ -43,7 +44,7 @@ namespace Sundew.Git.CommandLine
 
         /// <summary>Gets or sets the push option.</summary>
         /// <value>The push option.</value>
-        public string PushOption { get; set; }
+        public string? PushOption { get; set; }
 
         /// <summary>Gets the repository.</summary>
         /// <value>The repository.</value>

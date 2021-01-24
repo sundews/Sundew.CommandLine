@@ -20,18 +20,18 @@ namespace Sundew.Git.CommandLine
 
         /// <summary>Initializes a new instance of the <see cref="Commit"/> class.</summary>
         /// <param name="message">The message.</param>
-        public Commit(string message)
+        public Commit(string? message)
         {
             this.Message = message;
         }
 
         /// <summary>Gets the next verb.</summary>
         /// <value>The next verb.</value>
-        public IVerb NextVerb => null;
+        public IVerb? NextVerb => null;
 
         /// <summary>Gets the message.</summary>
         /// <value>The message.</value>
-        public string Message { get; private set; }
+        public string? Message { get; private set; }
 
         /// <summary>Gets or sets a value indicating whether this command is verbose.</summary>
         /// <value>

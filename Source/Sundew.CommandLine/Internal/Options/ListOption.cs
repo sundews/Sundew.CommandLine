@@ -21,7 +21,7 @@ namespace Sundew.CommandLine.Internal.Options
         private readonly Deserialize<TValue> deserialize;
 
         public ListOption(
-            string name,
+            string? name,
             string alias,
             IList<TValue> list,
             Serialize<TValue> serialize,
@@ -42,7 +42,7 @@ namespace Sundew.CommandLine.Internal.Options
             this.Usage = HelpTextHelper.GetUsage(name, alias);
         }
 
-        public string Name { get; }
+        public string? Name { get; }
 
         public string Alias { get; }
 
@@ -64,17 +64,19 @@ namespace Sundew.CommandLine.Internal.Options
 
         public bool IsNesting => false;
 
-        public Result.IfError<GeneratorError> SerializeTo(StringBuilder stringBuilder, Settings settings, bool useAliases)
+        public Result<bool, GeneratorError> SerializeTo(StringBuilder stringBuilder, Settings settings, bool useAliases)
         {
-            SerializationHelper.AppendNameOrAlias(stringBuilder, this.Name, this.Alias, useAliases);
-            stringBuilder.Append(Constants.SpaceCharacter);
-            var wasSerialized = SerializationHelper.SerializeTo(this, this.List, stringBuilder, settings);
+            var wasSerialized = SerializationHelper.SerializeTo(this, this.List, stringBuilder, settings, () =>
+            {
+                SerializationHelper.AppendNameOrAlias(stringBuilder, this.Name, this.Alias, useAliases);
+                stringBuilder.Append(Constants.SpaceCharacter);
+            });
             if (!wasSerialized && this.IsRequired)
             {
                 return Result.Error(new GeneratorError(this, GeneratorErrorType.RequiredOptionMissing));
             }
 
-            return Result.Success();
+            return Result.Success(wasSerialized);
         }
 
         public Result.IfError<ParserError> DeserializeFrom(
@@ -83,6 +85,7 @@ namespace Sundew.CommandLine.Internal.Options
             ReadOnlySpan<char> value,
             Settings settings)
         {
+            this.List.Clear();
             var currentResult = this.DeserializeFrom(value, settings);
             if (argumentList.TryMoveNext(out _))
             {
@@ -121,7 +124,7 @@ namespace Sundew.CommandLine.Internal.Options
             }
 
             stringBuilder.Append(Constants.DefaultText);
-            if (!SerializationHelper.SerializeTo(this, this.DefaultList, stringBuilder, settings))
+            if (!SerializationHelper.SerializeTo(this, this.DefaultList, stringBuilder, settings, null))
             {
                 stringBuilder.AppendLine(Constants.NoneText);
             }
