@@ -28,7 +28,11 @@ namespace Sundew.CommandLine
             }
             else
             {
-                Console.ForegroundColor = ConsoleColor.Red;
+                if (result.Error.Type != ParserErrorType.HelpRequested)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                }
+
                 Console.WriteLine(result.Error);
                 Console.ResetColor();
             }

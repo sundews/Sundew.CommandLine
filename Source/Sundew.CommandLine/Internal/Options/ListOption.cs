@@ -126,8 +126,10 @@ namespace Sundew.CommandLine.Internal.Options
             stringBuilder.Append(Constants.DefaultText);
             if (!SerializationHelper.SerializeTo(this, this.DefaultList, stringBuilder, settings, null))
             {
-                stringBuilder.AppendLine(Constants.NoneText);
+                stringBuilder.Append(Constants.NoneText);
             }
+
+            stringBuilder.AppendLine(string.Empty);
         }
 
         private Result.IfError<ParserError> DeserializeFrom(ReadOnlySpan<char> value, Settings settings)
