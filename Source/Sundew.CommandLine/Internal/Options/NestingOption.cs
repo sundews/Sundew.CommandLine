@@ -8,6 +8,7 @@
 namespace Sundew.CommandLine.Internal.Options
 {
     using System;
+    using System.Collections.Generic;
     using System.Globalization;
     using System.Text;
     using Sundew.Base.Computation;
@@ -36,7 +37,7 @@ namespace Sundew.CommandLine.Internal.Options
             this.Name = name;
             this.Alias = alias;
             this.IsRequired = isRequired;
-            this.HelpText = helpText;
+            this.HelpLines = HelpTextHelper.GetHelpLines(helpText);
             this.Usage = HelpTextHelper.GetUsage(name, alias);
         }
 
@@ -52,7 +53,7 @@ namespace Sundew.CommandLine.Internal.Options
 
         public string Usage { get; }
 
-        public string HelpText { get; }
+        public IReadOnlyList<string> HelpLines { get; }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2208:Instantiate argument exceptions correctly", Justification = "It's the proposed way of handling missing cases for enum switches.")]
         public Result<bool, GeneratorError> SerializeTo(StringBuilder stringBuilder, Settings settings, bool useAliases)
@@ -158,17 +159,17 @@ namespace Sundew.CommandLine.Internal.Options
         {
             if (this.IsRequired)
             {
-                stringBuilder.AppendLine(Constants.RequiredText);
+                stringBuilder.Append(Constants.RequiredText);
                 return;
             }
 
             if (this.options == null)
             {
-                stringBuilder.AppendLine(Constants.DefaultText + Constants.NoneText);
+                stringBuilder.Append(Constants.DefaultText + Constants.NoneText);
                 return;
             }
 
-            stringBuilder.AppendLine(Constants.DefaultText + Constants.SeeBelowText);
+            stringBuilder.Append(Constants.DefaultText + Constants.SeeBelowText);
         }
 
         private static Result.IfError<GeneratorError> SerializeValue(TOptions options, StringBuilder stringBuilder, Settings settings, bool useAliases)

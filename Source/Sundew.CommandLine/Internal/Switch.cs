@@ -8,6 +8,7 @@
 namespace Sundew.CommandLine.Internal
 {
     using System;
+    using System.Collections.Generic;
     using System.Globalization;
     using System.Text;
     using Sundew.CommandLine.Internal.Helpers;
@@ -22,7 +23,7 @@ namespace Sundew.CommandLine.Internal
             this.Alias = alias;
             this.DefaultValue = this.IsSet = isSet;
             this.setValue = setValue;
-            this.HelpText = helpText;
+            this.HelpLines = HelpTextHelper.GetHelpLines(helpText);
             this.Usage = HelpTextHelper.GetUsage(name, alias);
         }
 
@@ -34,7 +35,7 @@ namespace Sundew.CommandLine.Internal
 
         public string Usage { get; }
 
-        public string HelpText { get; }
+        public IReadOnlyList<string> HelpLines { get; }
 
         public bool IsNesting => false;
 
@@ -72,10 +73,21 @@ namespace Sundew.CommandLine.Internal
             var maxAliasPadRight = -maxAlias;
             stringBuilder.AppendFormat(
                 cultureInfo,
-                $@"  {(isForVerb ? Constants.SpaceText : string.Empty)}{HelpTextHelper.GetIndentation(indent)}{{0,{maxNamePadRight}}}{Constants.HelpSeparator}{{1,{maxAliasPadRight}}}{Constants.HelpSeparator}{{2}}{Environment.NewLine}",
+                $@"  {(isForVerb ? Constants.SpaceText : string.Empty)}{HelpTextHelper.GetIndentation(indent)}{{0,{maxNamePadRight}}}{Constants.HelpSeparator}{{1,{maxAliasPadRight}}}{Constants.HelpSeparator}{{2}}",
                 this.Name != null ? $"{Constants.ArgumentStartCharacter}{this.Name}" : string.Empty,
                 this.Alias != null ? $"{Constants.DoubleDashText}{this.Alias}" : string.Empty,
-                this.HelpText);
+                this.HelpLines[0]);
+            for (int i = 1; i < this.HelpLines.Count; i++)
+            {
+                stringBuilder.AppendFormat(
+                    cultureInfo,
+                    $@"{Environment.NewLine}  {(isForVerb ? Constants.SpaceText : string.Empty)}{HelpTextHelper.GetIndentation(indent)}{{0,{maxNamePadRight}}}{Constants.HelpSeparator}{{1,{maxAliasPadRight}}}{Constants.HelpSeparator}{{2}}",
+                    string.Empty,
+                    string.Empty,
+                    this.HelpLines[i]);
+            }
+
+            stringBuilder.AppendLine();
         }
     }
 }

@@ -9,5 +9,5 @@ namespace Sundew.CommandLine.AcceptanceTests.Sbu
 {
     using System;
 
-    public record PackageId(string Id, Version? Version);
+    public record PackageId(string Id, Version? Version = null);
 }

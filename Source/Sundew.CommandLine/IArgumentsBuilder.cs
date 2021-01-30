@@ -105,7 +105,9 @@ namespace Sundew.CommandLine
         /// <param name="useDoubleQuotes">if set to <c>true</c> [use double quotes].</param>
         void AddRequiredList<TValue>(string? name, string alias, IList<TValue> list, Serialize<TValue> serialize, Deserialize<TValue> deserialize, string helpText, bool useDoubleQuotes = false);
 
-        /// <summary>Adds the optional.</summary>
+        /// <summary>
+        /// Adds the optional.
+        /// </summary>
         /// <param name="name">The short name.</param>
         /// <param name="alias">The long name.</param>
         /// <param name="serialize">The serialize.</param>
@@ -113,9 +115,12 @@ namespace Sundew.CommandLine
         /// <param name="helpText">The helpText.</param>
         /// <param name="useDoubleQuotes">if set to <c>true</c> the item is wrapped in double quotes.</param>
         /// <param name="separators">Defines the value separators.</param>
-        void AddOptional(string? name, string alias, Func<string?> serialize, Action<string> deserialize, string helpText, bool useDoubleQuotes = false, Separators separators = default);
+        /// <param name="defaultValueText">The default value help text.</param>
+        void AddOptional(string? name, string alias, Func<string?> serialize, Action<string> deserialize, string helpText, bool useDoubleQuotes = false, Separators separators = default, string? defaultValueText = null);
 
-        /// <summary>Adds the optional.</summary>
+        /// <summary>
+        /// Adds the optional.
+        /// </summary>
         /// <param name="name">The name.</param>
         /// <param name="alias">The alias.</param>
         /// <param name="serialize">The serialize.</param>
@@ -123,7 +128,8 @@ namespace Sundew.CommandLine
         /// <param name="helpText">The help text.</param>
         /// <param name="useDoubleQuotes">if set to <c>true</c> [use double quotes].</param>
         /// <param name="separators">The separators.</param>
-        void AddOptional(string? name, string alias, Func<CultureInfo, string?> serialize, Action<string, CultureInfo> deserialize, string helpText, bool useDoubleQuotes = false, Separators separators = default);
+        /// <param name="defaultValueText">The default value help text.</param>
+        void AddOptional(string? name, string alias, Func<CultureInfo, string?> serialize, Action<string, CultureInfo> deserialize, string helpText, bool useDoubleQuotes = false, Separators separators = default, string? defaultValueText = null);
 
         /// <summary>
         /// Adds the optional.
@@ -135,7 +141,8 @@ namespace Sundew.CommandLine
         /// <param name="getDefault">The get default.</param>
         /// <param name="setOptions">The set options.</param>
         /// <param name="helpText">The help text.</param>
-        void AddOptional<TOptions>(string? name, string alias, TOptions? options, Func<TOptions> getDefault, Action<TOptions> setOptions, string helpText)
+        /// <param name="defaultValueText">The default value help text.</param>
+        void AddOptional<TOptions>(string? name, string alias, TOptions? options, Func<TOptions> getDefault, Action<TOptions> setOptions, string helpText, string? defaultValueText = null)
             where TOptions : class, IArguments;
 
         /// <summary>
@@ -146,7 +153,8 @@ namespace Sundew.CommandLine
         /// <param name="list">The list.</param>
         /// <param name="helpText">The helpText.</param>
         /// <param name="useDoubleQuotes">if set to <c>true</c> each item is wrapped in double quotes.</param>
-        void AddOptionalList(string? name, string alias, IList<string> list, string helpText, bool useDoubleQuotes = false);
+        /// <param name="defaultValueText">The default value help text.</param>
+        void AddOptionalList(string? name, string alias, IList<string> list, string helpText, bool useDoubleQuotes = false, string? defaultValueText = null);
 
         /// <summary>
         /// Adds the optional list.
@@ -159,7 +167,8 @@ namespace Sundew.CommandLine
         /// <param name="deserialize">The deserialize.</param>
         /// <param name="helpText">The help text.</param>
         /// <param name="useDoubleQuotes">if set to <c>true</c> [use double quotes].</param>
-        void AddOptionalList<TValue>(string? name, string alias, IList<TValue> list, Func<TValue, CultureInfo, string> serialize, Func<string, CultureInfo, TValue> deserialize, string helpText, bool useDoubleQuotes = false);
+        /// <param name="defaultValueText">The default value help text.</param>
+        void AddOptionalList<TValue>(string? name, string alias, IList<TValue> list, Func<TValue, CultureInfo, string> serialize, Func<string, CultureInfo, TValue> deserialize, string helpText, bool useDoubleQuotes = false, string? defaultValueText = null);
 
         /// <summary>
         /// Adds the optional list.
@@ -172,7 +181,8 @@ namespace Sundew.CommandLine
         /// <param name="deserialize">The deserialize.</param>
         /// <param name="helpText">The helpText.</param>
         /// <param name="useDoubleQuotes">if set to <c>true</c> each item is wrapped in double quotes.</param>
-        void AddOptionalList<TValue>(string? name, string alias, IList<TValue> list, Serialize<TValue> serialize, Deserialize<TValue> deserialize, string helpText, bool useDoubleQuotes = false);
+        /// <param name="defaultValueText">The default value help text.</param>
+        void AddOptionalList<TValue>(string? name, string alias, IList<TValue> list, Serialize<TValue> serialize, Deserialize<TValue> deserialize, string helpText, bool useDoubleQuotes = false, string? defaultValueText = null);
 
         /// <summary>
         /// Adds the switch.
@@ -208,29 +218,38 @@ namespace Sundew.CommandLine
         /// <param name="useDoubleQuotes">if set to <c>true</c> [use double quotes].</param>
         void AddRequiredValue(string name, Serialize serialize, Deserialize deserialize, string helpText, bool useDoubleQuotes = false);
 
-        /// <summary>Adds the optional value.</summary>
+        /// <summary>
+        /// Adds the optional value.
+        /// </summary>
         /// <param name="name">The name.</param>
         /// <param name="serialize">The serialize.</param>
         /// <param name="deserialize">The deserialize.</param>
         /// <param name="helpText">The help text.</param>
         /// <param name="useDoubleQuotes">if set to <c>true</c> [use double quotes].</param>
-        void AddOptionalValue(string name, Func<string?> serialize, Action<string> deserialize, string helpText, bool useDoubleQuotes = false);
+        /// <param name="defaultValueText">The default value help text.</param>
+        void AddOptionalValue(string name, Func<string?> serialize, Action<string> deserialize, string helpText, bool useDoubleQuotes = false, string? defaultValueText = null);
 
-        /// <summary>Adds the optional value.</summary>
+        /// <summary>
+        /// Adds the optional value.
+        /// </summary>
         /// <param name="name">The name.</param>
         /// <param name="serialize">The serialize.</param>
         /// <param name="deserialize">The deserialize.</param>
         /// <param name="helpText">The help text.</param>
         /// <param name="useDoubleQuotes">if set to <c>true</c> [use double quotes].</param>
-        void AddOptionalValue(string name, Func<CultureInfo, string> serialize, Action<string, CultureInfo> deserialize, string helpText, bool useDoubleQuotes = false);
+        /// <param name="defaultValueText">The default value help text.</param>
+        void AddOptionalValue(string name, Func<CultureInfo, string> serialize, Action<string, CultureInfo> deserialize, string helpText, bool useDoubleQuotes = false, string? defaultValueText = null);
 
-        /// <summary>Adds the optional value.</summary>
+        /// <summary>
+        /// Adds the optional value.
+        /// </summary>
         /// <param name="name">The name.</param>
         /// <param name="serialize">The serialize.</param>
         /// <param name="deserialize">The deserialize.</param>
         /// <param name="helpText">The help text.</param>
         /// <param name="useDoubleQuotes">if set to <c>true</c> [use double quotes].</param>
-        void AddOptionalValue(string name, Serialize serialize, Deserialize deserialize, string helpText, bool useDoubleQuotes = false);
+        /// <param name="defaultValueText">The default value help text.</param>
+        void AddOptionalValue(string name, Serialize serialize, Deserialize deserialize, string helpText, bool useDoubleQuotes = false, string? defaultValueText = null);
 
         /// <summary>Adds the required values.</summary>
         /// <typeparam name="TValue">The type of the value.</typeparam>
@@ -259,7 +278,9 @@ namespace Sundew.CommandLine
         /// <param name="useDoubleQuotes">if set to <c>true</c> [use double quotes].</param>
         void AddRequiredValues(string name, IList<string> values, string helpText, bool useDoubleQuotes = false);
 
-        /// <summary>Adds the optional values.</summary>
+        /// <summary>
+        /// Adds the optional values.
+        /// </summary>
         /// <typeparam name="TValue">The type of the value.</typeparam>
         /// <param name="name">The name.</param>
         /// <param name="values">The values.</param>
@@ -267,9 +288,12 @@ namespace Sundew.CommandLine
         /// <param name="deserialize">The deserialize.</param>
         /// <param name="helpText">The help text.</param>
         /// <param name="useDoubleQuotes">if set to <c>true</c> [use double quotes].</param>
-        void AddOptionalValues<TValue>(string name, IList<TValue> values, Func<TValue, CultureInfo, string> serialize, Func<string, CultureInfo, TValue> deserialize, string helpText, bool useDoubleQuotes = false);
+        /// <param name="defaultValueText">The default value help text.</param>
+        void AddOptionalValues<TValue>(string name, IList<TValue> values, Func<TValue, CultureInfo, string> serialize, Func<string, CultureInfo, TValue> deserialize, string helpText, bool useDoubleQuotes = false, string? defaultValueText = null);
 
-        /// <summary>Adds the optional values.</summary>
+        /// <summary>
+        /// Adds the optional values.
+        /// </summary>
         /// <typeparam name="TValue">The type of the value.</typeparam>
         /// <param name="name">The name.</param>
         /// <param name="values">The values.</param>
@@ -277,13 +301,17 @@ namespace Sundew.CommandLine
         /// <param name="deserialize">The deserialize.</param>
         /// <param name="helpText">The help text.</param>
         /// <param name="useDoubleQuotes">if set to <c>true</c> [use double quotes].</param>
-        void AddOptionalValues<TValue>(string name, IList<TValue> values, Serialize<TValue> serialize, Deserialize<TValue> deserialize, string helpText, bool useDoubleQuotes = false);
+        /// <param name="defaultValueText">The default value help text.</param>
+        void AddOptionalValues<TValue>(string name, IList<TValue> values, Serialize<TValue> serialize, Deserialize<TValue> deserialize, string helpText, bool useDoubleQuotes = false, string? defaultValueText = null);
 
-        /// <summary>Adds the optional values.</summary>
+        /// <summary>
+        /// Adds the optional values.
+        /// </summary>
         /// <param name="name">The name.</param>
         /// <param name="values">The values.</param>
         /// <param name="helpText">The help text.</param>
         /// <param name="useDoubleQuotes">if set to <c>true</c> [use double quotes].</param>
-        void AddOptionalValues(string name, IList<string> values, string helpText, bool useDoubleQuotes = false);
+        /// <param name="defaultValueText">The default value help text.</param>
+        void AddOptionalValues(string name, IList<string> values, string helpText, bool useDoubleQuotes = false, string? defaultValueText = null);
     }
 }

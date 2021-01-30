@@ -8,6 +8,7 @@
 namespace Sundew.CommandLine.Internal.Options
 {
     using System;
+    using System.Collections.Generic;
     using System.Globalization;
     using System.Text;
     using Sundew.Base.Computation;
@@ -19,6 +20,7 @@ namespace Sundew.CommandLine.Internal.Options
         private readonly Deserialize deserialize;
         private readonly Serialize serialize;
         private readonly bool useDoubleQuotes;
+        private readonly string? defaultValueHelpText;
         private readonly string defaultValue;
 
         public Option(
@@ -30,15 +32,17 @@ namespace Sundew.CommandLine.Internal.Options
             string helpText,
             bool useDoubleQuotes,
             Separators separators,
-            CultureInfo cultureInfo)
+            CultureInfo cultureInfo,
+            string? defaultValueHelpText)
         {
             this.Name = name;
             this.Alias = alias;
             this.serialize = serialize;
             this.deserialize = deserialize;
             this.useDoubleQuotes = useDoubleQuotes;
+            this.defaultValueHelpText = defaultValueHelpText;
             this.IsRequired = isRequired;
-            this.HelpText = helpText;
+            this.HelpLines = HelpTextHelper.GetHelpLines(helpText);
             this.Separators = separators;
             this.Usage = HelpTextHelper.GetUsage(name, alias);
             this.defaultValue = this.serialize(cultureInfo).ToString();
@@ -54,7 +58,7 @@ namespace Sundew.CommandLine.Internal.Options
 
         public string Usage { get; }
 
-        public string HelpText { get; }
+        public IReadOnlyList<string> HelpLines { get; }
 
         public Separators Separators { get; }
 
@@ -115,7 +119,14 @@ namespace Sundew.CommandLine.Internal.Options
         {
             if (this.IsRequired && !isNested)
             {
-                stringBuilder.AppendLine(Constants.RequiredText);
+                stringBuilder.Append(Constants.RequiredText);
+                return;
+            }
+
+            if (this.defaultValueHelpText != null)
+            {
+                stringBuilder.Append(Constants.DefaultText);
+                stringBuilder.Append(this.defaultValueHelpText);
                 return;
             }
 
@@ -123,17 +134,17 @@ namespace Sundew.CommandLine.Internal.Options
             {
                 if (this.IsRequired)
                 {
-                    stringBuilder.AppendLine(Constants.RequiredText);
+                    stringBuilder.Append(Constants.RequiredText);
                     return;
                 }
 
                 stringBuilder.Append(Constants.DefaultText);
-                stringBuilder.AppendLine(Constants.NoneText);
+                stringBuilder.Append(Constants.NoneText);
                 return;
             }
 
             stringBuilder.Append(Constants.DefaultText);
-            stringBuilder.AppendLine(this.defaultValue);
+            stringBuilder.Append(this.defaultValue);
         }
 
         private ReadOnlySpan<char> SerializeValue(Settings settings)

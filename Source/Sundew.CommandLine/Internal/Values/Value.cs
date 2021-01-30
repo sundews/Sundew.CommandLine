@@ -8,6 +8,7 @@
 namespace Sundew.CommandLine.Internal.Values
 {
     using System;
+    using System.Collections.Generic;
     using System.Globalization;
     using System.Text;
     using Sundew.Base.Computation;
@@ -23,12 +24,21 @@ namespace Sundew.CommandLine.Internal.Values
         private readonly string defaultValue;
         private bool hasBeenSet;
 
-        public Value(string name, Serialize serialize, Deserialize deserialize, bool isRequired, string helpText, bool useDoubleQuotes, CultureInfo cultureInfo)
+        public Value(
+            string name,
+            Serialize serialize,
+            Deserialize deserialize,
+            bool isRequired,
+            string helpText,
+            bool useDoubleQuotes,
+            CultureInfo cultureInfo,
+            string? defaultValueHelpText)
         {
             this.serialize = serialize;
             this.deserialize = deserialize;
             this.Name = name.Uncapitalize(cultureInfo);
-            this.HelpText = helpText;
+            this.HelpLines = HelpTextHelper.GetHelpLines(helpText);
+            this.DefaultValueHelpText = defaultValueHelpText;
             this.useDoubleQuotes = useDoubleQuotes;
             this.IsRequired = isRequired;
             this.defaultValue = this.serialize(cultureInfo).ToString();
@@ -42,7 +52,9 @@ namespace Sundew.CommandLine.Internal.Values
 
         public string Name { get; }
 
-        public string HelpText { get; }
+        public IReadOnlyList<string> HelpLines { get; }
+
+        public string? DefaultValueHelpText { get; }
 
         public bool IsNesting { get; }
 

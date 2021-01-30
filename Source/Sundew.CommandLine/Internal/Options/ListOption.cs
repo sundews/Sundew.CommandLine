@@ -19,6 +19,7 @@ namespace Sundew.CommandLine.Internal.Options
     internal class ListOption<TValue> : IOption, IListSerializationInfo<TValue>
     {
         private readonly Deserialize<TValue> deserialize;
+        private readonly string? defaultValueHelpText;
 
         public ListOption(
             string? name,
@@ -28,7 +29,8 @@ namespace Sundew.CommandLine.Internal.Options
             Deserialize<TValue> deserialize,
             bool isRequired,
             string helpText,
-            bool useDoubleQuotes)
+            bool useDoubleQuotes,
+            string? defaultValueHelpText)
         {
             this.Name = name;
             this.Alias = alias;
@@ -36,9 +38,10 @@ namespace Sundew.CommandLine.Internal.Options
             this.DefaultList = this.List.ToList();
             this.Serialize = serialize;
             this.deserialize = deserialize;
+            this.defaultValueHelpText = defaultValueHelpText;
             this.UseDoubleQuotes = useDoubleQuotes;
             this.IsRequired = isRequired;
-            this.HelpText = helpText;
+            this.HelpLines = HelpTextHelper.GetHelpLines(helpText);
             this.Usage = HelpTextHelper.GetUsage(name, alias);
         }
 
@@ -60,7 +63,7 @@ namespace Sundew.CommandLine.Internal.Options
 
         public string Usage { get; }
 
-        public string HelpText { get; }
+        public IReadOnlyList<string> HelpLines { get; }
 
         public bool IsNesting => false;
 
@@ -119,8 +122,14 @@ namespace Sundew.CommandLine.Internal.Options
         {
             if (this.IsRequired)
             {
-                stringBuilder.AppendLine(Constants.RequiredText);
+                stringBuilder.Append(Constants.RequiredText);
                 return;
+            }
+
+            if (this.defaultValueHelpText != null)
+            {
+                stringBuilder.Append(Constants.DefaultText);
+                stringBuilder.Append(this.defaultValueHelpText);
             }
 
             stringBuilder.Append(Constants.DefaultText);
@@ -128,8 +137,6 @@ namespace Sundew.CommandLine.Internal.Options
             {
                 stringBuilder.Append(Constants.NoneText);
             }
-
-            stringBuilder.AppendLine(string.Empty);
         }
 
         private Result.IfError<ParserError> DeserializeFrom(ReadOnlySpan<char> value, Settings settings)

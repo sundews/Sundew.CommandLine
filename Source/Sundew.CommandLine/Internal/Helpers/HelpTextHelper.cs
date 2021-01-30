@@ -7,7 +7,9 @@
 
 namespace Sundew.CommandLine.Internal.Helpers
 {
+    using System;
     using System.Globalization;
+    using System.Reflection;
     using System.Text;
     using Sundew.Base.Text;
 
@@ -32,8 +34,19 @@ namespace Sundew.CommandLine.Internal.Helpers
                 $@"  {(isForVerb ? Constants.SpaceText : string.Empty)}{indentText}{{0,{maxNamePadRight}}}{Constants.HelpSeparator}{{1,{maxAliasPadRight}}}{Constants.HelpSeparator}{{2,{maxHelpTextPadRight}}}{Constants.HelpSeparator}",
                 option.Name != null ? $"{Constants.ArgumentStartCharacter}{option.Name}{(option.Separators.NameSeparator != Constants.SpaceCharacter ? option.Separators.NameSeparator.ToString() : string.Empty)}" : string.Empty,
                 option.Alias != null ? $"{Constants.DoubleDashText}{option.Alias}{(option.Separators.AliasSeparator != Constants.SpaceCharacter ? option.Separators.AliasSeparator.ToString() : string.Empty)}" : string.Empty,
-                option.HelpText);
+                option.HelpLines[0]);
             option.AppendDefaultText(stringBuilder, settings, indent > 0);
+            stringBuilder.AppendLine();
+            for (int i = 1; i < option.HelpLines.Count; i++)
+            {
+                stringBuilder.AppendFormat(
+                    settings.CultureInfo,
+                    $@"  {(isForVerb ? Constants.SpaceText : string.Empty)}{indentText}{{0,{maxNamePadRight}}}{' '.Repeat(Constants.HelpSeparator.Length)}{{1,{maxAliasPadRight}}}{' '.Repeat(Constants.HelpSeparator.Length)}{{2,{maxHelpTextPadRight}}}",
+                    string.Empty,
+                    string.Empty,
+                    option.HelpLines[i]);
+                stringBuilder.AppendLine();
+            }
         }
 
         public static void AppendHelpText(StringBuilder stringBuilder, IValue value, int maxName, int indent, bool isForVerb, Settings settings)
@@ -42,9 +55,17 @@ namespace Sundew.CommandLine.Internal.Helpers
             var maxNamePadRight = -maxName;
             stringBuilder.AppendFormat(
                 settings.CultureInfo,
-                $@"  {(isForVerb ? Constants.SpaceText : string.Empty)}{GetIndentation(indent)}{{0,{maxNamePadRight}}}{Constants.HelpSeparator}{value.HelpText}{Constants.HelpSeparator}{defaultOrRequiredText}",
+                $@"  {(isForVerb ? Constants.SpaceText : string.Empty)}{GetIndentation(indent)}{{0,{maxNamePadRight}}}{Constants.HelpSeparator}{value.HelpLines[0]}{Constants.HelpSeparator}{defaultOrRequiredText}",
                 $"{Constants.LessThanText}{value.Name}{Constants.GreaterThanText}");
             stringBuilder.AppendLine();
+            for (int i = 1; i < value.HelpLines.Count; i++)
+            {
+                stringBuilder.AppendFormat(
+                    settings.CultureInfo,
+                    $@"  {(isForVerb ? Constants.SpaceText : string.Empty)}{GetIndentation(indent)}{{0,{maxNamePadRight}}}{' '.Repeat(Constants.HelpSeparator.Length)}{value.HelpLines[i]}{' '.Repeat(Constants.HelpSeparator.Length)}{defaultOrRequiredText}",
+                    string.Empty);
+                stringBuilder.AppendLine();
+            }
         }
 
         public static string GetIndentation(int indent)
@@ -90,6 +111,11 @@ namespace Sundew.CommandLine.Internal.Helpers
                 return Constants.RequiredText;
             }
 
+            if (value.DefaultValueHelpText != null)
+            {
+                return Constants.DefaultText + value.DefaultValueHelpText;
+            }
+
             var stringBuilder = new StringBuilder();
             value.SerializeTo(stringBuilder, settings);
             var defaultText = stringBuilder.ToString();
@@ -99,6 +125,11 @@ namespace Sundew.CommandLine.Internal.Helpers
             }
 
             return Constants.DefaultText + defaultText;
+        }
+
+        public static string[] GetHelpLines(string helpText)
+        {
+            return helpText.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
         }
     }
 }

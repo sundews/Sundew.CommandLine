@@ -61,7 +61,8 @@ namespace Sundew.CommandLine.Internal
                 helpText,
                 useDoubleQuotes,
                 actualSeparator,
-                this.CultureInfo);
+                this.CultureInfo,
+                null);
             this.AddOption(option, actualSeparator);
         }
 
@@ -99,21 +100,22 @@ namespace Sundew.CommandLine.Internal
                 deserialize,
                 true,
                 helpText,
-                useDoubleQuotes);
+                useDoubleQuotes,
+                null);
             this.AddOption(option, default);
         }
 
-        public void AddOptional(string? name, string alias, Func<string?> serialize, Action<string> deserialize, string helpText, bool useDoubleQuotes = false, Separators separators = default)
+        public void AddOptional(string? name, string alias, Func<string?> serialize, Action<string> deserialize, string helpText, bool useDoubleQuotes = false, Separators separators = default, string? defaultValueText = null)
         {
-            this.AddOptional(name, alias, (ci) => serialize().AsSpan(), (x, ci) => deserialize(x.ToString()), helpText, useDoubleQuotes, separators);
+            this.AddOptional(name, alias, (ci) => serialize().AsSpan(), (x, ci) => deserialize(x.ToString()), helpText, useDoubleQuotes, separators, defaultValueText);
         }
 
-        public void AddOptional(string? name, string alias, Func<CultureInfo, string?> serialize, Action<string, CultureInfo> deserialize, string helpText, bool useDoubleQuotes = false, Separators separators = default)
+        public void AddOptional(string? name, string alias, Func<CultureInfo, string?> serialize, Action<string, CultureInfo> deserialize, string helpText, bool useDoubleQuotes = false, Separators separators = default, string? defaultValueText = null)
         {
-            this.AddOptional(name, alias, (ci) => serialize(ci).AsSpan(), (x, ci) => deserialize(x.ToString(), ci), helpText, useDoubleQuotes, separators);
+            this.AddOptional(name, alias, (ci) => serialize(ci).AsSpan(), (x, ci) => deserialize(x.ToString(), ci), helpText, useDoubleQuotes, separators, defaultValueText);
         }
 
-        public void AddOptional(string? name, string alias, Serialize serialize, Deserialize deserialize, string helpText, bool useDoubleQuotes = false, Separators separators = default)
+        public void AddOptional(string? name, string alias, Serialize serialize, Deserialize deserialize, string helpText, bool useDoubleQuotes = false, Separators separators = default, string? defaultValueText = null)
         {
             var actualSeparator = this.GetActualSeparator(separators);
             var option = new Option(
@@ -125,11 +127,12 @@ namespace Sundew.CommandLine.Internal
                helpText,
                useDoubleQuotes,
                actualSeparator,
-               this.CultureInfo);
+               this.CultureInfo,
+               defaultValueText);
             this.AddOption(option, actualSeparator);
         }
 
-        public void AddOptional<TOptions>(string? name, string alias, TOptions? options, Func<TOptions> getDefault, Action<TOptions> setOptions, string helpText)
+        public void AddOptional<TOptions>(string? name, string alias, TOptions? options, Func<TOptions> getDefault, Action<TOptions> setOptions, string helpText, string? defaultValueText = null)
             where TOptions : class, IArguments
         {
             var option = new NestingOption<TOptions>(
@@ -143,17 +146,17 @@ namespace Sundew.CommandLine.Internal
             this.AddOption(option, default);
         }
 
-        public void AddOptionalList(string? name, string alias, IList<string> list, string helpText, bool useDoubleQuotes = false)
+        public void AddOptionalList(string? name, string alias, IList<string> list, string helpText, bool useDoubleQuotes = false, string? defaultValueText = null)
         {
-            this.AddOptionalList(name, alias, list, (x, ci) => x, (x, ci) => x, helpText, useDoubleQuotes);
+            this.AddOptionalList(name, alias, list, (x, ci) => x, (x, ci) => x, helpText, useDoubleQuotes, defaultValueText);
         }
 
-        public void AddOptionalList<TValue>(string? name, string alias, IList<TValue> list, Func<TValue, CultureInfo, string> serialize, Func<string, CultureInfo, TValue> deserialize, string helpText, bool useDoubleQuotes = false)
+        public void AddOptionalList<TValue>(string? name, string alias, IList<TValue> list, Func<TValue, CultureInfo, string> serialize, Func<string, CultureInfo, TValue> deserialize, string helpText, bool useDoubleQuotes = false, string? defaultValueText = null)
         {
-            this.AddOptionalList(name, alias, list, (x, ci) => serialize(x, ci).AsSpan(), (x, ci) => deserialize(x.ToString(), ci), helpText, useDoubleQuotes);
+            this.AddOptionalList(name, alias, list, (x, ci) => serialize(x, ci).AsSpan(), (x, ci) => deserialize(x.ToString(), ci), helpText, useDoubleQuotes, defaultValueText);
         }
 
-        public void AddOptionalList<TValue>(string? name, string alias, IList<TValue> list, Serialize<TValue> serialize, Deserialize<TValue> deserialize, string helpText, bool useDoubleQuotes = false)
+        public void AddOptionalList<TValue>(string? name, string alias, IList<TValue> list, Serialize<TValue> serialize, Deserialize<TValue> deserialize, string helpText, bool useDoubleQuotes = false, string? defaultValueText = null)
         {
             var option = new ListOption<TValue>(
                 name,
@@ -163,7 +166,8 @@ namespace Sundew.CommandLine.Internal
                 deserialize,
                 false,
                 helpText,
-                useDoubleQuotes);
+                useDoubleQuotes,
+                defaultValueText);
             this.AddOption(option, default);
         }
 
@@ -197,22 +201,22 @@ namespace Sundew.CommandLine.Internal
 
         public void AddRequiredValue(string name, Serialize serialize, Deserialize deserialize, string helpText, bool useDoubleQuotes = false)
         {
-            this.AddValue(new Value(name, serialize, deserialize, true, helpText, useDoubleQuotes, this.CultureInfo));
+            this.AddValue(new Value(name, serialize, deserialize, true, helpText, useDoubleQuotes, this.CultureInfo, null));
         }
 
-        public void AddOptionalValue(string name, Func<string?> serialize, Action<string> deserialize, string helpText, bool useDoubleQuotes = false)
+        public void AddOptionalValue(string name, Func<string?> serialize, Action<string> deserialize, string helpText, bool useDoubleQuotes = false, string? defaultValueText = null)
         {
-            this.AddOptionalValue(name, (ci) => serialize().AsSpan(), (x, ci) => deserialize(x.ToString()), helpText, useDoubleQuotes);
+            this.AddOptionalValue(name, (ci) => serialize().AsSpan(), (x, ci) => deserialize(x.ToString()), helpText, useDoubleQuotes, defaultValueText);
         }
 
-        public void AddOptionalValue(string name, Func<CultureInfo, string> serialize, Action<string, CultureInfo> deserialize, string helpText, bool useDoubleQuotes = false)
+        public void AddOptionalValue(string name, Func<CultureInfo, string> serialize, Action<string, CultureInfo> deserialize, string helpText, bool useDoubleQuotes = false, string? defaultValueText = null)
         {
-            this.AddOptionalValue(name, (ci) => serialize(ci).AsSpan(), (x, ci) => deserialize(x.ToString(), ci), helpText, useDoubleQuotes);
+            this.AddOptionalValue(name, (ci) => serialize(ci).AsSpan(), (x, ci) => deserialize(x.ToString(), ci), helpText, useDoubleQuotes, defaultValueText);
         }
 
-        public void AddOptionalValue(string name, Serialize serialize, Deserialize deserialize, string helpText, bool useDoubleQuotes = false)
+        public void AddOptionalValue(string name, Serialize serialize, Deserialize deserialize, string helpText, bool useDoubleQuotes = false, string? defaultValueText = null)
         {
-            this.AddValue(new Value(name, serialize, deserialize, false, helpText, useDoubleQuotes, this.CultureInfo));
+            this.AddValue(new Value(name, serialize, deserialize, false, helpText, useDoubleQuotes, this.CultureInfo, defaultValueText));
         }
 
         public void AddRequiredValues<TValue>(string name, IList<TValue> values, Func<TValue, CultureInfo, string> serialize, Func<string, CultureInfo, TValue> deserialize, string helpText, bool useDoubleQuotes = false)
@@ -229,7 +233,8 @@ namespace Sundew.CommandLine.Internal
                 deserialize,
                 true,
                 helpText,
-                useDoubleQuotes));
+                useDoubleQuotes,
+                null));
         }
 
         public void AddRequiredValues(string name, IList<string> values, string helpText, bool useDoubleQuotes = false)
@@ -237,12 +242,12 @@ namespace Sundew.CommandLine.Internal
             this.AddRequiredValues(name, values, (value, ci) => value, (value, ci) => value, helpText, useDoubleQuotes);
         }
 
-        public void AddOptionalValues<TValue>(string name, IList<TValue> values, Func<TValue, CultureInfo, string> serialize, Func<string, CultureInfo, TValue> deserialize, string helpText, bool useDoubleQuotes = false)
+        public void AddOptionalValues<TValue>(string name, IList<TValue> values, Func<TValue, CultureInfo, string> serialize, Func<string, CultureInfo, TValue> deserialize, string helpText, bool useDoubleQuotes = false, string? defaultValueText = null)
         {
-            this.AddOptionalValues(name, values, (x, ci) => serialize(x, ci).AsSpan(), (x, ci) => deserialize(x.ToString(), ci), helpText, useDoubleQuotes);
+            this.AddOptionalValues(name, values, (x, ci) => serialize(x, ci).AsSpan(), (x, ci) => deserialize(x.ToString(), ci), helpText, useDoubleQuotes, defaultValueText);
         }
 
-        public void AddOptionalValues<TValue>(string name, IList<TValue> values, Serialize<TValue> serialize, Deserialize<TValue> deserialize, string helpText, bool useDoubleQuotes = false)
+        public void AddOptionalValues<TValue>(string name, IList<TValue> values, Serialize<TValue> serialize, Deserialize<TValue> deserialize, string helpText, bool useDoubleQuotes = false, string? defaultValueText = null)
         {
             this.AddValue(new ListValue<TValue>(
                 name,
@@ -251,12 +256,13 @@ namespace Sundew.CommandLine.Internal
                 deserialize,
                 false,
                 helpText,
-                useDoubleQuotes));
+                useDoubleQuotes,
+                defaultValueText));
         }
 
-        public void AddOptionalValues(string name, IList<string> values, string helpText, bool useDoubleQuotes = false)
+        public void AddOptionalValues(string name, IList<string> values, string helpText, bool useDoubleQuotes = false, string? defaultValueText = null)
         {
-            this.AddOptionalValues(name, values, (value, ci) => value, (value, ci) => value, helpText, useDoubleQuotes);
+            this.AddOptionalValues(name, values, (value, ci) => value, (value, ci) => value, helpText, useDoubleQuotes, defaultValueText);
         }
 
         public void PrepareBuilder(IArguments arguments, bool allowReset)

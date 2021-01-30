@@ -7,6 +7,7 @@
 
 namespace Sundew.CommandLine
 {
+    using System.Collections.Generic;
     using System.Globalization;
 
     /// <summary>
@@ -19,12 +20,12 @@ namespace Sundew.CommandLine
         string Usage { get; }
 
         /// <summary>
-        /// Gets the help text.
+        /// Gets the help lines.
         /// </summary>
         /// <value>
-        /// The help text.
+        /// The help lines.
         /// </value>
-        string HelpText { get; }
+        IReadOnlyList<string> HelpLines { get; }
 
         /// <summary>
         /// Gets a value indicating whether this instance is nesting.

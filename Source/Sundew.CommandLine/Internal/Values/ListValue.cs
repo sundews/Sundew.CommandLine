@@ -28,15 +28,17 @@ namespace Sundew.CommandLine.Internal.Values
             Deserialize<TValue> deserialize,
             bool isRequired,
             string helpText,
-            bool useDoubleQuotes)
+            bool useDoubleQuotes,
+            string? defaultValueHelpText)
         {
             this.Name = name.Uncapitalize(CultureInfo.InvariantCulture);
             this.List = list;
             this.deserialize = deserialize;
             this.Serialize = serialize;
             this.IsRequired = isRequired;
-            this.HelpText = helpText;
+            this.HelpLines = HelpTextHelper.GetHelpLines(helpText);
             this.UseDoubleQuotes = useDoubleQuotes;
+            this.DefaultValueHelpText = defaultValueHelpText;
             this.DefaultList = this.List.ToList();
         }
 
@@ -52,9 +54,11 @@ namespace Sundew.CommandLine.Internal.Values
 
         public bool UseDoubleQuotes { get; }
 
+        public string? DefaultValueHelpText { get; }
+
         public string Usage => $"<{this.Name}>";
 
-        public string HelpText { get; }
+        public IReadOnlyList<string> HelpLines { get; }
 
         public bool IsNesting { get; }
 
