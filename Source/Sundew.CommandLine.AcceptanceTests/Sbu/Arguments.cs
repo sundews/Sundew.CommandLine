@@ -15,6 +15,7 @@ namespace Sundew.CommandLine.AcceptanceTests.Sbu
     public class Arguments : IArguments
     {
         private const string VersionGroupName = "Version";
+        private const string LocalSundewName = "Local-Sundew";
         private static readonly Regex PackageIdAndVersionRegex = new Regex(@"(?: |\.)(?<Version>(?:\d\.\d\.\d).*)");
         private readonly List<PackageId> packageIds;
         private readonly List<string> projects;
@@ -59,7 +60,7 @@ namespace Sundew.CommandLine.AcceptanceTests.Sbu
                 this.useLocalSource = value;
                 if (this.UseLocalSource)
                 {
-                    this.Source = "Local (Sundew)";
+                    this.Source = LocalSundewName;
                 }
             }
         }
@@ -73,7 +74,7 @@ namespace Sundew.CommandLine.AcceptanceTests.Sbu
             argumentsBuilder.AddOptional("d", "root-directory", () => this.RootDirectory, s => this.RootDirectory = s, "The directory to search to projects", true, defaultValueText: "Current directory");
             argumentsBuilder.AddSwitch("pr", "prerelease", this.AllowPrerelease, b => this.AllowPrerelease = b, "Allow updating to latest prerelease version");
             argumentsBuilder.AddSwitch("v", "verbose", this.Verbose, b => this.Verbose = b, "Verbose");
-            argumentsBuilder.AddSwitch("l", "local", this.UseLocalSource, b => this.UseLocalSource = b, @"Forces the source to ""Local-Sundew""");
+            argumentsBuilder.AddSwitch("l", "local", this.UseLocalSource, b => this.UseLocalSource = b, $@"Forces the source to ""{LocalSundewName}""");
         }
 
         private string Serialize(PackageId id, CultureInfo cultureInfo)
