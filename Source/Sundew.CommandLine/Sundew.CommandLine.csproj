@@ -15,7 +15,7 @@ Features:
 - Parses/Generates: simple types, lists, nested types.
 - Supports optional/required arguments
 - Nested arguments for argument grouping and reuse</Description>
-    <PackageReleaseNotes>5.0 Added support for multiline help and default value help text.
+    <PackageReleaseNotes>5.0 - Added support for multiline help and default value help text.
 4.2 - Added Parser Result extensions and help text improvements
 4.1 - Async support
 4.0 - Support nested verbs
@@ -54,7 +54,7 @@ Features:
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Sundew.Base" Version="6.0.0" />
-    <PackageReference Include="Sundew.Packaging.Publish" Version="3.0.0">
+    <PackageReference Include="Sundew.Packaging.Publish" Version="3.0.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
