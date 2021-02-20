@@ -16,6 +16,7 @@ namespace Sundew.CommandLine.Internal.Extensions
         public static IEnumerable<string> SplitBasedCommandLineTokenizer(this ReadOnlyMemory<char> input)
         {
             const char doubleQuote = '\"';
+            const char slash = '\\';
             const char space = ' ';
             var isInQuote = false;
             var isInEscape = false;
@@ -26,6 +27,15 @@ namespace Sundew.CommandLine.Internal.Extensions
                     isInEscape = false;
                     switch (character)
                     {
+                        case slash:
+                            var nextIndex = index + 1;
+                            if (isInQuote && input.Length > nextIndex && input.Span[nextIndex] == doubleQuote)
+                            {
+                                isInEscape = true;
+                                return SplitAction.Ignore;
+                            }
+
+                            return SplitAction.Include;
                         case doubleQuote:
                             if (!actualIsInEscape)
                             {
