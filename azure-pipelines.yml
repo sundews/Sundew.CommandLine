@@ -26,7 +26,7 @@ steps:
     version: 5.x
 
 - script: >
-    dotnet build $(solutionPath) --verbosity normal --configuration $(buildConfiguration) 
+    dotnet build $(solutionPath) --verbosity detailed --configuration $(buildConfiguration) 
     -p:'SppSourceName=$(Build.SourceBranch)'
     -p:'SppProductionSource=refs/heads/(?:master|main).* => $(source)'
     -p:'SppIntegrationSource=refs/heads/release/.+ => $(source)'
