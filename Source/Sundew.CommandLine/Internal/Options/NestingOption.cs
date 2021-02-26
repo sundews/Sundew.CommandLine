@@ -20,7 +20,7 @@ namespace Sundew.CommandLine.Internal.Options
         private readonly TOptions? options;
         private readonly Func<TOptions> getDefault;
         private readonly Action<TOptions> setOptions;
-        private readonly ArgumentsBuilder argumentsBuilder = new ArgumentsBuilder();
+        private readonly ArgumentsBuilder argumentsBuilder = new();
 
         public NestingOption(
             string? name,
@@ -29,7 +29,8 @@ namespace Sundew.CommandLine.Internal.Options
             Func<TOptions> getDefault,
             Action<TOptions> setOptions,
             bool isRequired,
-            string helpText)
+            string helpText,
+            int index)
         {
             this.options = options;
             this.getDefault = getDefault;
@@ -37,6 +38,7 @@ namespace Sundew.CommandLine.Internal.Options
             this.Name = name;
             this.Alias = alias;
             this.IsRequired = isRequired;
+            this.Index = index;
             this.HelpLines = HelpTextHelper.GetHelpLines(helpText);
             this.Usage = HelpTextHelper.GetUsage(name, alias);
         }
@@ -48,6 +50,8 @@ namespace Sundew.CommandLine.Internal.Options
         public Separators Separators => default;
 
         public bool IsRequired { get; }
+
+        public int Index { get; }
 
         public bool IsNesting => true;
 

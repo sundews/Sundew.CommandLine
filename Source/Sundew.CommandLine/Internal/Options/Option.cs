@@ -33,7 +33,8 @@ namespace Sundew.CommandLine.Internal.Options
             bool useDoubleQuotes,
             Separators separators,
             CultureInfo cultureInfo,
-            string? defaultValueHelpText)
+            string? defaultValueHelpText,
+            int index)
         {
             this.Name = name;
             this.Alias = alias;
@@ -41,6 +42,7 @@ namespace Sundew.CommandLine.Internal.Options
             this.deserialize = deserialize;
             this.useDoubleQuotes = useDoubleQuotes;
             this.defaultValueHelpText = defaultValueHelpText;
+            this.Index = index;
             this.IsRequired = isRequired;
             this.HelpLines = HelpTextHelper.GetHelpLines(helpText);
             this.Separators = separators;
@@ -53,6 +55,8 @@ namespace Sundew.CommandLine.Internal.Options
         public string Alias { get; }
 
         public bool IsRequired { get; }
+
+        public int Index { get; }
 
         public bool IsNesting => false;
 

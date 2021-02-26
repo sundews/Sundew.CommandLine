@@ -15,6 +15,8 @@ namespace Sundew.CommandLine.Internal
     {
         bool IsRequired { get; }
 
+        int Index { get; }
+
         Result<bool, GeneratorError> SerializeTo(StringBuilder stringBuilder, Settings settings, bool useAliases);
 
         Result.IfError<ParserError> DeserializeFrom(CommandLineArgumentsParser commandLineArgumentsParser, ArgumentList argumentList, ReadOnlySpan<char> value, Settings settings);

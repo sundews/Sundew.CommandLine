@@ -70,7 +70,8 @@ namespace Sundew.CommandLine.Internal
                 var argumentsBuilder = argumentsAction.Builder;
                 argumentsBuilder.PrepareBuilder(argumentsAction.Arguments, false);
 
-                if (argumentsBuilder.Options.Any() || argumentsBuilder.Switches.Any() || argumentsBuilder.Values.HasValues)
+                if (argumentsBuilder.Options.Any() || argumentsBuilder.Switches.Any() ||
+                    argumentsBuilder.Values.HasValues)
                 {
                     if (indent == 0)
                     {
@@ -91,7 +92,10 @@ namespace Sundew.CommandLine.Internal
             bool isVerbArgument,
             Settings settings)
         {
-            var maxValues = argumentsBuilder.Values.HasValues ? argumentsBuilder.Values.Max(x => x.Name.Length) + Constants.LessThanText.Length + Constants.GreaterThanText.Length : 0;
+            var maxValues = argumentsBuilder.Values.HasValues
+                ? argumentsBuilder.Values.Max(x => x.Name.Length) + Constants.LessThanText.Length +
+                  Constants.GreaterThanText.Length
+                : 0;
             if (argumentsBuilder.Options.Any() || argumentsBuilder.Switches.Any())
             {
                 var argumentInfos = Concat(argumentsBuilder.Options, argumentsBuilder.Switches);
@@ -99,19 +103,31 @@ namespace Sundew.CommandLine.Internal
                 maxAlias = Math.Max(Math.Max(argumentInfos.Max(x => x.Alias.Length + (x.Separators.AliasSeparator != Constants.SpaceCharacter ? 1 : 0) + (x.IsNesting ? 1 : 0)) + Constants.DoubleDashText.Length, maxAlias), maxValues - maxName - Constants.HelpSeparator.Length);
                 maxValues = maxName + maxAlias + Constants.HelpSeparator.Length;
 
-                var maxHelpText = argumentsBuilder.Options.Any() ? argumentsBuilder.Options.Max(x => x.HelpLines.Max(l => l.Length)) : 0;
-                foreach (var option in argumentsBuilder.Options.OrderByDescending(x => x.IsRequired))
+                var maxHelpText = argumentsBuilder.Options.Any()
+                    ? argumentsBuilder.Options.Max(x => x.HelpLines.Max(l => l.Length))
+                    : 0;
+                foreach (var option in GetOptions(argumentsBuilder.Options, argumentsBuilder.OptionsHelpOrder))
                 {
                     option.AppendHelpText(stringBuilder, settings, maxName, maxAlias, maxHelpText, indent, isVerbArgument);
                 }
 
-                foreach (var @switch in argumentsBuilder.Switches.OrderBy(x => x.Alias))
+                foreach (var @switch in argumentsBuilder.Switches.OrderBy(x => x.Index))
                 {
                     @switch.AppendHelpText(stringBuilder, maxName, maxAlias, indent, isVerbArgument, settings.CultureInfo);
                 }
             }
 
             argumentsBuilder.Values.AppendHelpText(stringBuilder, maxValues, indent, isVerbArgument, settings);
+        }
+
+        private static IEnumerable<IOption> GetOptions(ArgumentRegistry<IOption> options, OptionsHelpOrder optionsHelpOrder)
+        {
+            return optionsHelpOrder switch
+            {
+                OptionsHelpOrder.RequiredFirst => options.OrderByDescending(x => x.IsRequired).ThenBy(x => x.Index),
+                OptionsHelpOrder.AsAdded => options.OrderBy(x => x.Index),
+                _ => throw new ArgumentOutOfRangeException(nameof(optionsHelpOrder), optionsHelpOrder, $"{optionsHelpOrder} was out of range."),
+            };
         }
 
         private static int GetVerbNameMax<TSuccess, TError>(VerbRegistry<TSuccess, TError> verbRegistry, int verbMaxName)
