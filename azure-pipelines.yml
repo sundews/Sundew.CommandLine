@@ -26,7 +26,8 @@ steps:
     version: 5.x
 
 - script: >
-    dotnet build $(solutionPath) --verbosity diag --configuration $(buildConfiguration) -p:'SppSourceName=$(Build.SourceBranch)'
+    dotnet build $(solutionPath) --verbosity diag --configuration $(buildConfiguration)
+    -p:'SppSourceName=$(Build.SourceBranch)'
     -p:'SppProductionSource=refs/heads/(?:master|main).* => $(source)'
     -p:'SppIntegrationSource=refs/heads/release/.+ => $(source)'
     -p:'SppDevelopmentSource=refs/heads/(?:develop.*|feature/.+|bugfix/.+) => $(SppDevelopmentApiKey)@$(dev-source)'
@@ -34,6 +35,7 @@ steps:
     -p:'SppEnablePublish=false'
     -P:'SppApiKey=$(SppApiKey)'
     -p:'SppPublishLogFormats=##vso[task.setvariable variable=pushSource]{3}|##vso[task.setvariable variable=apiKey]{4}|##vso[task.setvariable variable=tags]$(tags) {1}|{0}'
+
   displayName: 'dotnet build $(buildConfiguration)'
 
 - script: dotnet test $(solutionPath) --verbosity normal --configuration $(buildConfiguration) --no-build
