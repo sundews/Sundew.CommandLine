@@ -34,7 +34,7 @@ steps:
     -p:'SppAllowLocalSource=false' 
     -p:'SppEnablePublish=false'
     -P:'SppApiKey=$(SppApiKey)'
-    -p:'SppPublishLogFormats=##vso[task.setvariable variable=pushSource]{3}|##vso[task.setvariable variable=apiKey]{4}|##vso[task.setvariable variable=tags]$(tags) {1}|{0}'
+    -p:'SppPublishLogFormats=##vso[task.setvariable variable=pushSource]{3}|##vso[task.setvariable variable=apiKey]{4}'
 
   displayName: 'dotnet build $(buildConfiguration)'
 
