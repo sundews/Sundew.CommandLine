@@ -19,7 +19,7 @@ variables:
   dev-source-latest-version: 'https://www.myget.org/F/sundew-dev/api/v3/index.json'
   pushSource: 'null'
   apiKey: 'null'
-  -c "cmd|/c echo {0}-{1}" "cmd|/c echo {1}-{0}" -s ; -v 1.0.1;Sundew.CommandLine 2.0.1;Sundew.Base: ''
+  tags: ''
   tag-separator: ''
 
 steps:
@@ -54,7 +54,7 @@ steps:
   displayName: 'dotnet nuget push'
 
 - script: dotnet tool update CommandLineBatcher -g --version 1.0.0-pre-u20210228-230337
-  displayName: 'install cb'
+  displayName: 'install CommandLineBatcher'
 
-- script: cb -c "cmd|/c echo {0}-{1}" "cmd|/c echo {1}-{0}" -s ; -v '$(tags)'
+- script: cb -c "cmd|/c echo {0}-{1}" "cmd|/c echo {1}-{0}" -s ';' -v '$(tags)'
   displayName: 'tag packages'
