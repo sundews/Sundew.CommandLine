@@ -25,29 +25,7 @@ steps:
     packageType: 'sdk'
     version: 5.x
 
-- script: >
-   echo
-   dotnet build $(solutionPath) --verbosity diag --configuration $(buildConfiguration)
-   -p:'SppSourceName=$(Build.SourceBranch)'
-   -p:'SppProductionSource=refs/heads/(?:master|main).*=>$(source)'
-   -p:'SppIntegrationSource=refs/heads/release/.+=>$(source)'
-   -p:'SppDevelopmentSource=refs/heads/(?:develop.*|feature/.+|bugfix/.+)=>$(SppDevelopmentApiKey)@$(dev-source)'
-   -p:'SppAllowLocalSource=false' 
-   -p:'SppEnablePublish=false'
-   -p:'SppPublishLogFormats=##vso[task.setvariable variable=pushSource]{3}'
-   -P:'SppApiKey=$(SppApiKey)'
-  displayName: 'echo'
-
-- script: >
-   dotnet build $(solutionPath) --verbosity diag --configuration $(buildConfiguration)
-   -p:'SppSourceName=$(Build.SourceBranch)'
-   -p:'SppProductionSource=refs/heads/(?:master|main).*=>$(source)'
-   -p:'SppIntegrationSource=refs/heads/release/.+=>$(source)'
-   -p:'SppDevelopmentSource=refs/heads/(?:develop.*|feature/.+|bugfix/.+)=>$(SppDevelopmentApiKey)@$(dev-source)'
-   -p:'SppAllowLocalSource=false' 
-   -p:'SppEnablePublish=false'
-   -p:'SppPublishLogFormats=##vso[task.setvariable variable=pushSource]{3}'
-   -P:'SppApiKey=$(SppApiKey)'
+- script: dotnet build $(solutionPath) --verbosity diag --configuration $(buildConfiguration) -p:'SppSourceName=$(Build.SourceBranch)' -p:'SppProductionSource=refs/heads/(?:master|main).*=>$(source)' -p:'SppIntegrationSource=refs/heads/release/.+=>$(source)' -p:'SppDevelopmentSource=refs/heads/(?:develop.*|feature/.+|bugfix/.+)=>$(SppDevelopmentApiKey)@$(dev-source)' -p:'SppAllowLocalSource=false' -p:'SppEnablePublish=false' -p:'SppPublishLogFormats=##vso[task.setvariable variable=pushSource]{3}|##vso[task.setvariable variable=apiKey]{4}|##vso[task.setvariable variable=tags]$(tags) {1};{0}' -p:'SppApiKey=$(SppApiKey)'
   displayName: 'dotnet build $(buildConfiguration)'
 
 - script: dotnet test $(solutionPath) --verbosity normal --configuration $(buildConfiguration) --no-build
