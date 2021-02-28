@@ -56,5 +56,5 @@ steps:
 - script: dotnet tool update CommandLineBatcher -g --version 1.0.0-pre-u20210228-230337
   displayName: 'install CommandLineBatcher'
 
-- script: cb -c "cmd|/c echo {0}-{1}" "cmd|/c echo {1}-{0}" -s ';' -v '$(tags)'
+- script: cb -c "bash|echo {0}-{1}" "bash|echo {1}-{0}" -s ';' -v '$(tags)'
   displayName: 'tag packages'
