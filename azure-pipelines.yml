@@ -41,9 +41,9 @@ steps:
 - script: >
    dotnet build $(solutionPath) --verbosity diag --configuration $(buildConfiguration)
    -p:'SppSourceName=$(Build.SourceBranch)'
-   -p:'SppProductionSource=refs/heads/(?:master|main).* => $(source)'
-   -p:'SppIntegrationSource=refs/heads/release/.+ => $(source)'
-   -p:'SppDevelopmentSource=refs/heads/(?:develop.*|feature/.+|bugfix/.+) => $(SppDevelopmentApiKey)@$(dev-source)'
+   -p:'SppProductionSource=refs/heads/(?:master|main).*=>$(source)'
+   -p:'SppIntegrationSource=refs/heads/release/.+=>$(source)'
+   -p:'SppDevelopmentSource=refs/heads/(?:develop.*|feature/.+|bugfix/.+)=>$(SppDevelopmentApiKey)@$(dev-source)'
    -p:'SppAllowLocalSource=false' 
    -p:'SppEnablePublish=false'
    -p:'SppPublishLogFormats=##vso[task.setvariable variable=pushSource]{3}'
