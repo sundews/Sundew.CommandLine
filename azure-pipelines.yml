@@ -27,7 +27,7 @@ steps:
     packageType: 'sdk'
     version: 5.x
 
-- script: dotnet build $(solutionPath) --verbosity diag --configuration $(buildConfiguration) -p:"SppSourceName=$(Build.SourceBranch)" -p:"SppProductionSource=refs/heads/(?:master|main).* => $(source)" -p:"SppIntegrationSource=refs/heads/release/.+ => $(source)" -p:"SppDevelopmentSource=refs/heads/(?:develop.*|feature/.+|bugfix/.+) => $(SppDevelopmentApiKey)@$(dev-source) {$(dev-source-latest-version)}" -p:"SppAllowLocalSource=false" -p:"SppEnablePublish=false" '-p:"SppPublishLogFormats={0}vso[task.setvariable variable=pushSource;]{4}|{0}vso[task.setvariable variable=apiKey;]{5}|{0}vso[task.setvariable variable=tags;]$(tags) {2};{1}"' -p:"SppApiKey=$(SppApiKey)" -p:"SppCommandPrefix=##"
+- script: dotnet build $(solutionPath) --verbosity normal --configuration $(buildConfiguration) -p:"SppSourceName=$(Build.SourceBranch)" -p:"SppProductionSource=refs/heads/(?:master|main).* => $(source)" -p:"SppIntegrationSource=refs/heads/release/.+ => $(source)" -p:"SppDevelopmentSource=refs/heads/(?:develop.*|feature/.+|bugfix/.+) => $(SppDevelopmentApiKey)@$(dev-source) {$(dev-source-latest-version)}" -p:"SppAllowLocalSource=false" -p:"SppEnablePublish=false" '-p:"SppPublishLogFormats={0}vso[task.setvariable variable=pushSource;]{4}|{0}vso[task.setvariable variable=apiKey;]{5}|{0}vso[task.setvariable variable=tags;]$(tags) {2};{1}"' -p:"SppApiKey=$(SppApiKey)" -p:"SppCommandPrefix=##"
   displayName: 'dotnet build $(buildConfiguration)'
 
 - script: dotnet test $(solutionPath) --verbosity normal --configuration $(buildConfiguration) --no-build
