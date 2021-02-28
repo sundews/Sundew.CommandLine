@@ -54,7 +54,7 @@ Features:
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Sundew.Base" Version="6.0.0" />
-    <PackageReference Include="Sundew.Packaging.Publish" Version="4.0.0-pre-u20210228-203707">
+    <PackageReference Include="Sundew.Packaging.Publish" Version="4.0.0-pre-u20210228-212109">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
