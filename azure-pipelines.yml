@@ -51,3 +51,6 @@ steps:
 - script: dotnet nuget push '$(Build.ArtifactStagingDirectory)/**/*.nupkg' -s '$(pushSource)' -k '$(apiKey)'
   condition: ne(variables.pushSource, 'null')
   displayName: 'dotnet nuget push'
+
+- script: echo '$(tags)'
+  displayName: 'echo $(tags)'
