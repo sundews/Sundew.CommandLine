@@ -19,7 +19,8 @@ variables:
   dev-source-latest-version: 'https://www.myget.org/F/sundew-dev/api/v3/index.json'
   pushSource: 'null'
   apiKey: 'null'
-  tags: ''
+  -c "cmd|/c echo {0}-{1}" "cmd|/c echo {1}-{0}" -s ; -v 1.0.1;Sundew.CommandLine 2.0.1;Sundew.Base: ''
+  tag-separator: ''
 
 steps:
 - task: UseDotNet@2
@@ -35,7 +36,7 @@ steps:
    -p:"SppDevelopmentSource=refs/heads/(?:develop.*|feature/.+|bugfix/.+) => $(SppDevelopmentApiKey)@$(dev-source) {$(dev-source-latest-version)}"
    -p:"SppAllowLocalSource=false"
    -p:"SppEnablePublish=false"
-   '-p:"SppPublishLogFormats={0}vso[task.setvariable variable=pushSource;]{4}|{0}vso[task.setvariable variable=apiKey;]{5}|{0}vso[task.setvariable variable=tags;]$(tags) {2};{1}"'
+   '-p:"SppPublishLogFormats={0}vso[task.setvariable variable=pushSource;]{4}|{0}vso[task.setvariable variable=apiKey;]{5}|{0}vso[task.setvariable variable=tags;]$(tags)$(tag-separator){2};{1}|{0}vso[task.setvariable variable=tag-separator;] "'
    -p:"SppApiKey=$(SppApiKey)"
    -p:"SppCommandPrefix=##"
   displayName: 'dotnet build $(buildConfiguration)'
@@ -52,5 +53,8 @@ steps:
   condition: ne(variables.pushSource, 'null')
   displayName: 'dotnet nuget push'
 
-- script: echo '$(tags)'
-  displayName: 'echo $(tags)'
+- script: dotnet tool update CommandLineBatcher -g --version 1.0.0-pre-u20210228-230337
+  displayName: 'install cb'
+
+- script: cb -c "cmd|/c echo {0}-{1}" "cmd|/c echo {1}-{0}" -s ; -v '$(tags)'
+  displayName: 'tag packages'
