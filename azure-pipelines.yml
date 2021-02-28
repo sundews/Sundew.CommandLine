@@ -26,27 +26,28 @@ steps:
     version: 5.x
 
 - script: >
-    echo
-    dotnet build $(solutionPath) --verbosity diag --configuration $(buildConfiguration)
-    -p:'SppSourceName=$(Build.SourceBranch)'
-    -p:'SppProductionSource=refs/heads/(?:master|main).* => $(source)'
-    -p:'SppIntegrationSource=refs/heads/release/.+ => $(source)'
-    -p:'SppDevelopmentSource=refs/heads/(?:develop.*|feature/.+|bugfix/.+) => $(SppDevelopmentApiKey)@$(dev-source)'
-    -p:'SppAllowLocalSource=false' 
-    -p:'SppEnablePublish=false'
-    -p:'SppPublishLogFormats=##vso[task.setvariable variable=pushSource]{3}'
-    -P:'SppApiKey=$(SppApiKey)'
+   echo
+   dotnet build $(solutionPath) --verbosity diag --configuration $(buildConfiguration)
+   -p:'SppSourceName=$(Build.SourceBranch)'
+   -p:'SppProductionSource=refs/heads/(?:master|main).* => $(source)'
+   -p:'SppIntegrationSource=refs/heads/release/.+ => $(source)'
+   -p:'SppDevelopmentSource=refs/heads/(?:develop.*|feature/.+|bugfix/.+) => $(SppDevelopmentApiKey)@$(dev-source)'
+   -p:'SppAllowLocalSource=false' 
+   -p:'SppEnablePublish=false'
+   -p:'SppPublishLogFormats=##vso[task.setvariable variable=pushSource]{3}'
+   -P:'SppApiKey=$(SppApiKey)'
+  displayName: 'echo'
 
 - script: >
-    dotnet build $(solutionPath) --verbosity diag --configuration $(buildConfiguration)
-    -p:'SppSourceName=$(Build.SourceBranch)'
-    -p:'SppProductionSource=refs/heads/(?:master|main).* => $(source)'
-    -p:'SppIntegrationSource=refs/heads/release/.+ => $(source)'
-    -p:'SppDevelopmentSource=refs/heads/(?:develop.*|feature/.+|bugfix/.+) => $(SppDevelopmentApiKey)@$(dev-source)'
-    -p:'SppAllowLocalSource=false' 
-    -p:'SppEnablePublish=false'
-    -p:'SppPublishLogFormats=##vso[task.setvariable variable=pushSource]{3}'
-    -P:'SppApiKey=$(SppApiKey)'
+   dotnet build $(solutionPath) --verbosity diag --configuration $(buildConfiguration)
+   -p:'SppSourceName=$(Build.SourceBranch)'
+   -p:'SppProductionSource=refs/heads/(?:master|main).* => $(source)'
+   -p:'SppIntegrationSource=refs/heads/release/.+ => $(source)'
+   -p:'SppDevelopmentSource=refs/heads/(?:develop.*|feature/.+|bugfix/.+) => $(SppDevelopmentApiKey)@$(dev-source)'
+   -p:'SppAllowLocalSource=false' 
+   -p:'SppEnablePublish=false'
+   -p:'SppPublishLogFormats=##vso[task.setvariable variable=pushSource]{3}'
+   -P:'SppApiKey=$(SppApiKey)'
   displayName: 'dotnet build $(buildConfiguration)'
 
 - script: dotnet test $(solutionPath) --verbosity normal --configuration $(buildConfiguration) --no-build
