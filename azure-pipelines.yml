@@ -55,5 +55,8 @@ steps:
 - script: dotnet tool update CommandLineBatcher -g --version 1.0.0-pre-u20210228-230337
   displayName: 'install CommandLineBatcher'
 
-- script: cb -c "git|tag -a {0}-{1} -m "{0}-{1}"" -s ',' -v $(tags)
+- script: |
+   git config user.email "build@sundew.dev"
+   git config user.name "sundew-build"
+   cb -c "git|tag -a {0}-{1} -m "{0}-{1}"" -s ',' -v $(tags)
   displayName: 'tag packages'
