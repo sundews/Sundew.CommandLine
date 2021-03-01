@@ -20,7 +20,7 @@ namespace Sundew.CommandLine.Internal.Values
     {
         private const string CannotAddARequiredValueAfterAnOptionalValueText = "Cannot add a required value after an optional value.";
         private const string CannotAddAnythingAfterAListOfValuesText = "Cannot add anything after a list of values.";
-        private readonly List<IValue> values = new List<IValue>();
+        private readonly List<IValue> values = new();
 
         public bool HasValues => this.values.Any();
 

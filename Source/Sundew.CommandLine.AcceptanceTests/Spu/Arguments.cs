@@ -5,7 +5,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.AcceptanceTests.Sbu
+namespace Sundew.CommandLine.AcceptanceTests.Spu
 {
     using System;
     using System.Collections.Generic;
@@ -73,8 +73,8 @@ namespace Sundew.CommandLine.AcceptanceTests.Sbu
             argumentsBuilder.AddOptional(null, "version", () => this.NuGetVersion?.ToString(), s => this.NuGetVersion = Version.Parse(s), "Pins the NuGet package version.", defaultValueText: "Latest if not pinned");
             argumentsBuilder.AddOptional("d", "root-directory", () => this.RootDirectory, s => this.RootDirectory = s, "The directory to search to projects", true, defaultValueText: "Current directory");
             argumentsBuilder.AddSwitch("pr", "prerelease", this.AllowPrerelease, b => this.AllowPrerelease = b, "Allow updating to latest prerelease version");
-            argumentsBuilder.AddSwitch("v", "verbose", this.Verbose, b => this.Verbose = b, "Verbose");
             argumentsBuilder.AddSwitch("l", "local", this.UseLocalSource, b => this.UseLocalSource = b, $@"Forces the source to ""{LocalSundewName}""");
+            argumentsBuilder.AddSwitch("v", "verbose", this.Verbose, b => this.Verbose = b, "Verbose");
         }
 
         private string Serialize(PackageId id, CultureInfo cultureInfo)

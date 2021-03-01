@@ -17,9 +17,11 @@ namespace Sundew.CommandLine.Internal
 
     internal sealed class ArgumentsBuilder : IArgumentsBuilder
     {
-        private readonly Dictionary<string, IOption> options = new Dictionary<string, IOption>();
-        private readonly Dictionary<string, Switch> switches = new Dictionary<string, Switch>();
+        private readonly Dictionary<string, IOption> options = new();
+        private readonly Dictionary<string, Switch> switches = new();
         private bool isConfigured;
+        private int currentOptionIndex;
+        private int currentSwitchIndex;
 
         public ArgumentsBuilder()
         {
@@ -27,15 +29,17 @@ namespace Sundew.CommandLine.Internal
             this.Switches = new ArgumentRegistry<Switch>(this.switches);
         }
 
-        public List<IArgumentInfo> RequiredArguments { get; } = new List<IArgumentInfo>();
+        public List<IArgumentInfo> RequiredArguments { get; } = new();
 
         public ArgumentRegistry<IOption> Options { get; }
 
         public ArgumentRegistry<Switch> Switches { get; }
 
-        public ValueRegistry Values { get; } = new ValueRegistry();
+        public ValueRegistry Values { get; } = new();
 
         public Separators Separators { get; set; } = Separators.Create();
+
+        public OptionsHelpOrder OptionsHelpOrder { get; set; } = OptionsHelpOrder.RequiredFirst;
 
         public CultureInfo CultureInfo { get; set; } = CultureInfo.CurrentCulture;
 
@@ -62,7 +66,8 @@ namespace Sundew.CommandLine.Internal
                 useDoubleQuotes,
                 actualSeparator,
                 this.CultureInfo,
-                null);
+                null,
+                this.GetIndex());
             this.AddOption(option, actualSeparator);
         }
 
@@ -76,7 +81,8 @@ namespace Sundew.CommandLine.Internal
                 getDefault,
                 setOptions,
                 true,
-                helpText);
+                helpText,
+                this.GetIndex());
             this.AddOption(option, default);
         }
 
@@ -101,7 +107,8 @@ namespace Sundew.CommandLine.Internal
                 true,
                 helpText,
                 useDoubleQuotes,
-                null);
+                null,
+                this.GetIndex());
             this.AddOption(option, default);
         }
 
@@ -128,7 +135,8 @@ namespace Sundew.CommandLine.Internal
                useDoubleQuotes,
                actualSeparator,
                this.CultureInfo,
-               defaultValueText);
+               defaultValueText,
+               this.GetIndex());
             this.AddOption(option, actualSeparator);
         }
 
@@ -142,7 +150,8 @@ namespace Sundew.CommandLine.Internal
                 getDefault,
                 setOptions,
                 false,
-                helpText);
+                helpText,
+                this.GetIndex());
             this.AddOption(option, default);
         }
 
@@ -167,7 +176,8 @@ namespace Sundew.CommandLine.Internal
                 false,
                 helpText,
                 useDoubleQuotes,
-                defaultValueText);
+                defaultValueText,
+                this.GetIndex());
             this.AddOption(option, default);
         }
 
@@ -177,7 +187,7 @@ namespace Sundew.CommandLine.Internal
             var isAliasNullOrEmpty = string.IsNullOrEmpty(alias);
             VerifyNameAndAlias(isNameNullOrEmpty, isAliasNullOrEmpty);
 
-            var @switch = new Switch(name, alias, value, setValue, helpText);
+            var @switch = new Switch(name, alias, value, setValue, helpText, this.currentSwitchIndex++);
             if (!isNameNullOrEmpty)
             {
                 this.switches.Add($"-{@switch.Name}", @switch);
@@ -335,6 +345,11 @@ namespace Sundew.CommandLine.Internal
             {
                 this.RequiredArguments.Add(value);
             }
+        }
+
+        private int GetIndex()
+        {
+            return this.currentOptionIndex++;
         }
     }
 }

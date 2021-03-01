@@ -17,12 +17,13 @@ namespace Sundew.CommandLine.Internal
     {
         private readonly Action<bool> setValue;
 
-        public Switch(string? name, string alias, bool isSet, Action<bool> setValue, string helpText)
+        public Switch(string? name, string alias, bool isSet, Action<bool> setValue, string helpText, int index)
         {
             this.Name = name;
             this.Alias = alias;
             this.DefaultValue = this.IsSet = isSet;
             this.setValue = setValue;
+            this.Index = index;
             this.HelpLines = HelpTextHelper.GetHelpLines(helpText);
             this.Usage = HelpTextHelper.GetUsage(name, alias);
         }
@@ -42,6 +43,8 @@ namespace Sundew.CommandLine.Internal
         public bool IsSet { get; private set; }
 
         public bool DefaultValue { get; }
+
+        public int Index { get; }
 
         public void ResetToDefault(CultureInfo cultureInfo)
         {

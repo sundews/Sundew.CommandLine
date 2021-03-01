@@ -5,7 +5,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.AcceptanceTests.Sbu
+namespace Sundew.CommandLine.AcceptanceTests.Spu
 {
     using System;
 

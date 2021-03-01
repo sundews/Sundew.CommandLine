@@ -30,7 +30,8 @@ namespace Sundew.CommandLine.Internal.Options
             bool isRequired,
             string helpText,
             bool useDoubleQuotes,
-            string? defaultValueHelpText)
+            string? defaultValueHelpText,
+            int index)
         {
             this.Name = name;
             this.Alias = alias;
@@ -39,6 +40,7 @@ namespace Sundew.CommandLine.Internal.Options
             this.Serialize = serialize;
             this.deserialize = deserialize;
             this.defaultValueHelpText = defaultValueHelpText;
+            this.Index = index;
             this.UseDoubleQuotes = useDoubleQuotes;
             this.IsRequired = isRequired;
             this.HelpLines = HelpTextHelper.GetHelpLines(helpText);
@@ -60,6 +62,8 @@ namespace Sundew.CommandLine.Internal.Options
         public bool UseDoubleQuotes { get; }
 
         public bool IsRequired { get; }
+
+        public int Index { get; }
 
         public string Usage { get; }
 

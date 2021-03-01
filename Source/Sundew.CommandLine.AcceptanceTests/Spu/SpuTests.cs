@@ -1,11 +1,11 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="SbuTests.cs" company="Hukano">
+// <copyright file="SpuTests.cs" company="Hukano">
 // Copyright (c) Hukano. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.AcceptanceTests.Sbu
+namespace Sundew.CommandLine.AcceptanceTests.Spu
 {
     using System;
     using System.Collections.Generic;
@@ -14,7 +14,7 @@ namespace Sundew.CommandLine.AcceptanceTests.Sbu
     using Sundew.Base.Text;
     using Xunit;
 
-    public class SbuTests
+    public class SpuTests
     {
         [Fact]
         public void Given_NoValues_Then_ResultShouldBeEmpty()
@@ -50,8 +50,8 @@ namespace Sundew.CommandLine.AcceptanceTests.Sbu
   -s  | --source         | The source or source name to search for packages (All supported)     | Default: NuGet.config: defaultPushSource
       | --version        | Pins the NuGet package version.                                      | Default: Latest if not pinned
   -d  | --root-directory | The directory to search to projects                                  | Default: Current directory
-  -l  | --local          | Forces the source to ""Local-Sundew""
   -pr | --prerelease     | Allow updating to latest prerelease version
+  -l  | --local          | Forces the source to ""Local-Sundew""
   -v  | --verbose        | Verbose
 ";
             var testee = new Arguments(new List<PackageId> { new("Sundew.Base", null) }, new List<string> { "Sundew.CommandLine" });
