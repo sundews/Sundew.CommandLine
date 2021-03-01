@@ -59,4 +59,5 @@ steps:
    git config user.email "build@sundew.dev"
    git config user.name "sundew-build"
    cb -c "git|tag -a {0}-{1} -m "{0}-{1}"" -s ',' -v $(tags)
+   git tag
   displayName: 'tag packages'
