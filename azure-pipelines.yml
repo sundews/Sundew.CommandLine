@@ -56,12 +56,9 @@ steps:
   displayName: 'install CommandLineBatcher'
 
 - script: |
-   git config user.email "build@sundew.dev"
+   git config user.email "sundew-dev@outlook.com"
    git config user.name "sundew-build"
   displayName: setup git
 
-- script: cb -c "git|tag -a {0}-{1} -m "{0}-{1}"" -s ',' -v $(tags)
+- script: cb -c "git|tag -a {0}-{1} -m "{0}-{1}"" "git|push https://sundew-dev:$(SundewDevPwd)@github.com/hugener/Sundew.CommandLine.git {0}-{1}" -s ',' -v $(tags)
   displayName: 'tag packages'
-
-- script: git tag
-  displayName: show tags
