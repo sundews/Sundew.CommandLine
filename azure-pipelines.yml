@@ -36,7 +36,7 @@ steps:
    -p:"SppDevelopmentSource=refs/heads/(?:develop.*|feature/.+|bugfix/.+) => $(SppDevelopmentApiKey)@$(dev-source) {$(dev-source-latest-version)}"
    -p:"SppAllowLocalSource=false"
    -p:"SppEnablePublish=false"
-   '-p:"SppPublishLogFormats=##vso[task.setvariable variable=pushSource;]{4}|##vso[task.setvariable variable=apiKey;]{5}|##vso[task.setvariable variable=tags;]$(tags)$(tag-separator){2};{1}|##vso[task.setvariable variable=tag-separator;] "'
+   '-p:"SppPublishLogFormats=##vso[task.setvariable variable=pushSource;]{4}|##vso[task.setvariable variable=apiKey;]{5}|##vso[task.setvariable variable=tags;]$(tags)$(tag-separator){2}';'{1}|##vso[task.setvariable variable=tag-separator;] "'
    -p:"SppApiKey=$(SppApiKey)"
   displayName: 'dotnet build $(buildConfiguration)'
 
@@ -55,5 +55,5 @@ steps:
 - script: dotnet tool update CommandLineBatcher -g --version 1.0.0-pre-u20210228-230337
   displayName: 'install CommandLineBatcher'
 
-- script: cb -c "bash|echo {0}-{1}" "bash|echo {1}-{0}" -s ';' -v '$(tags)'
+- script: cb -c "git|tag {0}-{1}" "git|tag {1}-{0}" -s ';' -v $(tags)
   displayName: 'tag packages'
