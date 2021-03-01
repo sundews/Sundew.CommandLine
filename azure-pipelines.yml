@@ -58,6 +58,10 @@ steps:
 - script: |
    git config user.email "build@sundew.dev"
    git config user.name "sundew-build"
-   cb -c "git|tag -a {0}-{1} -m "{0}-{1}"" -s ',' -v $(tags)
-   git tag
+  displayName: setup git
+
+- script: cb -c "git|tag -a {0}-{1} -m "{0}-{1}"" -s ',' -v $(tags)
   displayName: 'tag packages'
+
+- script: git tag
+  displayName: show tags
