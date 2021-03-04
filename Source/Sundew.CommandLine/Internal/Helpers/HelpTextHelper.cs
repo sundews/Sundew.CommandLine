@@ -8,8 +8,6 @@
 namespace Sundew.CommandLine.Internal.Helpers
 {
     using System;
-    using System.Globalization;
-    using System.Reflection;
     using System.Text;
     using Sundew.Base.Text;
 
@@ -19,29 +17,31 @@ namespace Sundew.CommandLine.Internal.Helpers
             StringBuilder stringBuilder,
             Settings settings,
             IOption option,
-            int maxName,
-            int maxAlias,
-            int maxHelpText,
             int indent,
-            bool isForVerb)
+            int nameMaxLength,
+            int aliasMaxLength,
+            int helpTextMaxLength,
+            bool isForVerb,
+            bool isForNested)
         {
             var indentText = GetIndentation(indent);
-            var maxNamePadRight = -maxName;
-            var maxAliasPadRight = -maxAlias;
-            var maxHelpTextPadRight = -maxHelpText;
+            var additionalIndentation = option.IsChoice ? 1 : 0;
+            var namePadRight = -(nameMaxLength - additionalIndentation);
+            var aliasPadRight = -aliasMaxLength;
+            var helpTextPadRight = -helpTextMaxLength;
             stringBuilder.AppendFormat(
                 settings.CultureInfo,
-                $@"  {(isForVerb ? Constants.SpaceText : string.Empty)}{indentText}{{0,{maxNamePadRight}}}{Constants.HelpSeparator}{{1,{maxAliasPadRight}}}{Constants.HelpSeparator}{{2,{maxHelpTextPadRight}}}{Constants.HelpSeparator}",
+                $@"  {(isForVerb ? Constants.SpaceText : string.Empty)}{indentText}{' '.Repeat(additionalIndentation)}{{0,{namePadRight}}}{Constants.HelpSeparator}{{1,{aliasPadRight}}}{Constants.HelpSeparator}{{2,{helpTextPadRight}}}{Constants.HelpSeparator}",
                 option.Name != null ? $"{Constants.ArgumentStartCharacter}{option.Name}{(option.Separators.NameSeparator != Constants.SpaceCharacter ? option.Separators.NameSeparator.ToString() : string.Empty)}" : string.Empty,
-                option.Alias != null ? $"{Constants.DoubleDashText}{option.Alias}{(option.Separators.AliasSeparator != Constants.SpaceCharacter ? option.Separators.AliasSeparator.ToString() : string.Empty)}" : string.Empty,
+                $"{Constants.DoubleDashText}{option.Alias}{(option.Separators.AliasSeparator != Constants.SpaceCharacter ? option.Separators.AliasSeparator.ToString() : string.Empty)}",
                 option.HelpLines[0]);
-            option.AppendDefaultText(stringBuilder, settings, indent > 0);
+            option.AppendDefaultText(stringBuilder, settings, isForNested);
             stringBuilder.AppendLine();
             for (int i = 1; i < option.HelpLines.Count; i++)
             {
                 stringBuilder.AppendFormat(
                     settings.CultureInfo,
-                    $@"  {(isForVerb ? Constants.SpaceText : string.Empty)}{indentText}{{0,{maxNamePadRight}}}{' '.Repeat(Constants.HelpSeparator.Length)}{{1,{maxAliasPadRight}}}{' '.Repeat(Constants.HelpSeparator.Length)}{{2,{maxHelpTextPadRight}}}",
+                    $@"  {(isForVerb ? Constants.SpaceText : string.Empty)}{indentText}{' '.Repeat(additionalIndentation)}{{0,{namePadRight}}}{' '.Repeat(Constants.HelpSeparator.Length)}{{1,{aliasPadRight}}}{' '.Repeat(Constants.HelpSeparator.Length)}{{2,{helpTextPadRight}}}",
                     string.Empty,
                     string.Empty,
                     option.HelpLines[i]);
@@ -62,7 +62,7 @@ namespace Sundew.CommandLine.Internal.Helpers
             {
                 stringBuilder.AppendFormat(
                     settings.CultureInfo,
-                    $@"  {(isForVerb ? Constants.SpaceText : string.Empty)}{GetIndentation(indent)}{{0,{maxNamePadRight}}}{' '.Repeat(Constants.HelpSeparator.Length)}{value.HelpLines[i]}{' '.Repeat(Constants.HelpSeparator.Length)}{defaultOrRequiredText}",
+                    $@"  {(isForVerb ? Constants.SpaceText : string.Empty)}{GetIndentation(indent)}{{0,{maxNamePadRight}}}{' '.Repeat(Constants.HelpSeparator.Length)}{value.HelpLines[i]}",
                     string.Empty);
                 stringBuilder.AppendLine();
             }

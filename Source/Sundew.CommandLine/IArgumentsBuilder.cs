@@ -75,6 +75,35 @@ namespace Sundew.CommandLine
             where TOptions : class, IArguments;
 
         /// <summary>
+        /// Adds the required enum.
+        /// </summary>
+        /// <typeparam name="TEnum">The type of the enum.</typeparam>
+        /// <param name="name">The name.</param>
+        /// <param name="alias">The alias.</param>
+        /// <param name="getEnumFunc">The get enum function.</param>
+        /// <param name="setEnumAction">The set enum action.</param>
+        /// <param name="helpText">The help text.</param>
+        /// <param name="separators">The separators.</param>
+        /// <param name="defaultValueText">The default value text.</param>
+        void AddRequiredEnum<TEnum>(string? name, string alias, Func<TEnum> getEnumFunc, Action<TEnum> setEnumAction, string helpText, Separators separators = default, string? defaultValueText = null)
+            where TEnum : Enum;
+
+        /// <summary>
+        /// Adds the required enum.
+        /// </summary>
+        /// <typeparam name="TEnum">The type of the enum.</typeparam>
+        /// <param name="name">The name.</param>
+        /// <param name="alias">The alias.</param>
+        /// <param name="getEnumFunc">The get enum function.</param>
+        /// <param name="setEnumAction">The set enum action.</param>
+        /// <param name="options">The options.</param>
+        /// <param name="helpText">The help text.</param>
+        /// <param name="separators">The separators.</param>
+        /// <param name="defaultValueText">The default value text.</param>
+        void AddRequiredEnum<TEnum>(string? name, string alias, Func<TEnum> getEnumFunc, Action<TEnum> setEnumAction, IEnumerable<TEnum> options, string helpText, Separators separators = default, string? defaultValueText = null)
+            where TEnum : Enum;
+
+        /// <summary>
         /// Adds the required list.
         /// </summary>
         /// <param name="name">The name.</param>
@@ -109,6 +138,13 @@ namespace Sundew.CommandLine
         /// <param name="helpText">The help text.</param>
         /// <param name="useDoubleQuotes">if set to <c>true</c> [use double quotes].</param>
         void AddRequiredList<TValue>(string? name, string alias, IList<TValue> list, Serialize<TValue> serialize, Deserialize<TValue> deserialize, string helpText, bool useDoubleQuotes = false);
+
+        /// <summary>
+        /// Adds the required alternatives.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <param name="selectChoicesAction">The select choice action.</param>
+        void RequireAnyOf(string name, Action<IChoiceBuilder> selectChoicesAction);
 
         /// <summary>
         /// Adds the optional.
@@ -149,6 +185,35 @@ namespace Sundew.CommandLine
         /// <param name="defaultValueText">The default value help text.</param>
         void AddOptional<TOptions>(string? name, string alias, TOptions? options, Func<TOptions> getDefault, Action<TOptions> setOptions, string helpText, string? defaultValueText = null)
             where TOptions : class, IArguments;
+
+        /// <summary>
+        /// Adds the optional enum.
+        /// </summary>
+        /// <typeparam name="TEnum">The type of the enum.</typeparam>
+        /// <param name="name">The name.</param>
+        /// <param name="alias">The alias.</param>
+        /// <param name="getEnumFunc">The get enum function.</param>
+        /// <param name="setEnumAction">The set enum action.</param>
+        /// <param name="helpText">The help text.</param>
+        /// <param name="separators">The separators.</param>
+        /// <param name="defaultValueText">The default value text.</param>
+        void AddOptionalEnum<TEnum>(string? name, string alias, Func<TEnum> getEnumFunc, Action<TEnum> setEnumAction, string helpText, Separators separators = default, string? defaultValueText = null)
+            where TEnum : Enum;
+
+        /// <summary>
+        /// Adds the optional enum.
+        /// </summary>
+        /// <typeparam name="TEnum">The type of the enum.</typeparam>
+        /// <param name="name">The name.</param>
+        /// <param name="alias">The alias.</param>
+        /// <param name="getEnumFunc">The get enum function.</param>
+        /// <param name="setEnumAction">The set enum action.</param>
+        /// <param name="options">The options.</param>
+        /// <param name="helpText">The help text.</param>
+        /// <param name="separators">The separators.</param>
+        /// <param name="defaultValueText">The default value text.</param>
+        void AddOptionalEnum<TEnum>(string? name, string alias, Func<TEnum> getEnumFunc, Action<TEnum> setEnumAction, IEnumerable<TEnum> options, string helpText, Separators separators = default, string? defaultValueText = null)
+            where TEnum : Enum;
 
         /// <summary>
         /// Adds the optional list.

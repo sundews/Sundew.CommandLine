@@ -27,14 +27,6 @@ namespace Sundew.CommandLine
         /// </value>
         IReadOnlyList<string> HelpLines { get; }
 
-        /// <summary>
-        /// Gets a value indicating whether this instance is nesting.
-        /// </summary>
-        /// <value>
-        /// <c>true</c> if this instance is nesting; otherwise, <c>false</c>.
-        /// </value>
-        bool IsNesting { get; }
-
         /// <summary>Resets to default.</summary>
         /// <param name="cultureInfo">The culture information.</param>
         void ResetToDefault(CultureInfo cultureInfo);

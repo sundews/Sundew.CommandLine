@@ -1,19 +1,27 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="StringExtensions.cs" company="Hukano">
+// <copyright file="ReadOnlyMemoryExtensions.cs" company="Hukano">
 // Copyright (c) Hukano. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.Internal.Extensions
+namespace Sundew.CommandLine.Extensions
 {
     using System;
     using System.Collections.Generic;
     using Sundew.Base.Text;
 
-    internal static class StringExtensions
+    /// <summary>
+    /// Extends the ReadOnlyMemory of char with Command Line parsing.
+    /// </summary>
+    public static class ReadOnlyMemoryExtensions
     {
-        public static IEnumerable<string> SplitBasedCommandLineTokenizer(this ReadOnlyMemory<char> input)
+        /// <summary>
+        /// Parses the command line arguments.
+        /// </summary>
+        /// <param name="input">The input.</param>
+        /// <returns>The arguments.</returns>
+        public static IEnumerable<string> ParseCommandLineArguments(this ReadOnlyMemory<char> input)
         {
             const char doubleQuote = '\"';
             const char slash = '\\';

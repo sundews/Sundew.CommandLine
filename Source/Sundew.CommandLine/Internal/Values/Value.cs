@@ -56,8 +56,6 @@ namespace Sundew.CommandLine.Internal.Values
 
         public string? DefaultValueHelpText { get; }
 
-        public bool IsNesting { get; }
-
         public void ResetToDefault(CultureInfo cultureInfo)
         {
             this.deserialize(this.defaultValue.AsSpan(), cultureInfo);
@@ -102,6 +100,11 @@ namespace Sundew.CommandLine.Internal.Values
             SerializationHelper.AppendQuotes(stringBuilder, this.useDoubleQuotes);
 
             return Result.Success();
+        }
+
+        public void AppendMissingArgumentsHint(StringBuilder stringBuilder)
+        {
+            stringBuilder.AppendLine(this.Usage);
         }
 
         private ReadOnlySpan<char> SerializeValue(Settings settings)

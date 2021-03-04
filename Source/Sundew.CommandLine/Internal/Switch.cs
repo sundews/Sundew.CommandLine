@@ -40,6 +40,8 @@ namespace Sundew.CommandLine.Internal
 
         public bool IsNesting => false;
 
+        public bool IsChoice => false;
+
         public bool IsSet { get; private set; }
 
         public bool DefaultValue { get; }

@@ -30,7 +30,8 @@ namespace Sundew.CommandLine.Internal.Options
             Action<TOptions> setOptions,
             bool isRequired,
             string helpText,
-            int index)
+            int index,
+            IArgumentHelpInfo? owner)
         {
             this.options = options;
             this.getDefault = getDefault;
@@ -39,6 +40,7 @@ namespace Sundew.CommandLine.Internal.Options
             this.Alias = alias;
             this.IsRequired = isRequired;
             this.Index = index;
+            this.Owner = owner;
             this.HelpLines = HelpTextHelper.GetHelpLines(helpText);
             this.Usage = HelpTextHelper.GetUsage(name, alias);
         }
@@ -53,7 +55,11 @@ namespace Sundew.CommandLine.Internal.Options
 
         public int Index { get; }
 
+        public IArgumentHelpInfo? Owner { get; }
+
         public bool IsNesting => true;
+
+        public bool IsChoice => this.Owner != null;
 
         public string Usage { get; }
 
@@ -145,13 +151,18 @@ namespace Sundew.CommandLine.Internal.Options
             }
         }
 
-        public void AppendHelpText(StringBuilder stringBuilder, Settings settings, int maxName, int maxAlias, int maxHelpText, int indent, bool isForVerb)
+        public void AppendHelpText(StringBuilder stringBuilder, Settings settings, int indent, int nameMaxLength, int aliasMaxLength, int helpTextMaxLength, bool isForVerb, bool isForNested)
         {
-            HelpTextHelper.AppendHelpText(stringBuilder, settings, this, maxName, maxAlias, maxHelpText, indent, false);
+            HelpTextHelper.AppendHelpText(stringBuilder, settings, this, indent, nameMaxLength, aliasMaxLength, helpTextMaxLength, false, isForNested);
             var argumentsBuilder = new ArgumentsBuilder { Separators = settings.Separators };
             var defaultOptions = this.options ?? this.getDefault();
             defaultOptions.Configure(argumentsBuilder);
-            CommandLineHelpGenerator.AppendCommandLineHelpText(argumentsBuilder, stringBuilder, indent + 1, maxName, maxAlias, isForVerb, settings);
+            CommandLineHelpGenerator.AppendCommandLineHelpText(argumentsBuilder, stringBuilder, indent + 1, nameMaxLength, aliasMaxLength, isForVerb, settings, true);
+        }
+
+        public void AppendMissingArgumentsHint(StringBuilder stringBuilder)
+        {
+            stringBuilder.AppendLine(this.Usage);
         }
 
         public void ResetToDefault(CultureInfo cultureInfo)

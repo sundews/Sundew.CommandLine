@@ -55,6 +55,14 @@ namespace Sundew.Git.CommandLine.LargeFileSystem
         /// <value>The name.</value>
         public string Name { get; } = "lfs";
 
+        /// <summary>
+        /// Gets the short name.
+        /// </summary>
+        /// <value>
+        /// The short name.
+        /// </value>
+        public string? ShortName { get; } = null;
+
         /// <summary>Configures the specified arguments builder.</summary>
         /// <param name="argumentsBuilder">The arguments builder.</param>
         public void Configure(IArgumentsBuilder argumentsBuilder)

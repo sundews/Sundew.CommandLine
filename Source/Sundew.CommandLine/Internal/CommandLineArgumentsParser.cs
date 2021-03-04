@@ -12,10 +12,11 @@ namespace Sundew.CommandLine.Internal
     using System.Linq;
     using System.Text;
     using Sundew.Base.Computation;
+    using Sundew.Base.Text;
 
     internal class CommandLineArgumentsParser
     {
-        private const string HelpRequestedText = "Help requested";
+        internal const string HelpRequestedText = "Help requested";
 
         public Result.IfError<ParserError> Parse(
             ArgumentsBuilder argumentsBuilder,
@@ -44,6 +45,11 @@ namespace Sundew.CommandLine.Internal
                         if (argumentsBuilder.Options.TryGet(actualArgument, out var option))
                         {
                             argumentsBuilder.RequiredArguments.Remove(option);
+                            if (option.Owner != null)
+                            {
+                                argumentsBuilder.RequiredArguments.Remove(option.Owner);
+                            }
+
                             ReadOnlySpan<char> argumentValue = null;
                             if (argumentValueSeparatorIndex > -1)
                             {
@@ -142,7 +148,7 @@ namespace Sundew.CommandLine.Internal
                     GetMissingArguments(argumentsBuilder.RequiredArguments)));
         }
 
-        private static string GetMissingArguments(List<IArgumentInfo> requiredArguments)
+        private static string GetMissingArguments(List<IArgumentMissingInfo> requiredArguments)
         {
             if (requiredArguments.Count == 0)
             {
@@ -152,10 +158,10 @@ namespace Sundew.CommandLine.Internal
             var stringBuilder = new StringBuilder();
             foreach (var requiredArgumentInfo in requiredArguments)
             {
-                stringBuilder.Append($"{requiredArgumentInfo.Usage}, ");
+                requiredArgumentInfo.AppendMissingArgumentsHint(stringBuilder);
             }
 
-            return stringBuilder.ToString(0, stringBuilder.Length - 2);
+            return stringBuilder.ToStringFromEnd(Environment.NewLine.Length);
         }
     }
 }

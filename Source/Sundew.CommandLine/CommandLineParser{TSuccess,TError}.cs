@@ -12,8 +12,8 @@ namespace Sundew.CommandLine
     using System.Linq;
     using System.Threading.Tasks;
     using Sundew.Base.Computation;
+    using Sundew.CommandLine.Extensions;
     using Sundew.CommandLine.Internal;
-    using Sundew.CommandLine.Internal.Extensions;
     using Sundew.CommandLine.Internal.Verbs;
 
     /// <summary>
@@ -27,8 +27,8 @@ namespace Sundew.CommandLine
     {
         private const string ArgumentsOrVerbsWereNotConfiguredText = "Arguments and/or verbs were not configured.";
         private const string ArgumentsWereNotConfiguredOrAnUnknownVerbWasUsedText = "Either arguments were not configured or an unknown verb was used.";
-        private readonly CommandLineArgumentsParser commandLineArgumentsParser = new CommandLineArgumentsParser();
-        private readonly VerbRegistry<TSuccess, TError> verbRegistry = new VerbRegistry<TSuccess, TError>(NullVerb.Instance, verb => Result.From(false, default(TSuccess)!, new ParserError<TError>(ParserErrorType.UnknownVerb, "Null verb")), null);
+        private readonly CommandLineArgumentsParser commandLineArgumentsParser = new();
+        private readonly VerbRegistry<TSuccess, TError> verbRegistry = new(NullVerb.Instance, verb => Result.From(false, default(TSuccess)!, new ParserError<TError>(ParserErrorType.UnknownVerb, "Null verb")), null);
         private ArgumentsAction<TSuccess, TError>? argumentsAction;
 
         /// <summary>
@@ -159,7 +159,7 @@ namespace Sundew.CommandLine
         /// <returns>The parser result.</returns>
         public ValueTask<Result<TSuccess, ParserError<TError>>> ParseAsync(string arguments, int startIndex)
         {
-            var argumentArray = arguments.AsMemory().SplitBasedCommandLineTokenizer().ToArray();
+            var argumentArray = arguments.AsMemory().ParseCommandLineArguments().ToArray();
             return this.ParseAsync(argumentArray, startIndex);
         }
 
@@ -194,27 +194,40 @@ namespace Sundew.CommandLine
 
                     if (currentVerbAction != null)
                     {
-                        var verbResult = this.ParseArguments(argumentList, currentVerbAction, currentVerbAction.Verb, currentVerbAction.Handler);
-                        return await CheckResultForHelpRequestedErrorAsync(verbResult, currentVerbAction, this.argumentsAction, this.Settings).ConfigureAwait(false);
+                        var verbResult = await this.ParseArguments(argumentList, currentVerbAction, currentVerbAction.Verb, currentVerbAction.Handler).ConfigureAwait(false);
+                        return CheckResultForHelpRequestedError(verbResult, currentVerbAction, this.argumentsAction, this.Settings);
                     }
                 }
             }
 
+            Result<TSuccess, ParserError<TError>> result;
             if (this.argumentsAction == null)
             {
                 if (this.verbRegistry.HasVerbs)
                 {
-                    return Result.Error(new ParserError<TError>(
-                        ParserErrorType.ArgumentsNotConfiguredOrUnknownVerb,
-                        ArgumentsWereNotConfiguredOrAnUnknownVerbWasUsedText));
+                    if (Constants.HelpRequestTexts.Contains(argumentList.FirstOrDefault() ?? string.Empty))
+                    {
+                        result = Result.Error(new ParserError<TError>(ParserErrorType.HelpRequested, CommandLineArgumentsParser.HelpRequestedText));
+                    }
+                    else
+                    {
+                        result = Result.Error(new ParserError<TError>(
+                            ParserErrorType.ArgumentsNotConfiguredOrUnknownVerb,
+                            ArgumentsWereNotConfiguredOrAnUnknownVerbWasUsedText));
+                    }
                 }
-
-                return Result.Error(new ParserError<TError>(
-                    ParserErrorType.ArgumentsAndVerbsAreNotConfigured, ArgumentsOrVerbsWereNotConfiguredText));
+                else
+                {
+                    result = Result.Error(new ParserError<TError>(
+                        ParserErrorType.ArgumentsAndVerbsAreNotConfigured, ArgumentsOrVerbsWereNotConfiguredText));
+                }
+            }
+            else
+            {
+                result = await this.ParseArguments(argumentList, this.argumentsAction, this.argumentsAction.Arguments, this.argumentsAction.Handler).ConfigureAwait(false);
             }
 
-            var result = this.ParseArguments(argumentList, this.argumentsAction, this.argumentsAction.Arguments, this.argumentsAction.Handler);
-            return await CheckResultForHelpRequestedErrorAsync(result, this.verbRegistry, this.argumentsAction, this.Settings).ConfigureAwait(false);
+            return CheckResultForHelpRequestedError(result, this.verbRegistry, this.argumentsAction, this.Settings);
         }
 
         /// <summary>
@@ -243,7 +256,7 @@ namespace Sundew.CommandLine
         /// <returns>The parser result.</returns>
         public Result<TSuccess, ParserError<TError>> Parse(string arguments, int startIndex)
         {
-            var argumentArray = arguments.AsMemory().SplitBasedCommandLineTokenizer().ToArray();
+            var argumentArray = arguments.AsMemory().ParseCommandLineArguments().ToArray();
             return this.Parse(argumentArray, startIndex);
         }
 
@@ -269,13 +282,12 @@ namespace Sundew.CommandLine
             return CommandLineHelpGenerator.CreateHelpText(this.verbRegistry, this.argumentsAction, this.Settings);
         }
 
-        private static async ValueTask<Result<TSuccess, ParserError<TError>>> CheckResultForHelpRequestedErrorAsync(
-            ValueTask<Result<TSuccess, ParserError<TError>>> resultTask,
+        private static Result<TSuccess, ParserError<TError>> CheckResultForHelpRequestedError(
+            Result<TSuccess, ParserError<TError>> result,
             VerbRegistry<TSuccess, TError> verbRegistry,
             ArgumentsAction<TSuccess, TError>? argumentsAction,
             Settings settings)
         {
-            var result = await resultTask.ConfigureAwait(false);
             if (!result)
             {
                 if (result.Error.Type == ParserErrorType.HelpRequested)

@@ -21,6 +21,14 @@ namespace Sundew.CommandLine
         /// <value>The name.</value>
         string Name { get; }
 
+        /// <summary>
+        /// Gets the short name.
+        /// </summary>
+        /// <value>
+        /// The short name.
+        /// </value>
+        string? ShortName { get; }
+
         /// <summary>Gets the help text.</summary>
         /// <value>The help text.</value>
         string HelpText { get; }

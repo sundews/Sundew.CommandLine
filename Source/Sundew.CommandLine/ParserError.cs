@@ -9,6 +9,7 @@ namespace Sundew.CommandLine
 {
     using System;
     using System.Text;
+    using Sundew.Base.Text;
     using Sundew.CommandLine.Internal;
 
     /// <summary>
@@ -87,7 +88,7 @@ namespace Sundew.CommandLine
         /// <returns>A new <see cref="ParserError{TInfo}"/>.</returns>
         public static ParserError<TInfo> From<TInfo>(TInfo info)
         {
-            return new ParserError<TInfo>(info);
+            return new(info);
         }
 
         /// <summary>
@@ -117,7 +118,9 @@ namespace Sundew.CommandLine
                     break;
                 case ParserErrorType.RequiredArgumentMissing:
                     stringBuilder.Append(SpaceCharacter, indent);
-                    stringBuilder.AppendLine($"The required options were missing: {parserError.Message}.");
+                    stringBuilder.AppendLine($"The required options were missing:");
+                    stringBuilder.Append(SpaceCharacter, indent + 1);
+                    stringBuilder.AppendLine(parserError.Message.Replace(Environment.NewLine, $"{Environment.NewLine}{SpaceCharacter.Repeat(indent + 1)}"));
                     break;
                 case ParserErrorType.SerializationException:
                     stringBuilder.Append(SpaceCharacter, indent);

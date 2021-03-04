@@ -54,11 +54,15 @@ Features:
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Sundew.Base" Version="6.0.0" />
-    <PackageReference Include="Sundew.Packaging.Publish" Version="4.0.0-pre-u20210228-223414">
+    <PackageReference Include="Sundew.Packaging.Publish" Version="4.0.0-pre-u20210304-221638">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Internal\Choices\" />
   </ItemGroup>
 
 </Project>

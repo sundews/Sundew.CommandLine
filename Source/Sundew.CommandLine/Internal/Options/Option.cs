@@ -34,7 +34,8 @@ namespace Sundew.CommandLine.Internal.Options
             Separators separators,
             CultureInfo cultureInfo,
             string? defaultValueHelpText,
-            int index)
+            int index,
+            IArgumentHelpInfo? owner)
         {
             this.Name = name;
             this.Alias = alias;
@@ -43,6 +44,7 @@ namespace Sundew.CommandLine.Internal.Options
             this.useDoubleQuotes = useDoubleQuotes;
             this.defaultValueHelpText = defaultValueHelpText;
             this.Index = index;
+            this.Owner = owner;
             this.IsRequired = isRequired;
             this.HelpLines = HelpTextHelper.GetHelpLines(helpText);
             this.Separators = separators;
@@ -58,7 +60,11 @@ namespace Sundew.CommandLine.Internal.Options
 
         public int Index { get; }
 
+        public IArgumentHelpInfo? Owner { get; }
+
         public bool IsNesting => false;
+
+        public bool IsChoice => this.Owner != null;
 
         public string Usage { get; }
 
@@ -109,9 +115,14 @@ namespace Sundew.CommandLine.Internal.Options
             }
         }
 
-        public void AppendHelpText(StringBuilder stringBuilder, Settings settings, int maxName, int maxAlias, int maxHelpText, int indent, bool isForVerb)
+        public void AppendHelpText(StringBuilder stringBuilder, Settings settings, int indent, int nameMaxLength, int aliasMaxLength, int helpTextMaxLength, bool isForVerb, bool isForNested)
         {
-            HelpTextHelper.AppendHelpText(stringBuilder, settings, this, maxName, maxAlias, maxHelpText, indent, isForVerb);
+            HelpTextHelper.AppendHelpText(stringBuilder, settings, this, indent, nameMaxLength, aliasMaxLength, helpTextMaxLength, isForVerb, isForNested);
+        }
+
+        public void AppendMissingArgumentsHint(StringBuilder stringBuilder)
+        {
+            stringBuilder.AppendLine(this.Usage);
         }
 
         public void ResetToDefault(CultureInfo cultureInfo)

@@ -11,7 +11,7 @@ namespace Sundew.CommandLine.Internal
     using System.Text;
     using Sundew.Base.Computation;
 
-    internal interface IValue : IArgumentInfo
+    internal interface IValue : IArgumentInfo, IArgumentMissingInfo
     {
         bool IsRequired { get; }
 

@@ -95,5 +95,10 @@ namespace Sundew.CommandLine.Internal.Values
 
             return Result.Success();
         }
+
+        public void AppendMissingArgumentsHint(StringBuilder stringBuilder)
+        {
+            stringBuilder.AppendLine(this.Usage);
+        }
     }
 }

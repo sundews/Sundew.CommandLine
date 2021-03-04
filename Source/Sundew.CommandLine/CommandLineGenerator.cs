@@ -36,7 +36,7 @@ namespace Sundew.CommandLine
         /// <summary>
         /// Gets the settings.
         /// </summary>
-        public Settings Settings { get; } = new Settings();
+        public Settings Settings { get; } = new();
 
         /// <summary>Generates the specified verb.</summary>
         /// <param name="verb">The verb.</param>
@@ -50,7 +50,7 @@ namespace Sundew.CommandLine
         /// <param name="verb">The verb.</param>
         /// <param name="useAliases">if set to <c>true</c> [use aliases].</param>
         /// <returns>The generator result.</returns>
-        public Result<string, GeneratorError> Generate(IVerb verb, bool useAliases)
+        public Result<string, GeneratorError> Generate(IVerb? verb, bool useAliases)
         {
             if (verb == null)
             {

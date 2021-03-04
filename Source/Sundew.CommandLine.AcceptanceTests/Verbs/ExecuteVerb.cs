@@ -25,6 +25,8 @@ namespace Sundew.CommandLine.AcceptanceTests.Verbs
 
         public string Name { get; } = "execute";
 
+        public string? ShortName { get; } = null;
+
         public string HelpText { get; } = string.Empty;
 
         public void Configure(IArgumentsBuilder argumentsBuilder)

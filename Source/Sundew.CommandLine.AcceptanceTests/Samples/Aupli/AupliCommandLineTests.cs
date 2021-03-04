@@ -161,7 +161,8 @@ namespace Sundew.CommandLine.AcceptanceTests.Samples.Aupli
         {
             string expectedText = $@"Error:
   Inner required argument was missing while parsing: -fl/--file-log with argument: -ms.
-    The required options were missing: -lp/--log-path.";
+    The required options were missing:
+     -lp/--log-path";
             var commandLineParser = new CommandLineParser<Options, int>();
             commandLineParser.WithArguments(new Options(false, false), options => Result.Success(options));
             var parserResult = commandLineParser.Parse($@"-fl -ms 3");

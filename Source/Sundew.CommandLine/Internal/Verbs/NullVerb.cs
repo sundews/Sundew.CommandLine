@@ -20,6 +20,8 @@ namespace Sundew.CommandLine.Internal.Verbs
 
         public string Name { get; } = default!;
 
+        public string? ShortName { get; } = null;
+
         public string HelpText { get; } = default!;
 
         public void Configure(IArgumentsBuilder argumentsBuilder)
