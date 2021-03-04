@@ -47,6 +47,7 @@ steps:
   inputs:
     Contents: '**/*.nupkg'
     TargetFolder: $(Build.ArtifactStagingDirectory)
+  displayName: 'copy packages to artifact directory'
 
 - script: dotnet nuget push '$(Build.ArtifactStagingDirectory)/**/*.nupkg' -s '$(pushSource)' -k '$(apiKey)'
   condition: ne(variables.pushSource, 'null')
@@ -60,4 +61,4 @@ steps:
    git config user.name "sundew-build"
    cb -c "git|tag -a {0}-{1} -m "{0}-{1}"" "git|push https://sundew-dev:$(SundewDevPwd)@github.com/hugener/Sundew.CommandLine.git {0}-{1}" -s ',' -v $(tags)
   condition: eq(variables.pushSource, variables.source)
-  displayName: 'tag packages'
+  displayName: 'tag version'
