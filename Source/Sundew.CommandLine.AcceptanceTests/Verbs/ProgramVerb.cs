@@ -15,6 +15,8 @@ namespace Sundew.CommandLine.AcceptanceTests.Verbs
 
         public string Name { get; } = "program";
 
+        public string? ShortName { get; } = null;
+
         public void Configure(IArgumentsBuilder argumentsBuilder)
         {
         }

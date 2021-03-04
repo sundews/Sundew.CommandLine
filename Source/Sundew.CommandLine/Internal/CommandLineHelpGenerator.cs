@@ -39,15 +39,15 @@ namespace Sundew.CommandLine.Internal
             {
                 if (verbRegistry.Verb != NullVerb.Instance)
                 {
-                    verbMaxName = Math.Max(verbMaxName, verbRegistry.Verb.Name.Length);
+                    verbMaxName = Math.Max(verbMaxName, verbRegistry.Verb.Name.Length + (string.IsNullOrEmpty(verbRegistry.Verb.ShortName) ? 0 : verbRegistry.Verb.ShortName!.Length + 1));
                     stringBuilder.AppendFormat(
                         settings.CultureInfo,
                         $" {HelpTextHelper.GetIndentation(indent)}{{0,{-verbMaxName}}} | {verbRegistry.Verb.HelpText}",
-                        verbRegistry.Verb.Name);
+                        $"{verbRegistry.Verb.Name}{(string.IsNullOrEmpty(verbRegistry.Verb.ShortName) ? string.Empty : $"/{verbRegistry.Verb.ShortName}")}");
                     stringBuilder.AppendLine();
                     verbRegistry.Builder.PrepareBuilder(verbRegistry.Verb, false);
 
-                    AppendCommandLineHelpText(verbRegistry.Builder, stringBuilder, indent, 0, 0, true, settings);
+                    AppendCommandLineHelpText(verbRegistry.Builder, stringBuilder, indent, 0, 0, true, settings, false);
                 }
 
                 if (verbRegistry.HasVerbs)
@@ -58,7 +58,7 @@ namespace Sundew.CommandLine.Internal
                     }
 
                     verbMaxName = GetVerbNameMax(verbRegistry, verbMaxName);
-                    foreach (var registry in verbRegistry.VerbRegistries)
+                    foreach (var registry in verbRegistry.HelpVerbs)
                     {
                         AppendHelpText(stringBuilder, registry, argumentsAction, indent + 1, verbMaxName, settings);
                     }
@@ -78,7 +78,7 @@ namespace Sundew.CommandLine.Internal
                         stringBuilder.AppendLine(Constants.ArgumentsText);
                     }
 
-                    AppendCommandLineHelpText(argumentsBuilder, stringBuilder, indent, 0, 0, false, settings);
+                    AppendCommandLineHelpText(argumentsBuilder, stringBuilder, indent,  0, 0, false, settings, false);
                 }
             }
         }
@@ -87,10 +87,11 @@ namespace Sundew.CommandLine.Internal
             ArgumentsBuilder argumentsBuilder,
             StringBuilder stringBuilder,
             int indent,
-            int maxName,
-            int maxAlias,
+            int nameMaxLength,
+            int aliasMaxLength,
             bool isVerbArgument,
-            Settings settings)
+            Settings settings,
+            bool isForNested)
         {
             var maxValues = argumentsBuilder.Values.HasValues
                 ? argumentsBuilder.Values.Max(x => x.Name.Length) + Constants.LessThanText.Length +
@@ -99,28 +100,28 @@ namespace Sundew.CommandLine.Internal
             if (argumentsBuilder.Options.Any() || argumentsBuilder.Switches.Any())
             {
                 var argumentInfos = Concat(argumentsBuilder.Options, argumentsBuilder.Switches);
-                maxName = Math.Max(argumentInfos.Max(x => (x.Name?.Length ?? 0) + (x.Separators.NameSeparator != Constants.SpaceCharacter ? 1 : 0) + (x.IsNesting ? 1 : 0)) + Constants.DashText.Length, maxName);
-                maxAlias = Math.Max(Math.Max(argumentInfos.Max(x => x.Alias.Length + (x.Separators.AliasSeparator != Constants.SpaceCharacter ? 1 : 0) + (x.IsNesting ? 1 : 0)) + Constants.DoubleDashText.Length, maxAlias), maxValues - maxName - Constants.HelpSeparator.Length);
-                maxValues = maxName + maxAlias + Constants.HelpSeparator.Length;
+                nameMaxLength = Math.Max(argumentInfos.Max(x => (x.Name?.Length ?? 0) + (x.Separators.NameSeparator != Constants.SpaceCharacter ? 1 : 0) + (x.IsNesting ? 1 : 0) + (x.IsChoice ? 1 : 0)) + Constants.DashText.Length, nameMaxLength);
+                aliasMaxLength = Math.Max(Math.Max(argumentInfos.Max(x => x.Alias.Length + (x.Separators.AliasSeparator != Constants.SpaceCharacter ? 1 : 0) + (x.IsNesting ? 1 : 0)) + Constants.DoubleDashText.Length, aliasMaxLength), maxValues - nameMaxLength - Constants.HelpSeparator.Length);
+                maxValues = nameMaxLength + aliasMaxLength + Constants.HelpSeparator.Length;
 
                 var maxHelpText = argumentsBuilder.Options.Any()
                     ? argumentsBuilder.Options.Max(x => x.HelpLines.Max(l => l.Length))
                     : 0;
-                foreach (var option in GetOptions(argumentsBuilder.Options, argumentsBuilder.OptionsHelpOrder))
+                foreach (var option in GetOptions(argumentsBuilder.HelpOptions, argumentsBuilder.OptionsHelpOrder))
                 {
-                    option.AppendHelpText(stringBuilder, settings, maxName, maxAlias, maxHelpText, indent, isVerbArgument);
+                    option.AppendHelpText(stringBuilder, settings, indent, nameMaxLength, aliasMaxLength, maxHelpText, isVerbArgument, isForNested);
                 }
 
                 foreach (var @switch in argumentsBuilder.Switches.OrderBy(x => x.Index))
                 {
-                    @switch.AppendHelpText(stringBuilder, maxName, maxAlias, indent, isVerbArgument, settings.CultureInfo);
+                    @switch.AppendHelpText(stringBuilder, nameMaxLength, aliasMaxLength, indent, isVerbArgument, settings.CultureInfo);
                 }
             }
 
             argumentsBuilder.Values.AppendHelpText(stringBuilder, maxValues, indent, isVerbArgument, settings);
         }
 
-        private static IEnumerable<IOption> GetOptions(ArgumentRegistry<IOption> options, OptionsHelpOrder optionsHelpOrder)
+        private static IEnumerable<IArgumentHelpInfo> GetOptions(IReadOnlyList<IArgumentHelpInfo> options, OptionsHelpOrder optionsHelpOrder)
         {
             return optionsHelpOrder switch
             {
@@ -134,7 +135,7 @@ namespace Sundew.CommandLine.Internal
         {
             if (verbRegistry.HasVerbs)
             {
-                return Math.Max(verbMaxName, verbRegistry.VerbRegistries.Max(x => x.Verb.Name.Length));
+                return Math.Max(verbMaxName, verbRegistry.VerbRegistries.Max(x => x.Verb.Name.Length + (string.IsNullOrEmpty(verbRegistry.Verb.ShortName) ? 0 : verbRegistry.Verb.ShortName!.Length + 1)));
             }
 
             return verbMaxName;

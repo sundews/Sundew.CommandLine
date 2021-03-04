@@ -1,24 +1,22 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="TestsVerb.cs" company="Hukano">
+// <copyright file="Command.cs" company="Hukano">
 // Copyright (c) Hukano. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.AcceptanceTests.Verbs
+namespace Sundew.CommandLine.AcceptanceTests.CommandLineBatcher
 {
-    public class TestsVerb : IVerb
+    public class Command
     {
-        public IVerb? NextVerb => null;
-
-        public string HelpText { get; } = string.Empty;
-
-        public string Name => "tests";
-
-        public string? ShortName { get; } = null;
-
-        public void Configure(IArgumentsBuilder argumentsBuilder)
+        public Command(string executable, string arguments)
         {
+            this.Executable = executable;
+            this.Arguments = arguments;
         }
+
+        public string Executable { get; }
+
+        public string Arguments { get; }
     }
 }

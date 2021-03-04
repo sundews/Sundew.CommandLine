@@ -56,6 +56,14 @@ namespace Sundew.Git.CommandLine
         /// <value>The name.</value>
         public string Name { get; } = "init";
 
+        /// <summary>
+        /// Gets the short name.
+        /// </summary>
+        /// <value>
+        /// The short name.
+        /// </value>
+        public string? ShortName { get; } = null;
+
         /// <summary>Configures the specified arguments builder.</summary>
         /// <param name="argumentsBuilder">The arguments builder.</param>
         public void Configure(IArgumentsBuilder argumentsBuilder)

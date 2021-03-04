@@ -26,6 +26,22 @@ namespace Sundew.CommandLine.Internal
         string Alias { get; }
 
         /// <summary>
+        /// Gets a value indicating whether this instance is nesting.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is nesting; otherwise, <c>false</c>.
+        /// </value>
+        bool IsNesting { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether this instance is choice.
+        /// </summary>
+        /// <value>
+        ///   <c>true</c> if this instance is choice; otherwise, <c>false</c>.
+        /// </value>
+        bool IsChoice { get; }
+
+        /// <summary>
         /// Gets the separators.
         /// </summary>
         Separators Separators { get; }

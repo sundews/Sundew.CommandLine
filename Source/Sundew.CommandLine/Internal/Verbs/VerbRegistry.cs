@@ -15,8 +15,8 @@ namespace Sundew.CommandLine.Internal.Verbs
 
     internal class VerbRegistry<TSuccess, TError> : IVerbBuilder<TSuccess, TError>, IVerbRegistry<TSuccess, TError>
     {
-        private readonly Dictionary<string, VerbRegistry<TSuccess, TError>> verbRegistries =
-            new Dictionary<string, VerbRegistry<TSuccess, TError>>();
+        private readonly Dictionary<string, VerbRegistry<TSuccess, TError>> verbRegistries = new();
+        private readonly List<VerbRegistry<TSuccess, TError>> helpVerbses = new();
 
         public VerbRegistry(IVerb verb, Func<IVerb, ValueTask<Result<TSuccess, ParserError<TError>>>> handler, Action<IVerbBuilder<TSuccess, TError>>? verbBuilderAction)
         {
@@ -25,11 +25,13 @@ namespace Sundew.CommandLine.Internal.Verbs
             verbBuilderAction?.Invoke(this);
         }
 
-        public ArgumentsBuilder Builder { get; } = new ArgumentsBuilder();
+        public ArgumentsBuilder Builder { get; } = new();
 
         public bool HasVerbs => this.verbRegistries.Any();
 
         public IEnumerable<VerbRegistry<TSuccess, TError>> VerbRegistries => this.verbRegistries.Values;
+
+        public IEnumerable<VerbRegistry<TSuccess, TError>> HelpVerbs => this.helpVerbses;
 
         public IVerb Verb { get; }
 
@@ -72,9 +74,14 @@ namespace Sundew.CommandLine.Internal.Verbs
             Action<IVerbBuilder<TSuccess, TError>>? verbBuilderAction)
             where TVerb : IVerb
         {
-            this.verbRegistries.Add(
-                verb.Name,
-                new VerbRegistry<TSuccess, TError>(verb, parsedVerb => verbHandler((TVerb)parsedVerb), verbBuilderAction));
+            var verbRegistry = new VerbRegistry<TSuccess, TError>(verb, parsedVerb => verbHandler((TVerb)parsedVerb), verbBuilderAction);
+            this.verbRegistries.Add(verb.Name, verbRegistry);
+            this.helpVerbses.Add(verbRegistry);
+            if (!string.IsNullOrEmpty(verb.ShortName))
+            {
+                this.verbRegistries.Add(verb.ShortName!, verbRegistry);
+            }
+
             return verb;
         }
 

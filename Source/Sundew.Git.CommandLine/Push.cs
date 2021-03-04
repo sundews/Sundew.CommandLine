@@ -38,6 +38,14 @@ namespace Sundew.Git.CommandLine
         /// <value>The name.</value>
         public string Name { get; } = "push";
 
+        /// <summary>
+        /// Gets the short name.
+        /// </summary>
+        /// <value>
+        /// The short name.
+        /// </value>
+        public string? ShortName { get; } = null;
+
         /// <summary>Gets or sets a value indicating whether verbose logging is used.</summary>
         /// <value>A value indicating whether verbose logging is used.</value>
         public bool Verbose { get; set; }

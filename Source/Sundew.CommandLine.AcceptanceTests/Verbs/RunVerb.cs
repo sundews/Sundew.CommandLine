@@ -46,6 +46,8 @@ namespace Sundew.CommandLine.AcceptanceTests.Verbs
 
         public string Name => "run";
 
+        public string? ShortName { get; } = "r";
+
         public void Configure(IArgumentsBuilder argumentsBuilder)
         {
             argumentsBuilder.AddRequiredList("t", "tasks", this.tasks, "The tasks to run", true);

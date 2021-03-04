@@ -31,7 +31,8 @@ namespace Sundew.CommandLine.Internal.Options
             string helpText,
             bool useDoubleQuotes,
             string? defaultValueHelpText,
-            int index)
+            int index,
+            IArgumentHelpInfo? owner)
         {
             this.Name = name;
             this.Alias = alias;
@@ -41,6 +42,7 @@ namespace Sundew.CommandLine.Internal.Options
             this.deserialize = deserialize;
             this.defaultValueHelpText = defaultValueHelpText;
             this.Index = index;
+            this.Owner = owner;
             this.UseDoubleQuotes = useDoubleQuotes;
             this.IsRequired = isRequired;
             this.HelpLines = HelpTextHelper.GetHelpLines(helpText);
@@ -65,11 +67,15 @@ namespace Sundew.CommandLine.Internal.Options
 
         public int Index { get; }
 
+        public IArgumentHelpInfo? Owner { get; }
+
         public string Usage { get; }
 
         public IReadOnlyList<string> HelpLines { get; }
 
         public bool IsNesting => false;
+
+        public bool IsChoice => this.Owner != null;
 
         public Result<bool, GeneratorError> SerializeTo(StringBuilder stringBuilder, Settings settings, bool useAliases)
         {
@@ -111,9 +117,14 @@ namespace Sundew.CommandLine.Internal.Options
             return currentResult;
         }
 
-        public void AppendHelpText(StringBuilder stringBuilder, Settings settings, int maxName, int maxAlias, int maxHelpText, int indent, bool isForVerb)
+        public void AppendHelpText(StringBuilder stringBuilder, Settings settings, int indent, int nameMaxLength, int aliasMaxLength, int helpTextMaxLength, bool isForVerb, bool isForNested)
         {
-            HelpTextHelper.AppendHelpText(stringBuilder, settings, this, maxName, maxAlias, maxHelpText, indent, isForVerb);
+            HelpTextHelper.AppendHelpText(stringBuilder, settings, this, indent, nameMaxLength, aliasMaxLength, helpTextMaxLength, isForVerb, isForNested);
+        }
+
+        public void AppendMissingArgumentsHint(StringBuilder stringBuilder)
+        {
+            stringBuilder.AppendLine(this.Usage);
         }
 
         public void ResetToDefault(CultureInfo cultureInfo)

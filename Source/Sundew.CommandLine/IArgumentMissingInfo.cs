@@ -1,24 +1,16 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="TestsVerb.cs" company="Hukano">
+// <copyright file="IArgumentMissingInfo.cs" company="Hukano">
 // Copyright (c) Hukano. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.AcceptanceTests.Verbs
+namespace Sundew.CommandLine
 {
-    public class TestsVerb : IVerb
+    using System.Text;
+
+    internal interface IArgumentMissingInfo
     {
-        public IVerb? NextVerb => null;
-
-        public string HelpText { get; } = string.Empty;
-
-        public string Name => "tests";
-
-        public string? ShortName { get; } = null;
-
-        public void Configure(IArgumentsBuilder argumentsBuilder)
-        {
-        }
+        void AppendMissingArgumentsHint(StringBuilder stringBuilder);
     }
 }

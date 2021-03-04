@@ -10,7 +10,7 @@ namespace Sundew.CommandLine.UnitTests.Internals
     using System;
     using System.Linq;
     using FluentAssertions;
-    using Sundew.CommandLine.Internal.Extensions;
+    using Sundew.CommandLine.Extensions;
     using Xunit;
 
     public class StringExtensionTests
@@ -20,7 +20,7 @@ namespace Sundew.CommandLine.UnitTests.Internals
         {
             var commandLine = $@"-fl --max-size ""4000 -cl";
 
-            var result = commandLine.AsMemory().SplitBasedCommandLineTokenizer().ToArray();
+            var result = commandLine.AsMemory().ParseCommandLineArguments().ToArray();
 
             result.Should().Equal("-fl", "--max-size", "4000 -cl");
         }

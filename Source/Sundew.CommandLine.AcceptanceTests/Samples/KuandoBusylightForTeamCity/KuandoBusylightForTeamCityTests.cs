@@ -7,7 +7,6 @@
 
 namespace Sundew.CommandLine.AcceptanceTests.Samples.KuandoBusylightForTeamCity
 {
-    using System.Linq;
     using System.Net;
     using FluentAssertions;
     using Sundew.Base.Computation;
@@ -35,7 +34,7 @@ namespace Sundew.CommandLine.AcceptanceTests.Samples.KuandoBusylightForTeamCity
             result.Value.BuildTypeId.Should().Be(ExpectedBuildTypeId);
             result.Value.Credentials?.UserName.Should().Be(ExpectedUserName);
             new NetworkCredential(string.Empty, result.Value.Credentials?.Password).Password.Should().Be(ExpectedPassword);
-            result.Value.HidDeviceIds.First().Should().Be(ExpectedDevice);
+            result.Value.HidDeviceIds[0].Should().Be(ExpectedDevice);
         }
 
         [Fact]

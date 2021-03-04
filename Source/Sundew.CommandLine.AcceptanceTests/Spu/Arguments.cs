@@ -16,7 +16,7 @@ namespace Sundew.CommandLine.AcceptanceTests.Spu
     {
         private const string VersionGroupName = "Version";
         private const string LocalSundewName = "Local-Sundew";
-        private static readonly Regex PackageIdAndVersionRegex = new Regex(@"(?: |\.)(?<Version>(?:\d\.\d\.\d).*)");
+        private static readonly Regex PackageIdAndVersionRegex = new(@"(?: |\.)(?<Version>(?:\d\.\d\.\d).*)");
         private readonly List<PackageId> packageIds;
         private readonly List<string> projects;
         private bool useLocalSource;

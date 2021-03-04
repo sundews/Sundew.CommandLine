@@ -11,18 +11,14 @@ namespace Sundew.CommandLine.Internal
     using System.Text;
     using Sundew.Base.Computation;
 
-    internal interface IOption : INamedArgumentInfo
+    internal interface IOption : INamedArgumentInfo, IArgumentHelpInfo
     {
-        bool IsRequired { get; }
-
-        int Index { get; }
+        IArgumentHelpInfo? Owner { get; }
 
         Result<bool, GeneratorError> SerializeTo(StringBuilder stringBuilder, Settings settings, bool useAliases);
 
         Result.IfError<ParserError> DeserializeFrom(CommandLineArgumentsParser commandLineArgumentsParser, ArgumentList argumentList, ReadOnlySpan<char> value, Settings settings);
 
         void AppendDefaultText(StringBuilder stringBuilder, Settings settings, bool isNested);
-
-        void AppendHelpText(StringBuilder stringBuilder, Settings settings, int maxName, int maxAlias, int maxHelpText, int indent, bool isForVerb);
     }
 }

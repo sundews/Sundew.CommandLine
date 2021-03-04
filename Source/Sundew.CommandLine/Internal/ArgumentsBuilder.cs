@@ -12,6 +12,7 @@ namespace Sundew.CommandLine.Internal
     using System.Globalization;
     using System.Linq;
     using Sundew.Base.Collections;
+    using Sundew.CommandLine.Internal.Enums;
     using Sundew.CommandLine.Internal.Options;
     using Sundew.CommandLine.Internal.Values;
 
@@ -19,6 +20,7 @@ namespace Sundew.CommandLine.Internal
     {
         private readonly Dictionary<string, IOption> options = new();
         private readonly Dictionary<string, Switch> switches = new();
+        private readonly List<IArgumentHelpInfo> helpOptions;
         private bool isConfigured;
         private int currentOptionIndex;
         private int currentSwitchIndex;
@@ -26,12 +28,15 @@ namespace Sundew.CommandLine.Internal
         public ArgumentsBuilder()
         {
             this.Options = new ArgumentRegistry<IOption>(this.options);
+            this.helpOptions = new List<IArgumentHelpInfo>();
             this.Switches = new ArgumentRegistry<Switch>(this.switches);
         }
 
-        public List<IArgumentInfo> RequiredArguments { get; } = new();
+        public List<IArgumentMissingInfo> RequiredArguments { get; } = new();
 
         public ArgumentRegistry<IOption> Options { get; }
+
+        public IReadOnlyList<IArgumentHelpInfo> HelpOptions => this.helpOptions;
 
         public ArgumentRegistry<Switch> Switches { get; }
 
@@ -67,8 +72,37 @@ namespace Sundew.CommandLine.Internal
                 actualSeparator,
                 this.CultureInfo,
                 null,
-                this.GetIndex());
+                this.GetIndex(),
+                null);
             this.AddOption(option, actualSeparator);
+        }
+
+        public void AddRequiredEnum<TEnum>(string? name, string alias, Func<TEnum> getEnumFunc, Action<TEnum> setEnumAction, string helpText, Separators separators = default, string? defaultValueText = null)
+            where TEnum : Enum
+        {
+            this.AddRequiredEnum(name, alias, getEnumFunc, setEnumAction, helpText, separators, defaultValueText);
+        }
+
+        public void AddRequiredEnum<TEnum>(string? name, string alias, Func<TEnum> getEnumFunc, Action<TEnum> setEnumAction, IEnumerable<TEnum> enumOptions, string helpText, Separators separators = default, string? defaultValueText = null)
+            where TEnum : Enum
+        {
+            var enumSerializer = new EnumSerializer<TEnum>(enumOptions);
+            var actualSeparator = this.GetActualSeparator(separators);
+            this.AddOption(
+                new Option(
+                    name,
+                    alias,
+                    _ => enumSerializer.Serialize(getEnumFunc()),
+                    (value, _) => setEnumAction(enumSerializer.Deserialize(value)),
+                    true,
+                    string.Format(helpText, enumSerializer.GetAllValues()),
+                    false,
+                    actualSeparator,
+                    this.CultureInfo,
+                    defaultValueText,
+                    this.GetIndex(),
+                    null),
+                actualSeparator);
         }
 
         public void AddRequired<TOptions>(string? name, string alias, TOptions? options, Func<TOptions> getDefault, Action<TOptions> setOptions, string helpText)
@@ -82,7 +116,8 @@ namespace Sundew.CommandLine.Internal
                 setOptions,
                 true,
                 helpText,
-                this.GetIndex());
+                this.GetIndex(),
+                null);
             this.AddOption(option, default);
         }
 
@@ -108,8 +143,18 @@ namespace Sundew.CommandLine.Internal
                 helpText,
                 useDoubleQuotes,
                 null,
-                this.GetIndex());
+                this.GetIndex(),
+                null);
             this.AddOption(option, default);
+        }
+
+        public void RequireAnyOf(string name, Action<IChoiceBuilder> selectChoiceAction)
+        {
+            var options = new List<IOption>();
+            var requiredChoiceArgumentInfo = new RequiredChoiceArgumentInfo(name, options, this.GetIndex());
+            this.helpOptions.Add(requiredChoiceArgumentInfo);
+            this.RequiredArguments.Add(requiredChoiceArgumentInfo);
+            selectChoiceAction(new ChoiceBuilder(this, requiredChoiceArgumentInfo, options));
         }
 
         public void AddOptional(string? name, string alias, Func<string?> serialize, Action<string> deserialize, string helpText, bool useDoubleQuotes = false, Separators separators = default, string? defaultValueText = null)
@@ -136,7 +181,8 @@ namespace Sundew.CommandLine.Internal
                actualSeparator,
                this.CultureInfo,
                defaultValueText,
-               this.GetIndex());
+               this.GetIndex(),
+               null);
             this.AddOption(option, actualSeparator);
         }
 
@@ -151,8 +197,37 @@ namespace Sundew.CommandLine.Internal
                 setOptions,
                 false,
                 helpText,
-                this.GetIndex());
+                this.GetIndex(),
+                null);
             this.AddOption(option, default);
+        }
+
+        public void AddOptionalEnum<TEnum>(string? name, string alias, Func<TEnum> getEnumFunc, Action<TEnum> setEnumAction, string helpText, Separators separators = default, string? defaultValueText = null)
+            where TEnum : Enum
+        {
+            this.AddOptionalEnum(name, alias, getEnumFunc, setEnumAction, Enum.GetValues(typeof(TEnum)).Cast<TEnum>(), helpText, separators, defaultValueText);
+        }
+
+        public void AddOptionalEnum<TEnum>(string? name, string alias, Func<TEnum> getEnumFunc, Action<TEnum> setEnumAction, IEnumerable<TEnum> enumOptions, string helpText, Separators separators = default, string? defaultValueText = null)
+            where TEnum : Enum
+        {
+            var enumSerializer = new EnumSerializer<TEnum>(enumOptions);
+            var actualSeparator = this.GetActualSeparator(separators);
+            this.AddOption(
+                new Option(
+                    name,
+                    alias,
+                    _ => enumSerializer.Serialize(getEnumFunc()),
+                    (value, _) => setEnumAction(enumSerializer.Deserialize(value)),
+                    false,
+                    string.Format(helpText, enumSerializer.GetAllValues()),
+                    false,
+                    actualSeparator,
+                    this.CultureInfo,
+                    defaultValueText,
+                    this.GetIndex(),
+                    null),
+                actualSeparator);
         }
 
         public void AddOptionalList(string? name, string alias, IList<string> list, string helpText, bool useDoubleQuotes = false, string? defaultValueText = null)
@@ -177,7 +252,8 @@ namespace Sundew.CommandLine.Internal
                 helpText,
                 useDoubleQuotes,
                 defaultValueText,
-                this.GetIndex());
+                this.GetIndex(),
+                null);
             this.AddOption(option, default);
         }
 
@@ -288,22 +364,7 @@ namespace Sundew.CommandLine.Internal
             }
         }
 
-        private static void VerifyNameAndAlias(bool isNameNullOrEmpty, bool isAliasNullOrEmpty)
-        {
-            if (isNameNullOrEmpty && isAliasNullOrEmpty)
-            {
-                throw new NotSupportedException("Both name and alias cannot be null or empty.");
-            }
-        }
-
-        private void ResetToDefault()
-        {
-            this.options.Values.Distinct().ForEach(x => x.ResetToDefault(this.CultureInfo));
-            this.switches.Values.Distinct().ForEach(x => x.ResetToDefault(this.CultureInfo));
-            this.Values.ResetToDefault(this.CultureInfo);
-        }
-
-        private void AddOption(IOption option, Separators separators)
+        internal void AddOption(IOption option, Separators separators)
         {
             var isNameNullOrEmpty = string.IsNullOrEmpty(option.Name);
             var isAliasNullOrEmpty = string.IsNullOrEmpty(option.Alias);
@@ -321,13 +382,14 @@ namespace Sundew.CommandLine.Internal
                 this.options.Add($"--{option.Alias}{(isAddingAliasSeparator ? separators.AliasSeparator.ToString() : string.Empty)}", option);
             }
 
+            this.helpOptions.Add(option);
             if (option.IsRequired)
             {
                 this.RequiredArguments.Add(option);
             }
         }
 
-        private Separators GetActualSeparator(Separators separators)
+        internal Separators GetActualSeparator(Separators separators)
         {
             var actualSeparator = this.Separators;
             if (!separators.IsDefault)
@@ -338,6 +400,26 @@ namespace Sundew.CommandLine.Internal
             return actualSeparator;
         }
 
+        internal int GetIndex()
+        {
+            return this.currentOptionIndex++;
+        }
+
+        private static void VerifyNameAndAlias(bool isNameNullOrEmpty, bool isAliasNullOrEmpty)
+        {
+            if (isNameNullOrEmpty && isAliasNullOrEmpty)
+            {
+                throw new NotSupportedException("Both name and alias cannot be null or empty.");
+            }
+        }
+
+        private void ResetToDefault()
+        {
+            this.options.Values.Distinct().ForEach(x => x.ResetToDefault(this.CultureInfo));
+            this.switches.Values.Distinct().ForEach(x => x.ResetToDefault(this.CultureInfo));
+            this.Values.ResetToDefault(this.CultureInfo);
+        }
+
         private void AddValue(IValue value)
         {
             this.Values.Add(value);
@@ -345,11 +427,6 @@ namespace Sundew.CommandLine.Internal
             {
                 this.RequiredArguments.Add(value);
             }
-        }
-
-        private int GetIndex()
-        {
-            return this.currentOptionIndex++;
         }
     }
 }
