@@ -9,7 +9,7 @@ namespace Sundew.CommandLine.AcceptanceTests.Samples.KuandoBusylightForTeamCity
 {
     using System.Net;
     using FluentAssertions;
-    using Sundew.Base.Computation;
+    using Sundew.Base.Primitives.Computation;
     using Xunit;
 
     public class KuandoBusylightForTeamCityTests

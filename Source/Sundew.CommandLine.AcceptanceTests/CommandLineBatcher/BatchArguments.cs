@@ -11,7 +11,6 @@ namespace Sundew.CommandLine.AcceptanceTests.CommandLineBatcher
     using System.Collections.Generic;
     using System.Globalization;
     using System.IO;
-    using Sundew.Base.Collections;
     using Sundew.Base.Text;
     using Sundew.CommandLine;
 
@@ -79,9 +78,7 @@ namespace Sundew.CommandLine.AcceptanceTests.CommandLineBatcher
 
         private string SerializeBatch(Values arg1, CultureInfo arg2)
         {
-            return arg1.Arguments.AggregateToStringBuilder(
-                (builder, s) => builder.Append(s).Append(this.BatchValueSeparator),
-                builder => builder.ToStringFromEnd(1));
+            return arg1.Arguments.AggregateToString(this.BatchValueSeparator);
         }
     }
 }

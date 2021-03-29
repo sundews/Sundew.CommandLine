@@ -9,7 +9,7 @@ namespace Sundew.CommandLine.Internal
 {
     using System;
     using System.Text;
-    using Sundew.Base.Computation;
+    using Sundew.Base.Primitives.Computation;
 
     internal interface IOption : INamedArgumentInfo, IArgumentHelpInfo
     {

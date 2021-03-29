@@ -11,7 +11,7 @@ namespace Sundew.CommandLine.Internal
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
-    using Sundew.Base.Computation;
+    using Sundew.Base.Primitives.Computation;
     using Sundew.Base.Text;
 
     internal class CommandLineArgumentsParser
@@ -161,7 +161,7 @@ namespace Sundew.CommandLine.Internal
                 requiredArgumentInfo.AppendMissingArgumentsHint(stringBuilder);
             }
 
-            return stringBuilder.ToStringFromEnd(Environment.NewLine.Length);
+            return stringBuilder.ToString(Environment.NewLine);
         }
     }
 }

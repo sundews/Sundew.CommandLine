@@ -29,7 +29,7 @@ namespace Sundew.CommandLine.Extensions
             var isInQuote = false;
             var isInEscape = false;
             return input.Split(
-                (char character, int index) =>
+                (character, index, _) =>
                 {
                     var actualIsInEscape = isInEscape;
                     isInEscape = false;

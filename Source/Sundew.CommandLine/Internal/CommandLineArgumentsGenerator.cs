@@ -8,7 +8,7 @@
 namespace Sundew.CommandLine.Internal
 {
     using System.Text;
-    using Sundew.Base.Computation;
+    using Sundew.Base.Primitives.Computation;
 
     internal static class CommandLineArgumentsGenerator
     {

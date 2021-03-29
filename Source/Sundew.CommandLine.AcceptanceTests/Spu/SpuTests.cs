@@ -10,7 +10,7 @@ namespace Sundew.CommandLine.AcceptanceTests.Spu
     using System;
     using System.Collections.Generic;
     using FluentAssertions;
-    using Sundew.Base.Computation;
+    using Sundew.Base.Primitives.Computation;
     using Sundew.Base.Text;
     using Xunit;
 

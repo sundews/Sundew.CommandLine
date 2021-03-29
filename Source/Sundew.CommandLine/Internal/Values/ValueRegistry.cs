@@ -13,7 +13,7 @@ namespace Sundew.CommandLine.Internal.Values
     using System.Globalization;
     using System.Linq;
     using System.Text;
-    using Sundew.Base.Computation;
+    using Sundew.Base.Primitives.Computation;
     using Sundew.CommandLine.Internal.Helpers;
 
     internal class ValueRegistry : IEnumerable<IValue>

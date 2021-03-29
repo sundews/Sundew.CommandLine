@@ -9,7 +9,7 @@ namespace Sundew.CommandLine.AcceptanceTests.CommandLineBatcher
 {
     using System.Linq;
     using FluentAssertions;
-    using Sundew.Base.Computation;
+    using Sundew.Base.Primitives.Computation;
     using Xunit;
 
     public class CommandLineBatcherTests

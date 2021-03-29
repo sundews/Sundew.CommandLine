@@ -8,7 +8,7 @@
 namespace Sundew.CommandLine.AcceptanceTests.Verbs
 {
     using System.Collections.Generic;
-    using Sundew.Base.Enumerations;
+    using Sundew.Base.Primitives;
 
     public enum Mode
     {
