@@ -55,7 +55,11 @@ namespace Sundew.CommandLine.Internal.Enums
                 {
                     if (fullName.Length > 6)
                     {
-                        shortName = fullName.Substring(0, 4);
+                        var dashIndex = fullName.IndexOf('-');
+                        if (dashIndex > -1)
+                        {
+                            shortName = fullName.Substring(0, dashIndex);
+                        }
                     }
                 }
 
