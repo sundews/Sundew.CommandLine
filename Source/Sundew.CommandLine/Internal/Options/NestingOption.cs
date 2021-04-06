@@ -195,7 +195,7 @@ namespace Sundew.CommandLine.Internal.Options
         private Result.IfError<ParserError> DeserializeValue(CommandLineArgumentsParser commandLineArgumentsParser, ArgumentList argumentList, TOptions options, Settings settings)
         {
             this.argumentsBuilder.PrepareBuilder(options, true);
-            return commandLineArgumentsParser.Parse(this.argumentsBuilder, settings, argumentList);
+            return commandLineArgumentsParser.Parse(this.argumentsBuilder, settings, argumentList, true);
         }
     }
 }

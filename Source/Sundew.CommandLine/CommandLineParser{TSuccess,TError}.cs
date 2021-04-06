@@ -309,7 +309,7 @@ namespace Sundew.CommandLine
             var argumentsBuilder = argumentsBuilderProvider.Builder;
             argumentsBuilder.PrepareBuilder(argumentsDefinition, true);
 
-            var result = this.commandLineArgumentsParser.Parse(argumentsBuilder, this.Settings, argumentList);
+            var result = this.commandLineArgumentsParser.Parse(argumentsBuilder, this.Settings, argumentList, false);
             if (!result)
             {
                 return result.Convert(default(TSuccess)!, parserError => new ParserError<TError>(parserError));
