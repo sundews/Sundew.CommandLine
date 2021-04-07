@@ -8,7 +8,7 @@
 namespace Sundew.CommandLine
 {
     using System;
-    using Sundew.Base.Computation;
+    using Sundew.Base.Primitives.Computation;
 
     /// <summary>Contains extension methods for command line parser results.</summary>
     public static class ResultExtensions

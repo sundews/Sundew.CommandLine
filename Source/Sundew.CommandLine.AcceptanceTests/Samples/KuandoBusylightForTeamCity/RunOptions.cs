@@ -9,7 +9,7 @@ namespace Sundew.CommandLine.AcceptanceTests.Samples.KuandoBusylightForTeamCity
 {
     using System;
     using System.Collections.Generic;
-    using Sundew.Base.Numeric;
+    using Sundew.Base.Primitives.Numeric;
 
     public class RunOptions : IArguments, IRunOptions
     {

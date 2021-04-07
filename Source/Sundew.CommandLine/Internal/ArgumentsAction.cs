@@ -9,7 +9,7 @@ namespace Sundew.CommandLine.Internal
 {
     using System;
     using System.Threading.Tasks;
-    using Sundew.Base.Computation;
+    using Sundew.Base.Primitives.Computation;
 
     internal class ArgumentsAction<TSuccess, TError> : IArgumentsBuilderProvider
     {

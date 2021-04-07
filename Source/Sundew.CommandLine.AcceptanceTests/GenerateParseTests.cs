@@ -10,7 +10,7 @@ namespace Sundew.CommandLine.AcceptanceTests
     using System;
     using System.Collections.Generic;
     using FluentAssertions;
-    using Sundew.Base.Computation;
+    using Sundew.Base.Primitives.Computation;
     using Sundew.CommandLine.AcceptanceTests.Verbs;
     using Xunit;
 

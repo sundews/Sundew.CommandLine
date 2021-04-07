@@ -8,7 +8,7 @@
 namespace Sundew.CommandLine
 {
     using System.Text;
-    using Sundew.Base.Computation;
+    using Sundew.Base.Primitives.Computation;
     using Sundew.CommandLine.Internal;
 
     /// <summary>

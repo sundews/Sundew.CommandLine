@@ -9,7 +9,7 @@ namespace Sundew.CommandLine
 {
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using Sundew.Base.Computation;
+    using Sundew.Base.Primitives.Computation;
 
     /// <summary>
     /// Interface for implementing the command line parser.

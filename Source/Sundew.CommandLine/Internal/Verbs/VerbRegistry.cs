@@ -11,7 +11,7 @@ namespace Sundew.CommandLine.Internal.Verbs
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using Sundew.Base.Computation;
+    using Sundew.Base.Primitives.Computation;
 
     internal class VerbRegistry<TSuccess, TError> : IVerbBuilder<TSuccess, TError>, IVerbRegistry<TSuccess, TError>
     {

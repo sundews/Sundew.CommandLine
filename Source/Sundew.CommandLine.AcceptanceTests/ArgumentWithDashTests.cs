@@ -11,7 +11,7 @@ namespace Sundew.CommandLine.AcceptanceTests
     using System.Collections.Generic;
     using System.Globalization;
     using FluentAssertions;
-    using Sundew.Base.Computation;
+    using Sundew.Base.Primitives.Computation;
     using Xunit;
 
     public class ArgumentWithDashTests

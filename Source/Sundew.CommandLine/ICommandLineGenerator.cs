@@ -7,7 +7,7 @@
 
 namespace Sundew.CommandLine
 {
-    using Sundew.Base.Computation;
+    using Sundew.Base.Primitives.Computation;
 
     /// <summary>
     /// Interface for implementing a command line generator.

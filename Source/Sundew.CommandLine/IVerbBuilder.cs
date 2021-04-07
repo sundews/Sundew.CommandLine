@@ -9,7 +9,7 @@ namespace Sundew.CommandLine
 {
     using System;
     using System.Threading.Tasks;
-    using Sundew.Base.Computation;
+    using Sundew.Base.Primitives.Computation;
 
     /// <summary>Interface for building verbs.</summary>
     /// <typeparam name="TSuccess">The type of the success.</typeparam>

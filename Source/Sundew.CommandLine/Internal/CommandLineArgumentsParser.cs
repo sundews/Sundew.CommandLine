@@ -11,7 +11,7 @@ namespace Sundew.CommandLine.Internal
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
-    using Sundew.Base.Computation;
+    using Sundew.Base.Primitives.Computation;
     using Sundew.Base.Text;
 
     internal class CommandLineArgumentsParser
@@ -21,7 +21,8 @@ namespace Sundew.CommandLine.Internal
         public Result.IfError<ParserError> Parse(
             ArgumentsBuilder argumentsBuilder,
             Settings settings,
-            ArgumentList argumentList)
+            ArgumentList argumentList,
+            bool isNested)
         {
             try
             {
@@ -80,13 +81,20 @@ namespace Sundew.CommandLine.Internal
                         }
                         else if (currentResult != null)
                         {
-                            argumentList.MoveBack();
-                            if (argumentsBuilder.RequiredArguments.Any())
+                            if (isNested)
                             {
-                                return CreateRequiredOptionMissingResult(argumentsBuilder);
+                                argumentList.MoveBack();
+                                if (argumentsBuilder.RequiredArguments.Any())
+                                {
+                                    return CreateRequiredOptionMissingResult(argumentsBuilder);
+                                }
+
+                                return currentResult.Value;
                             }
 
-                            return currentResult.Value;
+                            return Result.Error(new ParserError(
+                                ParserErrorType.UnknownOption,
+                                string.Format(settings.CultureInfo, Constants.UnknownOptionFormat, argument)));
                         }
                         else if (Constants.HelpRequestTexts.Contains(argument))
                         {
@@ -161,7 +169,7 @@ namespace Sundew.CommandLine.Internal
                 requiredArgumentInfo.AppendMissingArgumentsHint(stringBuilder);
             }
 
-            return stringBuilder.ToStringFromEnd(Environment.NewLine.Length);
+            return stringBuilder.ToString(Environment.NewLine);
         }
     }
 }

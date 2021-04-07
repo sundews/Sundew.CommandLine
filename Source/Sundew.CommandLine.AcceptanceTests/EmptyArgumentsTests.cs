@@ -8,7 +8,7 @@
 namespace Sundew.CommandLine.AcceptanceTests
 {
     using FluentAssertions;
-    using Sundew.Base.Computation;
+    using Sundew.Base.Primitives.Computation;
     using Xunit;
 
     public class EmptyArgumentsTests

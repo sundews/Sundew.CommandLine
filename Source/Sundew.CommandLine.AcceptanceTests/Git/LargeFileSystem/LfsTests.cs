@@ -8,7 +8,7 @@
 namespace Sundew.CommandLine.AcceptanceTests.Git.LargeFileSystem
 {
     using FluentAssertions;
-    using Sundew.Base.Computation;
+    using Sundew.Base.Primitives.Computation;
     using Sundew.Git.CommandLine.LargeFileSystem;
     using Xunit;
 

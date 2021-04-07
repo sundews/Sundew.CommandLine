@@ -11,7 +11,7 @@ namespace Sundew.CommandLine.Internal.Enums
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
-    using Sundew.Base.Enumerations;
+    using Sundew.Base.Primitives;
     using Sundew.Base.Text;
 
     internal class EnumSerializer<TEnum>
@@ -55,7 +55,11 @@ namespace Sundew.CommandLine.Internal.Enums
                 {
                     if (fullName.Length > 6)
                     {
-                        shortName = fullName.Substring(0, 4);
+                        var dashIndex = fullName.IndexOf('-');
+                        if (dashIndex > -1)
+                        {
+                            shortName = fullName.Substring(0, dashIndex);
+                        }
                     }
                 }
 
@@ -82,7 +86,7 @@ namespace Sundew.CommandLine.Internal.Enums
                 stringBuilder.Append(EnumValueSeparator);
             }
 
-            this.possibleValues[0] = stringBuilder.ToStringFromEnd(EnumValueSeparator.Length);
+            this.possibleValues[0] = stringBuilder.ToString(EnumValueSeparator);
         }
 
         public ReadOnlySpan<char> Serialize(TEnum enumOption)

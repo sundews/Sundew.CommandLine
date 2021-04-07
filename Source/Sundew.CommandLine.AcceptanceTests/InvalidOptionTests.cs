@@ -8,7 +8,7 @@
 namespace Sundew.CommandLine.AcceptanceTests
 {
     using FluentAssertions;
-    using Sundew.Base.Computation;
+    using Sundew.Base.Primitives.Computation;
     using Xunit;
 
     public class InvalidOptionTests
@@ -28,12 +28,35 @@ namespace Sundew.CommandLine.AcceptanceTests
             result.Error.Message.Should().Be(@"The option does not exist: -d");
         }
 
+        [Fact]
+        public void Parse_When_UnknownOptionIsSpecified_Then_ResultShouldBeFalseAndErrorShouldBeUnknownOption()
+        {
+            var commandLine = "-n Hi -d 43";
+
+            var testee = new CommandLineParser<int, int>();
+            testee.WithArguments(new Arguments(), arguments => Result.Success(40));
+
+            var result = testee.Parse(commandLine);
+
+            result.IsSuccess.Should().BeFalse();
+            result.Error.Type.Should().Be(ParserErrorType.UnknownOption);
+            result.Error.Message.Should().Be(@"The option does not exist: -d");
+        }
+
         private class Arguments : IArguments
         {
             public bool Switch { get; private set; }
 
+            public string Name { get; private set; } = "name";
+
+            public string Value { get; private set; } = "default";
+
             public void Configure(IArgumentsBuilder argumentsBuilder)
             {
+                argumentsBuilder.AddRequired("n", "name", () => this.Name, s => this.Name = s, "A name");
+
+                argumentsBuilder.AddRequired("v", "value", () => this.Value, s => this.Value = s, "A value");
+
                 argumentsBuilder.AddSwitch("s", "switch", this.Switch, b => this.Switch = b, "A switch");
             }
         }
