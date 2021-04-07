@@ -78,7 +78,7 @@ namespace Sundew.CommandLine.AcceptanceTests.CommandLineBatcher
 
         private string SerializeBatch(Values arg1, CultureInfo arg2)
         {
-            return arg1.Arguments.AggregateToString(this.BatchValueSeparator);
+            return arg1.Arguments.JoinToString(this.BatchValueSeparator);
         }
     }
 }
