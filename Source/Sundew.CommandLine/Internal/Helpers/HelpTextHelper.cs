@@ -129,7 +129,7 @@ namespace Sundew.CommandLine.Internal.Helpers
 
         public static string[] GetHelpLines(string helpText)
         {
-            return helpText.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+            return helpText.Replace(Strings.WindowsNewLine, Strings.UnixNewLine).Split(new[] { Strings.UnixNewLine }, StringSplitOptions.RemoveEmptyEntries);
         }
     }
 }
