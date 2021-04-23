@@ -53,11 +53,11 @@ namespace Sundew.CommandLine.AcceptanceTests.Git.LargeFileSystem
         {
             const string expectedResult = @"Help
  Verbs:
-   lfs | Git Large File Storage (LFS) replaces large files.
-     install | Installs lfs into git hooks
-     track   | Start tracking the given patterns(s) through Git LFS.
-       <pattern> | The <pattern> argument is written to .gitattributes. | Default: [none]
-     untrack | Stop tracking the given patterns(s) through Git LFS.
+   lfs           | Git Large File Storage (LFS) replaces large files.
+     install     | Installs lfs into git hooks
+     track       | Start tracking the given patterns(s) through Git LFS.
+       <pattern> | The <pattern> argument is written to .gitattributes.   | Default: [none]
+     untrack     | Stop tracking the given patterns(s) through Git LFS.
        <pattern> | The <pattern> argument is removed from .gitattributes. | Default: [none]
 ";
             var commandLineParser = CreateParser();
@@ -75,7 +75,7 @@ namespace Sundew.CommandLine.AcceptanceTests.Git.LargeFileSystem
         public void Parse_When_HelpIsRequested_Then_ResultShouldBeExpectedResult(string helpArgument)
         {
             const string expectedHelpText = @"Help
- track | Start tracking the given patterns(s) through Git LFS.
+ track       | Start tracking the given patterns(s) through Git LFS.
    <pattern> | The <pattern> argument is written to .gitattributes. | Default: [none]
 ";
             var commandLineParser = CreateParser();

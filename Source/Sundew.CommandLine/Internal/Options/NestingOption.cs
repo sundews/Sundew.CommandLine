@@ -31,7 +31,7 @@ namespace Sundew.CommandLine.Internal.Options
             bool isRequired,
             string helpText,
             int index,
-            IArgumentHelpInfo? owner)
+            IArgumentMissingInfo? owner)
         {
             this.options = options;
             this.getDefault = getDefault;
@@ -55,7 +55,7 @@ namespace Sundew.CommandLine.Internal.Options
 
         public int Index { get; }
 
-        public IArgumentHelpInfo? Owner { get; }
+        public IArgumentMissingInfo? Owner { get; }
 
         public bool IsNesting => true;
 
@@ -151,13 +151,13 @@ namespace Sundew.CommandLine.Internal.Options
             }
         }
 
-        public void AppendHelpText(StringBuilder stringBuilder, Settings settings, int indent, int nameMaxLength, int aliasMaxLength, int helpTextMaxLength, bool isForVerb, bool isForNested)
+        public void AppendHelpText(StringBuilder stringBuilder, Settings settings, int indent, TextSizes textSizes, bool isForVerb, bool isForNested)
         {
-            HelpTextHelper.AppendHelpText(stringBuilder, settings, this, indent, nameMaxLength, aliasMaxLength, helpTextMaxLength, false, isForNested);
+            HelpTextHelper.AppendHelpText(stringBuilder, settings, this, indent, textSizes.NameMaxLength, textSizes.AliasMaxLength, textSizes.HelpTextMaxLength, false, isForNested);
             var argumentsBuilder = new ArgumentsBuilder { Separators = settings.Separators };
             var defaultOptions = this.options ?? this.getDefault();
             defaultOptions.Configure(argumentsBuilder);
-            CommandLineHelpGenerator.AppendCommandLineHelpText(argumentsBuilder, stringBuilder, indent + 1, nameMaxLength, aliasMaxLength, isForVerb, settings, true);
+            CommandLineHelpGenerator.AppendCommandLineHelpText(argumentsBuilder, stringBuilder, textSizes, indent + 1, isForVerb, settings, true);
         }
 
         public void AppendMissingArgumentsHint(StringBuilder stringBuilder)

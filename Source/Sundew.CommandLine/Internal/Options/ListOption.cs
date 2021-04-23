@@ -32,7 +32,7 @@ namespace Sundew.CommandLine.Internal.Options
             bool useDoubleQuotes,
             string? defaultValueHelpText,
             int index,
-            IArgumentHelpInfo? owner)
+            IArgumentMissingInfo? owner)
         {
             this.Name = name;
             this.Alias = alias;
@@ -67,7 +67,7 @@ namespace Sundew.CommandLine.Internal.Options
 
         public int Index { get; }
 
-        public IArgumentHelpInfo? Owner { get; }
+        public IArgumentMissingInfo? Owner { get; }
 
         public string Usage { get; }
 
@@ -117,9 +117,9 @@ namespace Sundew.CommandLine.Internal.Options
             return currentResult;
         }
 
-        public void AppendHelpText(StringBuilder stringBuilder, Settings settings, int indent, int nameMaxLength, int aliasMaxLength, int helpTextMaxLength, bool isForVerb, bool isForNested)
+        public void AppendHelpText(StringBuilder stringBuilder, Settings settings, int indent, TextSizes textSizes, bool isForVerb, bool isForNested)
         {
-            HelpTextHelper.AppendHelpText(stringBuilder, settings, this, indent, nameMaxLength, aliasMaxLength, helpTextMaxLength, isForVerb, isForNested);
+            HelpTextHelper.AppendHelpText(stringBuilder, settings, this, indent, textSizes.NameMaxLength, textSizes.AliasMaxLength, textSizes.HelpTextMaxLength, isForVerb, isForNested);
         }
 
         public void AppendMissingArgumentsHint(StringBuilder stringBuilder)

@@ -130,5 +130,16 @@ namespace Sundew.CommandLine
         /// <param name="defaultValueText">The default value help text.</param>
         /// <returns>This instance.</returns>
         IChoiceBuilder AddList<TValue>(string? name, string alias, IList<TValue> list, Serialize<TValue> serialize, Deserialize<TValue> deserialize, string helpText, bool useDoubleQuotes = false, string? defaultValueText = null);
+
+        /// <summary>
+        /// Adds the switch.
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <param name="alias">The alias.</param>
+        /// <param name="value">if set to <c>true</c> [value].</param>
+        /// <param name="setValue">The set value.</param>
+        /// <param name="helpText">The help text.</param>
+        /// <returns>This instance.</returns>
+        IChoiceBuilder AddSwitch(string? name, string alias, bool value, Action<bool> setValue, string helpText);
     }
 }

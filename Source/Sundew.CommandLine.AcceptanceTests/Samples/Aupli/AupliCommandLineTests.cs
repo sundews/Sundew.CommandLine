@@ -86,9 +86,9 @@ namespace Sundew.CommandLine.AcceptanceTests.Samples.Aupli
             const string ExpectedHelpText = @"Help
  Arguments:
   -fl  | --file-log    | Specifies whether to use a File logger and it's options | Default: [none]
-    -lp  | --log-path    | Specifies the log path, in case of the File logger | Required
-    -ms  | --max-size    | Specifies max log file size in bytes.              | Default: 5000000
-    -mf  | --max-files   | Specifies max number of log files.                 | Default: 10
+    -lp | --log-path    | Specifies the log path, in case of the File logger      | Required
+    -ms | --max-size    | Specifies max log file size in bytes.                   | Default: 5000000
+    -mf | --max-files   | Specifies max number of log files.                      | Default: 10
   -cl  | --console-log | Specifies whether to use a Console logger
   -s   | --shutdown    | Allows Aupli to shutdown the device when closing.
 ";
@@ -107,9 +107,9 @@ namespace Sundew.CommandLine.AcceptanceTests.Samples.Aupli
             string expectedHelpText = $@"Help
  Arguments:
   -fl  | --file-log    | Specifies whether to use a File logger and it's options | Default: see below
-    -lp  | --log-path    | Specifies the log path, in case of the File logger | Default: {expectedPath}
-    -ms  | --max-size    | Specifies max log file size in bytes.              | Default: 5000000
-    -mf  | --max-files   | Specifies max number of log files.                 | Default: 10
+    -lp | --log-path    | Specifies the log path, in case of the File logger      | Default: {expectedPath}
+    -ms | --max-size    | Specifies max log file size in bytes.                   | Default: 5000000
+    -mf | --max-files   | Specifies max number of log files.                      | Default: 10
   -cl  | --console-log | Specifies whether to use a Console logger
   -s   | --shutdown    | Allows Aupli to shutdown the device when closing.
 ";
@@ -127,9 +127,9 @@ namespace Sundew.CommandLine.AcceptanceTests.Samples.Aupli
             string expectedHelpText = $@"Help
  Arguments:
   -fl  | --file-log    | Specifies whether to use a File logger and it's options | Default: [none]
-    -lp  | --log-path    | Specifies the log path, in case of the File logger | Required
-    -ms  | --max-size    | Specifies max log file size in bytes.              | Default: 5000000
-    -mf  | --max-files   | Specifies max number of log files.                 | Default: 10
+    -lp | --log-path    | Specifies the log path, in case of the File logger      | Required
+    -ms | --max-size    | Specifies max log file size in bytes.                   | Default: 5000000
+    -mf | --max-files   | Specifies max number of log files.                      | Default: 10
   -cl  | --console-log | Specifies whether to use a Console logger
   -s   | --shutdown    | Allows Aupli to shutdown the device when closing.
 ";

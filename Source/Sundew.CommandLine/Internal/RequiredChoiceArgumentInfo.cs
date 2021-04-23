@@ -12,12 +12,13 @@ namespace Sundew.CommandLine.Internal
     using System.Text;
     using Sundew.CommandLine.Internal.Helpers;
 
-    internal class RequiredChoiceArgumentInfo : IArgumentHelpInfo
+    internal class RequiredChoiceArgumentInfo : IArgumentHelpInfo, IArgumentMissingInfo
     {
+        private const string Or = " or ";
         private readonly string name;
-        private readonly List<IOption> choiceOptions;
+        private readonly List<IArgumentInfo> choiceOptions;
 
-        public RequiredChoiceArgumentInfo(string name, List<IOption> choiceOptions, int index)
+        public RequiredChoiceArgumentInfo(string name, List<IArgumentInfo> choiceOptions, int index)
         {
             this.name = name;
             this.choiceOptions = choiceOptions;
@@ -28,10 +29,10 @@ namespace Sundew.CommandLine.Internal
 
         public int Index { get; }
 
-        public void AppendHelpText(StringBuilder stringBuilder, Settings settings, int indent, int nameMaxLength, int aliasMaxLength, int helpTextMaxLength, bool isForVerb, bool isForNested)
+        public void AppendHelpText(StringBuilder stringBuilder, Settings settings, int indent, TextSizes textSizes, bool isForVerb, bool isForNested)
         {
-            var indentText = HelpTextHelper.GetIndentation(indent);
-            var namePadRight = -(nameMaxLength + aliasMaxLength + helpTextMaxLength + 6);
+            var indentText = HelpTextHelper.GetIndentationText(HelpTextHelper.GetIndentation(indent));
+            var namePadRight = -(textSizes.NameMaxLength + textSizes.AliasMaxLength + textSizes.HelpTextMaxLength + 5);
             stringBuilder.AppendFormat(
                 settings.CultureInfo,
                 $@"  {(isForVerb ? Constants.SpaceText : string.Empty)}{indentText}{{0,{namePadRight}}}{Constants.HelpSeparator}{Constants.RequiredText}",
@@ -44,7 +45,7 @@ namespace Sundew.CommandLine.Internal
             stringBuilder.Append(this.choiceOptions[0].Usage);
             foreach (var choiceOption in this.choiceOptions.Skip(1))
             {
-                stringBuilder.Append(" or ");
+                stringBuilder.Append(Or);
                 stringBuilder.Append(choiceOption.Usage);
             }
 

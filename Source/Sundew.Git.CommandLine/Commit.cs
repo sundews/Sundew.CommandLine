@@ -64,8 +64,6 @@ namespace Sundew.Git.CommandLine
         public void Configure(IArgumentsBuilder argumentsBuilder)
         {
             argumentsBuilder.Separators = Separators.ForAlias('=');
-            CommonOptions.ConfigureQuiet(argumentsBuilder, this.Quiet, quiet => this.Quiet = quiet);
-            CommonOptions.ConfigureVerbose(argumentsBuilder, this.Verbose, verbose => this.Verbose = verbose);
             argumentsBuilder.AddOptional(
                 "m",
                 "message",
@@ -73,6 +71,8 @@ namespace Sundew.Git.CommandLine
                 message => this.Message = message,
                 "Use the given <msg> as the commit message.",
                 true);
+            CommonOptions.ConfigureQuiet(argumentsBuilder, this.Quiet, quiet => this.Quiet = quiet);
+            CommonOptions.ConfigureVerbose(argumentsBuilder, this.Verbose, verbose => this.Verbose = verbose);
         }
     }
 }

@@ -5,7 +5,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.AcceptanceTests.CommandLineBatcher
+namespace Sundew.CommandLine.AcceptanceTests.CommandlineBatcher
 {
     public class Command
     {

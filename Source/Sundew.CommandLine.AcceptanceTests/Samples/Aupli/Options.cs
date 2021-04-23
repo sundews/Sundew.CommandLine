@@ -56,6 +56,14 @@ namespace Sundew.CommandLine.AcceptanceTests.Samples.Aupli
         /// <param name="argumentsBuilder">The arguments builder.</param>
         public void Configure(IArgumentsBuilder argumentsBuilder)
         {
+            argumentsBuilder.AddOptional(
+                "fl",
+                "file-log",
+                this.FileLogOptions,
+                () => new FileLogOptions(default!),
+                value => this.FileLogOptions = value,
+                "Specifies whether to use a File logger and it's options");
+
             argumentsBuilder.AddSwitch(
                 "cl",
                 "console-log",
@@ -69,14 +77,6 @@ namespace Sundew.CommandLine.AcceptanceTests.Samples.Aupli
                 this.AllowShutdown,
                 argument => this.AllowShutdown = argument,
                 "Allows Aupli to shutdown the device when closing.");
-
-            argumentsBuilder.AddOptional(
-                "fl",
-                "file-log",
-                this.FileLogOptions,
-                () => new FileLogOptions(default!),
-                value => this.FileLogOptions = value,
-                "Specifies whether to use a File logger and it's options");
         }
     }
 }

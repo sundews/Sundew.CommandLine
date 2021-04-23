@@ -23,7 +23,6 @@ namespace Sundew.CommandLine.Internal
         private readonly List<IArgumentHelpInfo> helpOptions;
         private bool isConfigured;
         private int currentOptionIndex;
-        private int currentSwitchIndex;
 
         public ArgumentsBuilder()
         {
@@ -72,7 +71,7 @@ namespace Sundew.CommandLine.Internal
                 actualSeparator,
                 this.CultureInfo,
                 null,
-                this.GetIndex(),
+                this.GetIndexAndIncrement(),
                 null);
             this.AddOption(option, actualSeparator);
         }
@@ -100,7 +99,7 @@ namespace Sundew.CommandLine.Internal
                     actualSeparator,
                     this.CultureInfo,
                     defaultValueText,
-                    this.GetIndex(),
+                    this.GetIndexAndIncrement(),
                     null),
                 actualSeparator);
         }
@@ -116,7 +115,7 @@ namespace Sundew.CommandLine.Internal
                 setOptions,
                 true,
                 helpText,
-                this.GetIndex(),
+                this.GetIndexAndIncrement(),
                 null);
             this.AddOption(option, default);
         }
@@ -143,18 +142,18 @@ namespace Sundew.CommandLine.Internal
                 helpText,
                 useDoubleQuotes,
                 null,
-                this.GetIndex(),
+                this.GetIndexAndIncrement(),
                 null);
             this.AddOption(option, default);
         }
 
         public void RequireAnyOf(string name, Action<IChoiceBuilder> selectChoiceAction)
         {
-            var options = new List<IOption>();
-            var requiredChoiceArgumentInfo = new RequiredChoiceArgumentInfo(name, options, this.GetIndex());
+            var choiceArgumentInfos = new List<IArgumentInfo>();
+            var requiredChoiceArgumentInfo = new RequiredChoiceArgumentInfo(name, choiceArgumentInfos, this.GetIndexAndIncrement());
             this.helpOptions.Add(requiredChoiceArgumentInfo);
             this.RequiredArguments.Add(requiredChoiceArgumentInfo);
-            selectChoiceAction(new ChoiceBuilder(this, requiredChoiceArgumentInfo, options));
+            selectChoiceAction(new ChoiceBuilder(this, requiredChoiceArgumentInfo, choiceArgumentInfos));
         }
 
         public void AddOptional(string? name, string alias, Func<string?> serialize, Action<string> deserialize, string helpText, bool useDoubleQuotes = false, Separators separators = default, string? defaultValueText = null)
@@ -181,7 +180,7 @@ namespace Sundew.CommandLine.Internal
                actualSeparator,
                this.CultureInfo,
                defaultValueText,
-               this.GetIndex(),
+               this.GetIndexAndIncrement(),
                null);
             this.AddOption(option, actualSeparator);
         }
@@ -197,7 +196,7 @@ namespace Sundew.CommandLine.Internal
                 setOptions,
                 false,
                 helpText,
-                this.GetIndex(),
+                this.GetIndexAndIncrement(),
                 null);
             this.AddOption(option, default);
         }
@@ -225,7 +224,7 @@ namespace Sundew.CommandLine.Internal
                     actualSeparator,
                     this.CultureInfo,
                     defaultValueText,
-                    this.GetIndex(),
+                    this.GetIndexAndIncrement(),
                     null),
                 actualSeparator);
         }
@@ -252,27 +251,14 @@ namespace Sundew.CommandLine.Internal
                 helpText,
                 useDoubleQuotes,
                 defaultValueText,
-                this.GetIndex(),
+                this.GetIndexAndIncrement(),
                 null);
             this.AddOption(option, default);
         }
 
         public void AddSwitch(string? name, string alias, bool value, Action<bool> setValue, string helpText)
         {
-            var isNameNullOrEmpty = string.IsNullOrEmpty(name);
-            var isAliasNullOrEmpty = string.IsNullOrEmpty(alias);
-            VerifyNameAndAlias(isNameNullOrEmpty, isAliasNullOrEmpty);
-
-            var @switch = new Switch(name, alias, value, setValue, helpText, this.currentSwitchIndex++);
-            if (!isNameNullOrEmpty)
-            {
-                this.switches.Add($"-{@switch.Name}", @switch);
-            }
-
-            if (!isAliasNullOrEmpty)
-            {
-                this.switches.Add($"--{@switch.Alias}", @switch);
-            }
+            this.AddSwitch(this.CreateSwitch(name, alias, value, setValue, helpText, this.GetIndexAndIncrement(), null));
         }
 
         public void AddRequiredValue(string name, Func<string> serialize, Action<string> deserialize, string helpText, bool useDoubleQuotes = false)
@@ -389,6 +375,29 @@ namespace Sundew.CommandLine.Internal
             }
         }
 
+        internal Switch CreateSwitch(string? name, string alias, bool value, Action<bool> setValue, string helpText, int switchIndex, IArgumentMissingInfo? owner)
+        {
+            var isNameNullOrEmpty = string.IsNullOrEmpty(name);
+            var isAliasNullOrEmpty = string.IsNullOrEmpty(alias);
+            VerifyNameAndAlias(isNameNullOrEmpty, isAliasNullOrEmpty);
+            return new(name, alias, value, setValue, helpText, switchIndex, owner);
+        }
+
+        internal void AddSwitch(Switch @switch)
+        {
+            if (!string.IsNullOrEmpty(@switch.Name))
+            {
+                this.switches.Add($"-{@switch.Name}", @switch);
+            }
+
+            if (!string.IsNullOrEmpty(@switch.Alias))
+            {
+                this.switches.Add($"--{@switch.Alias}", @switch);
+            }
+
+            this.helpOptions.Add(@switch);
+        }
+
         internal Separators GetActualSeparator(Separators separators)
         {
             var actualSeparator = this.Separators;
@@ -400,7 +409,7 @@ namespace Sundew.CommandLine.Internal
             return actualSeparator;
         }
 
-        internal int GetIndex()
+        internal int GetIndexAndIncrement()
         {
             return this.currentOptionIndex++;
         }

@@ -78,6 +78,10 @@ namespace Sundew.CommandLine.Internal
                         else if (argumentsBuilder.Switches.TryGet(argument, out var @switch))
                         {
                             @switch.Set();
+                            if (@switch.Owner != null)
+                            {
+                                argumentsBuilder.RequiredArguments.Remove(@switch.Owner);
+                            }
                         }
                         else if (currentResult != null)
                         {

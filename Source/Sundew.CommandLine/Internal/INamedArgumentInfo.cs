@@ -7,6 +7,8 @@
 
 namespace Sundew.CommandLine.Internal
 {
+    using System.Text;
+
     internal interface INamedArgumentInfo : IArgumentInfo
     {
         /// <summary>
@@ -45,5 +47,13 @@ namespace Sundew.CommandLine.Internal
         /// Gets the separators.
         /// </summary>
         Separators Separators { get; }
+
+        /// <summary>
+        /// Gets the owner.
+        /// </summary>
+        /// <value>
+        /// The owner.
+        /// </value>
+        IArgumentMissingInfo? Owner { get; }
     }
 }

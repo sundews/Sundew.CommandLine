@@ -37,10 +37,11 @@ namespace Sundew.CommandLine.AcceptanceTests.Git
         {
             const string expectedText = @"Help
  Verbs:
-   commit/c | Record changes to the repository.
-     -m | --message= | Use the given <msg> as the commit message. | Default: [none]
+   commit/c          | Record changes to the repository.
+     -m | --message= | Use the given <msg> as the commit message.                                                                         | Default: [none]
      -q | --quiet    | Only print error and warning messages; all other output will be suppressed.
-     -v | --verbose  | Show unified diff between the HEAD commit and what would be committed at the bottom of the commit message template to help the user describe the commit by reminding what changes the commit has.
+     -v | --verbose  | Show unified diff between the HEAD commit and what would be committed at the bottom of the commit message template
+                       to help the user describe the commit by reminding what changes the commit has.
 ";
             var commandLineParser = new CommandLineParser<int, int>();
             commandLineParser.AddVerb(new Commit(), verb => Result.Success(0));

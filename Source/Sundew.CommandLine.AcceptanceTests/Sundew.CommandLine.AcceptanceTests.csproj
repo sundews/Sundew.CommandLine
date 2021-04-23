@@ -26,6 +26,7 @@
   <ItemGroup>
     <PackageReference Include="FluentAssertions" Version="5.10.3" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.9.4" />
+    <PackageReference Include="NuGet.Versioning" Version="5.9.1" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.333">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
@@ -40,6 +41,10 @@
   <ItemGroup>
     <ProjectReference Include="..\Sundew.CommandLine\Sundew.CommandLine.csproj" />
     <ProjectReference Include="..\Sundew.Git.CommandLine\Sundew.Git.CommandLine.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Spt\" />
   </ItemGroup>
 
 </Project>

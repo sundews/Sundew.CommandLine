@@ -83,11 +83,11 @@ namespace Sundew.CommandLine.Internal.Values
             return result;
         }
 
-        public void AppendHelpText(StringBuilder stringBuilder, int maxValues, int indent, bool isForVerb, Settings settings)
+        public void AppendHelpText(StringBuilder stringBuilder, TextSizes textSizes, int indent, bool isForVerb, Settings settings)
         {
             foreach (var value in this.values)
             {
-                HelpTextHelper.AppendHelpText(stringBuilder, value, maxValues, indent, isForVerb, settings);
+                HelpTextHelper.AppendHelpText(stringBuilder, value, textSizes, indent, isForVerb, settings);
             }
         }
 

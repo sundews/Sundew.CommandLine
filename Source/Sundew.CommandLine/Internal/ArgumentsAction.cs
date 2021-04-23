@@ -24,7 +24,7 @@ namespace Sundew.CommandLine.Internal
             this.Handler = handler;
         }
 
-        public ArgumentsBuilder Builder { get; } = new ArgumentsBuilder();
+        public ArgumentsBuilder Builder { get; } = new();
 
         public IArguments Arguments { get; }
 

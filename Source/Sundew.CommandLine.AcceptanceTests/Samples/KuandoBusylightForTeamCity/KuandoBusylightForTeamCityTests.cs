@@ -45,8 +45,8 @@ namespace Sundew.CommandLine.AcceptanceTests.Samples.KuandoBusylightForTeamCity
   -h  | --host-name        | Specifies the TeamCity host name                                               | Required
   -b  | --build-type-id    | Specifies the TeamCity build type id                                           | Required
   -c  | --credentials      | Specifies the credentials to connect to TeamCity                               | Default: [none]
-    -u  | --username         | Specifies the username | Required
-    -p  | --password         | Specifies the password | Required
+    -u | --username         | Specifies the username                                                         | Required
+    -p | --password         | Specifies the password                                                         | Required
   -ri | --refresh-interval | The refresh interval within the Interval: min: 00:00:00.2000000, max: 00:10:00 | Default: 00:00:01
   -d  | --devices          | The list of hid device ids                                                     | Default: [none]
 ";
