@@ -13,17 +13,18 @@ namespace Sundew.CommandLine.Internal
     using System.Text;
     using Sundew.CommandLine.Internal.Helpers;
 
-    internal sealed class Switch : INamedArgumentInfo
+    internal sealed class Switch : INamedArgumentInfo, IArgumentHelpInfo
     {
         private readonly Action<bool> setValue;
 
-        public Switch(string? name, string alias, bool isSet, Action<bool> setValue, string helpText, int index)
+        public Switch(string? name, string alias, bool isSet, Action<bool> setValue, string helpText, int index, IArgumentMissingInfo? owner)
         {
             this.Name = name;
             this.Alias = alias;
             this.DefaultValue = this.IsSet = isSet;
             this.setValue = setValue;
             this.Index = index;
+            this.Owner = owner;
             this.HelpLines = HelpTextHelper.GetHelpLines(helpText);
             this.Usage = HelpTextHelper.GetUsage(name, alias);
         }
@@ -40,13 +41,17 @@ namespace Sundew.CommandLine.Internal
 
         public bool IsNesting => false;
 
-        public bool IsChoice => false;
+        public bool IsChoice => this.Owner != null;
 
         public bool IsSet { get; private set; }
 
         public bool DefaultValue { get; }
 
+        public bool IsRequired => false;
+
         public int Index { get; }
+
+        public IArgumentMissingInfo? Owner { get; }
 
         public void ResetToDefault(CultureInfo cultureInfo)
         {
@@ -72,22 +77,26 @@ namespace Sundew.CommandLine.Internal
             SerializationHelper.AppendNameOrAlias(stringBuilder, this.Name, this.Alias, useAliases);
         }
 
-        public void AppendHelpText(StringBuilder stringBuilder, int maxName, int maxAlias, int indent, bool isForVerb, CultureInfo cultureInfo)
+        public void AppendHelpText(StringBuilder stringBuilder, Settings settings, int indent, TextSizes textSizes, bool isForVerb, bool isForNested)
         {
-            var maxNamePadRight = -maxName;
-            var maxAliasPadRight = -maxAlias;
+            var cultureInfo = settings.CultureInfo;
+            var additionalIndent = isForVerb ? 1 : 0;
+            additionalIndent += this.IsChoice ? 1 : 0;
+            var maxNamePadRight = -textSizes.NameMaxLength;
+            var maxAliasPadRight = -textSizes.AliasMaxLength;
+            var indentationText = HelpTextHelper.GetIndentationText(HelpTextHelper.GetIndentation(indent) + additionalIndent + 1);
             stringBuilder.AppendFormat(
                 cultureInfo,
-                $@"  {(isForVerb ? Constants.SpaceText : string.Empty)}{HelpTextHelper.GetIndentation(indent)}{{0,{maxNamePadRight}}}{Constants.HelpSeparator}{{1,{maxAliasPadRight}}}{Constants.HelpSeparator}{{2}}",
-                this.Name != null ? $"{Constants.ArgumentStartCharacter}{this.Name}" : string.Empty,
+                $@" {{0,{maxNamePadRight}}}{Constants.HelpSeparator}{{1,{maxAliasPadRight}}}{Constants.HelpSeparator}{{2}}",
+                this.Name != null ? $"{indentationText}{Constants.ArgumentStartCharacter}{this.Name}" : string.Empty,
                 this.Alias != null ? $"{Constants.DoubleDashText}{this.Alias}" : string.Empty,
                 this.HelpLines[0]);
             for (int i = 1; i < this.HelpLines.Count; i++)
             {
                 stringBuilder.AppendFormat(
                     cultureInfo,
-                    $@"{Environment.NewLine}  {(isForVerb ? Constants.SpaceText : string.Empty)}{HelpTextHelper.GetIndentation(indent)}{{0,{maxNamePadRight}}}{Constants.HelpSeparator}{{1,{maxAliasPadRight}}}{Constants.HelpSeparator}{{2}}",
-                    string.Empty,
+                    $@"{Environment.NewLine} {{0,{maxNamePadRight}}}   {{1,{maxAliasPadRight}}}   {{2}}",
+                    indentationText,
                     string.Empty,
                     this.HelpLines[i]);
             }

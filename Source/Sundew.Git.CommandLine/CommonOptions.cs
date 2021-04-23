@@ -31,6 +31,7 @@ namespace Sundew.Git.CommandLine
         /// <param name="argumentsBuilder">The arguments builder.</param>
         /// <param name="verbose">if set to <c>true</c> [verbose].</param>
         /// <param name="setVerbose">The set verbose.</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("StyleCop.CSharp.ReadabilityRules", "SA1118:Parameter should not span multiple lines", Justification = "Bug! it a string with a new line.")]
         public static void ConfigureVerbose(IArgumentsBuilder argumentsBuilder, bool verbose, Action<bool> setVerbose)
         {
             argumentsBuilder.AddSwitch(
@@ -38,7 +39,8 @@ namespace Sundew.Git.CommandLine
                     "verbose",
                     verbose,
                     setVerbose,
-                    "Show unified diff between the HEAD commit and what would be committed at the bottom of the commit message template to help the user describe the commit by reminding what changes the commit has.");
+                    @"Show unified diff between the HEAD commit and what would be committed at the bottom of the commit message template
+to help the user describe the commit by reminding what changes the commit has.");
         }
     }
 }

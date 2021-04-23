@@ -18,13 +18,13 @@ namespace Sundew.CommandLine.Internal
     {
         private readonly ArgumentsBuilder argumentsBuilder;
         private readonly RequiredChoiceArgumentInfo requiredChoiceArgumentInfo;
-        private readonly List<IOption> choiceOptions;
+        private readonly List<IArgumentInfo> choiceArgumentInfos;
 
-        public ChoiceBuilder(ArgumentsBuilder argumentsBuilder, RequiredChoiceArgumentInfo requiredChoiceArgumentInfo, List<IOption> choiceOptions)
+        public ChoiceBuilder(ArgumentsBuilder argumentsBuilder, RequiredChoiceArgumentInfo requiredChoiceArgumentInfo, List<IArgumentInfo> choiceArgumentInfos)
         {
             this.argumentsBuilder = argumentsBuilder;
             this.requiredChoiceArgumentInfo = requiredChoiceArgumentInfo;
-            this.choiceOptions = choiceOptions;
+            this.choiceArgumentInfos = choiceArgumentInfos;
         }
 
         public IChoiceBuilder Add(string? name, string alias, Func<string?> serialize, Action<string> deserialize, string helpText, bool useDoubleQuotes = false, Separators separators = default, string? defaultValueText = null)
@@ -51,10 +51,10 @@ namespace Sundew.CommandLine.Internal
                 actualSeparator,
                 this.argumentsBuilder.CultureInfo,
                 defaultValueText,
-                this.argumentsBuilder.GetIndex(),
+                this.argumentsBuilder.GetIndexAndIncrement(),
                 this.requiredChoiceArgumentInfo);
             this.argumentsBuilder.AddOption(option, actualSeparator);
-            this.choiceOptions.Add(option);
+            this.choiceArgumentInfos.Add(option);
             return this;
         }
 
@@ -69,10 +69,10 @@ namespace Sundew.CommandLine.Internal
                 setOptions,
                 false,
                 helpText,
-                this.argumentsBuilder.GetIndex(),
+                this.argumentsBuilder.GetIndexAndIncrement(),
                 this.requiredChoiceArgumentInfo);
             this.argumentsBuilder.AddOption(option, default);
-            this.choiceOptions.Add(option);
+            this.choiceArgumentInfos.Add(option);
             return this;
         }
 
@@ -98,10 +98,10 @@ namespace Sundew.CommandLine.Internal
                 actualSeparator,
                 this.argumentsBuilder.CultureInfo,
                 defaultValueText,
-                this.argumentsBuilder.GetIndex(),
-                null);
+                this.argumentsBuilder.GetIndexAndIncrement(),
+                this.requiredChoiceArgumentInfo);
             this.argumentsBuilder.AddOption(option, actualSeparator);
-            this.choiceOptions.Add(option);
+            this.choiceArgumentInfos.Add(option);
             return this;
         }
 
@@ -127,10 +127,18 @@ namespace Sundew.CommandLine.Internal
                 helpText,
                 useDoubleQuotes,
                 defaultValueText,
-                this.argumentsBuilder.GetIndex(),
+                this.argumentsBuilder.GetIndexAndIncrement(),
                 this.requiredChoiceArgumentInfo);
             this.argumentsBuilder.AddOption(option, default);
-            this.choiceOptions.Add(option);
+            this.choiceArgumentInfos.Add(option);
+            return this;
+        }
+
+        public IChoiceBuilder AddSwitch(string? name, string alias, bool value, Action<bool> setValue, string helpText)
+        {
+            var @switch = this.argumentsBuilder.CreateSwitch(name, alias, value, setValue, helpText, this.argumentsBuilder.GetIndexAndIncrement(), this.requiredChoiceArgumentInfo);
+            this.argumentsBuilder.AddSwitch(@switch);
+            this.choiceArgumentInfos.Add(@switch);
             return this;
         }
     }

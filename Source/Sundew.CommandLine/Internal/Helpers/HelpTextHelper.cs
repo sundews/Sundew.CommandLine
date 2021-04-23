@@ -24,15 +24,17 @@ namespace Sundew.CommandLine.Internal.Helpers
             bool isForVerb,
             bool isForNested)
         {
-            var indentText = GetIndentation(indent);
             var additionalIndentation = option.IsChoice ? 1 : 0;
-            var namePadRight = -(nameMaxLength - additionalIndentation);
+            additionalIndentation += isForVerb ? 1 : 0;
+
+            var indentationText = GetIndentationText(GetIndentation(indent) + additionalIndentation + 1);
+            var namePadRight = -nameMaxLength;
             var aliasPadRight = -aliasMaxLength;
             var helpTextPadRight = -helpTextMaxLength;
             stringBuilder.AppendFormat(
                 settings.CultureInfo,
-                $@"  {(isForVerb ? Constants.SpaceText : string.Empty)}{indentText}{' '.Repeat(additionalIndentation)}{{0,{namePadRight}}}{Constants.HelpSeparator}{{1,{aliasPadRight}}}{Constants.HelpSeparator}{{2,{helpTextPadRight}}}{Constants.HelpSeparator}",
-                option.Name != null ? $"{Constants.ArgumentStartCharacter}{option.Name}{(option.Separators.NameSeparator != Constants.SpaceCharacter ? option.Separators.NameSeparator.ToString() : string.Empty)}" : string.Empty,
+                $@" {{0,{namePadRight}}}{Constants.HelpSeparator}{{1,{aliasPadRight}}}{Constants.HelpSeparator}{{2,{helpTextPadRight}}}{Constants.HelpSeparator}",
+                $"{indentationText}{(option.Name != null ? $"{Constants.ArgumentStartCharacter}{option.Name}{(option.Separators.NameSeparator != Constants.SpaceCharacter ? option.Separators.NameSeparator.ToString() : string.Empty)}" : string.Empty)}",
                 $"{Constants.DoubleDashText}{option.Alias}{(option.Separators.AliasSeparator != Constants.SpaceCharacter ? option.Separators.AliasSeparator.ToString() : string.Empty)}",
                 option.HelpLines[0]);
             option.AppendDefaultText(stringBuilder, settings, isForNested);
@@ -41,36 +43,46 @@ namespace Sundew.CommandLine.Internal.Helpers
             {
                 stringBuilder.AppendFormat(
                     settings.CultureInfo,
-                    $@"  {(isForVerb ? Constants.SpaceText : string.Empty)}{indentText}{' '.Repeat(additionalIndentation)}{{0,{namePadRight}}}{' '.Repeat(Constants.HelpSeparator.Length)}{{1,{aliasPadRight}}}{' '.Repeat(Constants.HelpSeparator.Length)}{{2,{helpTextPadRight}}}",
-                    string.Empty,
+                    $@" {{0,{namePadRight}}}{' '.Repeat(Constants.HelpSeparator.Length)}{{1,{aliasPadRight}}}{' '.Repeat(Constants.HelpSeparator.Length)}{{2}}",
+                    indentationText,
                     string.Empty,
                     option.HelpLines[i]);
                 stringBuilder.AppendLine();
             }
         }
 
-        public static void AppendHelpText(StringBuilder stringBuilder, IValue value, int maxName, int indent, bool isForVerb, Settings settings)
+        public static void AppendHelpText(StringBuilder stringBuilder, IValue value, TextSizes textSizes, int indent, bool isForVerb, Settings settings)
         {
+            var additionalIndentation = isForVerb ? 1 : 0;
             var defaultOrRequiredText = GetDefaultOrRequiredText(value, settings);
-            var maxNamePadRight = -maxName;
+            var maxNamePadRight = -textSizes.ValuesMaxLength;
+            var maxHelpTextPadRight = -textSizes.HelpTextMaxLength;
+            var indentationText = GetIndentationText(GetIndentation(indent) + additionalIndentation + 1);
             stringBuilder.AppendFormat(
                 settings.CultureInfo,
-                $@"  {(isForVerb ? Constants.SpaceText : string.Empty)}{GetIndentation(indent)}{{0,{maxNamePadRight}}}{Constants.HelpSeparator}{value.HelpLines[0]}{Constants.HelpSeparator}{defaultOrRequiredText}",
-                $"{Constants.LessThanText}{value.Name}{Constants.GreaterThanText}");
+                $@" {{0,{maxNamePadRight}}}{Constants.HelpSeparator}{{1,{maxHelpTextPadRight}}}{Constants.HelpSeparator}{defaultOrRequiredText}",
+                $"{indentationText}{Constants.LessThanText}{value.Name}{Constants.GreaterThanText}",
+                value.HelpLines[0]);
             stringBuilder.AppendLine();
             for (int i = 1; i < value.HelpLines.Count; i++)
             {
                 stringBuilder.AppendFormat(
                     settings.CultureInfo,
-                    $@"  {(isForVerb ? Constants.SpaceText : string.Empty)}{GetIndentation(indent)}{{0,{maxNamePadRight}}}{' '.Repeat(Constants.HelpSeparator.Length)}{value.HelpLines[i]}",
-                    string.Empty);
+                    $@" {{0,{maxNamePadRight}}}{' '.Repeat(Constants.HelpSeparator.Length)}{{1}}",
+                    indentationText,
+                    value.HelpLines[i]);
                 stringBuilder.AppendLine();
             }
         }
 
-        public static string GetIndentation(int indent)
+        public static int GetIndentation(int indent)
         {
-            return Constants.SpaceCharacter.Repeat(indent * 2);
+            return indent * 2;
+        }
+
+        public static string GetIndentationText(int indent)
+        {
+            return Constants.SpaceCharacter.Repeat(indent);
         }
 
         public static string GetUsage(string? name, string alias, Separators separators = default)
