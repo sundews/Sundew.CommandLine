@@ -139,7 +139,7 @@ namespace Sundew.CommandLine.Internal
                     textSizes.ValuesMaxLength);
 
                 var argumentInfos = Concat(argumentsBuilder.Options, argumentsBuilder.Switches);
-                textSizes.NameMaxLength = Math.Max(argumentInfos.Any() ? argumentInfos.Max(x => (x.Name?.Length ?? 0) + (x.Separators.NameSeparator != Constants.SpaceCharacter ? 1 : 0) + (x.IsNesting ? 1 : 0)) + Constants.DashText.Length + indentation : 0, textSizes.NameMaxLength);
+                textSizes.NameMaxLength = Math.Max(argumentInfos.Any() ? argumentInfos.Max(x => (x.Name?.Length ?? 0) + (x.Separators.NameSeparator != Constants.SpaceCharacter ? 1 : 0) + (x.IsNesting ? 1 : 0) + (x.IsChoice ? 1 : 0)) + Constants.DashText.Length + indentation : 0, textSizes.NameMaxLength);
                 textSizes.AliasMaxLength = Math.Max(Math.Max(argumentInfos.Any() ? argumentInfos.Max(x => x.Alias.Length + (x.Separators.AliasSeparator != Constants.SpaceCharacter ? 1 : 0) + (x.IsNesting ? 1 : 0)) + Constants.DoubleDashText.Length : 0, textSizes.AliasMaxLength), tempValuesMaxLength - textSizes.NameMaxLength - Constants.HelpSeparator.Length);
                 textSizes.ValuesMaxLength = textSizes.NameMaxLength + Constants.HelpSeparator.Length + textSizes.AliasMaxLength;
 
