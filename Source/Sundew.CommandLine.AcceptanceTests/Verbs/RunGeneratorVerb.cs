@@ -45,7 +45,7 @@ namespace Sundew.CommandLine.AcceptanceTests.Verbs
 
         public IVerb? NextVerb => null;
 
-        string IVerb.HelpText => "Runs the generator";
+        string IArguments.HelpText => "Runs the generator";
 
         public void Configure(IArgumentsBuilder argumentsBuilder)
         {

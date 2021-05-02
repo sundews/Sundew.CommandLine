@@ -84,7 +84,7 @@ namespace Sundew.CommandLine.AcceptanceTests.Samples.Aupli
         public void Given_options_with_a_complex_type_When_complex_type_is_null_Then_help_text_should_contain_indentation()
         {
             const string ExpectedHelpText = @"Help
- Arguments:
+ Arguments:            Launches Aupli
   -fl  | --file-log    | Specifies whether to use a File logger and it's options | Default: [none]
     -lp | --log-path    | Specifies the log path, in case of the File logger      | Required
     -ms | --max-size    | Specifies max log file size in bytes.                   | Default: 5000000
@@ -105,7 +105,7 @@ namespace Sundew.CommandLine.AcceptanceTests.Samples.Aupli
         {
             const string expectedPath = @"c:\temp\log.log";
             string expectedHelpText = $@"Help
- Arguments:
+ Arguments:            Launches Aupli
   -fl  | --file-log    | Specifies whether to use a File logger and it's options | Default: see below
     -lp | --log-path    | Specifies the log path, in case of the File logger      | Default: {expectedPath}
     -ms | --max-size    | Specifies max log file size in bytes.                   | Default: 5000000
@@ -125,7 +125,7 @@ namespace Sundew.CommandLine.AcceptanceTests.Samples.Aupli
         public void Given_the_help_commandline_Then_ResultErrorToString_should_be_the_expected_help_text()
         {
             string expectedHelpText = $@"Help
- Arguments:
+ Arguments:            Launches Aupli
   -fl  | --file-log    | Specifies whether to use a File logger and it's options | Default: [none]
     -lp | --log-path    | Specifies the log path, in case of the File logger      | Required
     -ms | --max-size    | Specifies max log file size in bytes.                   | Default: 5000000

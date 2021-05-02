@@ -49,6 +49,7 @@ jobs:
         -p:"SppApiKey=${{ secrets.SPP_API_KEY }}"
         -p:"SppSymbolApiKey=${{ secrets.SPP_API_KEY }}"
         -p:"ContinuousIntegrationBuild=true"
+        -p:"SppForceVersion=${{ secrets.SPP_FORCE_VERSION_IF_SET }}"
     - name: Test
       run: dotnet test ${{ env.solutionPath }} --verbosity normal --configuration ${{ env.buildConfiguration }} --no-build
     - name: 'Publish package(s)'

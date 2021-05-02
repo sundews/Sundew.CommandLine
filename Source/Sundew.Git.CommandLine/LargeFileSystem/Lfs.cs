@@ -49,7 +49,10 @@ namespace Sundew.Git.CommandLine.LargeFileSystem
 
         /// <summary>Gets the help text.</summary>
         /// <value>The help text.</value>
-        public string HelpText { get; } = "Git Large File Storage (LFS) replaces large files.";
+        public string HelpText { get; } = @"Git Large File Storage (LFS) replaces large files
+such as audio samples, videos, datasets, and graphics
+with text pointers inside Git, while storing the file
+contents on a remote server like GitHub.com or GitHub Enterprise.";
 
         /// <summary>Gets the name.</summary>
         /// <value>The name.</value>

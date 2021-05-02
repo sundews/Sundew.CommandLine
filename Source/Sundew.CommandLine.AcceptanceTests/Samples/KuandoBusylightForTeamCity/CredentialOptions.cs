@@ -27,6 +27,8 @@ namespace Sundew.CommandLine.AcceptanceTests.Samples.KuandoBusylightForTeamCity
 
         public SecureString Password { get; private set; }
 
+        public string HelpText { get; } = "The credentials";
+
         public void Configure(IArgumentsBuilder argumentsBuilder)
         {
             argumentsBuilder.AddRequired("u", "username", () => this.UserName, userName => this.UserName = userName, "Specifies the username");

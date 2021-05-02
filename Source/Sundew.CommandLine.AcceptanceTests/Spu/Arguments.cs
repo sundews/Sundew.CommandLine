@@ -65,6 +65,8 @@ namespace Sundew.CommandLine.AcceptanceTests.Spu
             }
         }
 
+        public string HelpText { get; } = "Runs a package update.";
+
         public void Configure(IArgumentsBuilder argumentsBuilder)
         {
             argumentsBuilder.AddOptionalList("id", "package-ids", this.packageIds, this.Serialize, this.Deserialize, @$"The package(s) to update. (* Wildcards supported){Environment.NewLine}Format: Id[.Version] or ""Id[ Version]"" (Pinning version is optional)");

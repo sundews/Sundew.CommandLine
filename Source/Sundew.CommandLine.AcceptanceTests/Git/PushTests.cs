@@ -39,7 +39,7 @@ namespace Sundew.CommandLine.AcceptanceTests.Git
         {
             const string expectedText = @"Help
  Verbs:
-   push                   | Update remote refs along with associated objects.
+   push                   Update remote refs along with associated objects.
      -o | --push-option=  | Transmit the given string to the server, which passes them to the pre-receive as well as the post-receive hook.    | Default: [none]
      -v | --verbose       | Show unified diff between the HEAD commit and what would be committed at the bottom of the commit message template
                             to help the user describe the commit by reminding what changes the commit has.

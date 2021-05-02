@@ -23,11 +23,6 @@ namespace Sundew.CommandLine
         Separators Separators { get; set; }
 
         /// <summary>
-        /// Gets or sets the help order. Default: OptionsHelpOrder.RequiredFirst.
-        /// </summary>
-        OptionsHelpOrder OptionsHelpOrder { get; set; }
-
-        /// <summary>
         /// Adds the required.
         /// </summary>
         /// <param name="name">The name.</param>

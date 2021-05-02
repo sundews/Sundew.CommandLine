@@ -22,7 +22,7 @@ namespace Sundew.CommandLine.Internal.Verbs
 
         public string? ShortName { get; } = null;
 
-        public string HelpText { get; } = default!;
+        public string HelpText { get; } = string.Empty;
 
         public void Configure(IArgumentsBuilder argumentsBuilder)
         {

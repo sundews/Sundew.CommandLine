@@ -76,6 +76,8 @@ namespace Sundew.CommandLine.AcceptanceTests
 
             public int Number { get; private set; }
 
+            public string HelpText { get; } = "Numbers";
+
             public void Configure(IArgumentsBuilder argumentsBuilder)
             {
                 argumentsBuilder.AddRequired("n", "number", ci => this.Number.ToString(ci).AsSpan(), (x, ci) => this.Number = int.Parse(x, NumberStyles.Integer, ci), "A number");
@@ -85,6 +87,8 @@ namespace Sundew.CommandLine.AcceptanceTests
         private class NumbersOptions : IArguments
         {
             public List<int> Numbers { get; } = new List<int>();
+
+            public string HelpText { get; } = "Numbers";
 
             public void Configure(IArgumentsBuilder argumentsBuilder)
             {

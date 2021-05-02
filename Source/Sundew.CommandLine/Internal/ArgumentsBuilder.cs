@@ -43,8 +43,6 @@ namespace Sundew.CommandLine.Internal
 
         public Separators Separators { get; set; } = Separators.Create();
 
-        public OptionsHelpOrder OptionsHelpOrder { get; set; } = OptionsHelpOrder.RequiredFirst;
-
         public CultureInfo CultureInfo { get; set; } = CultureInfo.CurrentCulture;
 
         public void AddRequired(string? name, string alias, Func<string> serialize, Action<string> deserialize, string helpText, bool useDoubleQuotes = false, Separators separators = default)

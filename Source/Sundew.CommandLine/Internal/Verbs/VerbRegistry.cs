@@ -12,6 +12,7 @@ namespace Sundew.CommandLine.Internal.Verbs
     using System.Linq;
     using System.Threading.Tasks;
     using Sundew.Base.Primitives.Computation;
+    using Sundew.CommandLine.Internal.Helpers;
 
     internal class VerbRegistry<TSuccess, TError> : IVerbBuilder<TSuccess, TError>, IVerbRegistry<TSuccess, TError>
     {
@@ -22,6 +23,7 @@ namespace Sundew.CommandLine.Internal.Verbs
         {
             this.Verb = verb;
             this.Handler = handler;
+            this.HelpLines = HelpTextHelper.GetHelpLines(verb.HelpText);
             verbBuilderAction?.Invoke(this);
         }
 
@@ -36,6 +38,8 @@ namespace Sundew.CommandLine.Internal.Verbs
         public IVerb Verb { get; }
 
         public Func<IVerb, ValueTask<Result<TSuccess, ParserError<TError>>>> Handler { get; }
+
+        public string[] HelpLines { get; }
 
         public TVerb AddVerb<TVerb>(
             TVerb verb,
