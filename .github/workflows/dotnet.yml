@@ -9,7 +9,6 @@ jobs:
     env:
       solutionPath: ./Source/Sundew.CommandLine.sln
       repository: 'https://sundew-dev:${{ secrets.SUNDEW_DEV_TOKEN }}@github.com/hugener/Sundew.CommandLine.git'
-      buildConfiguration: Release
       source: 'https://api.nuget.org/v3/index.json'
       dev-source: 'https://www.myget.org/F/sundew-dev/api/v2/package'
       dev-source-latest-version: 'https://www.myget.org/F/sundew-dev/api/v3/index.json'
@@ -40,6 +39,7 @@ jobs:
         "(?:master|main).* => stage=production|buildConfiguration=Release"
         "release/.+ => stage=ci|buildConfiguration=Debug|dev-package-source-if-set= -s ${{ env.dev-source-latest-version }}"
         "(?:develop.*|feature/(?<Postfix>.+)|bugfix/(?<Postfix>.+)) => stage=development|buildConfiguration=Debug|package-postfix={Postfix}|dev-package-source-if-set= -s ${{ env.dev-source-latest-version }}"
+        ".+ => stage=none|buildConfiguration=Release"
         --format "::set-output name={0}::{1}"
         -tvs '='
         --input ${{ github.ref }}
