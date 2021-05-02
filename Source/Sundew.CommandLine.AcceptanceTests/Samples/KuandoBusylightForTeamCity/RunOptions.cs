@@ -41,6 +41,8 @@ namespace Sundew.CommandLine.AcceptanceTests.Samples.KuandoBusylightForTeamCity
 
         public IReadOnlyList<string> HidDeviceIds => this.hidDeviceIds;
 
+        public string HelpText { get; } = "Runs something";
+
         public void Configure(IArgumentsBuilder argumentsBuilder)
         {
             argumentsBuilder.AddRequired("h", "host-name", () => this.HostName, hostName => this.HostName = hostName, "Specifies the TeamCity host name");

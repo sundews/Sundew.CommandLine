@@ -41,7 +41,7 @@ namespace Sundew.CommandLine.AcceptanceTests.Samples.KuandoBusylightForTeamCity
         public void Given_a_configured_parser_Then_result_should_be_expected_values()
         {
             const string expectedHelpText = @"Help
- Arguments:
+ Arguments:                Runs something
   -h  | --host-name        | Specifies the TeamCity host name                                               | Required
   -b  | --build-type-id    | Specifies the TeamCity build type id                                           | Required
   -c  | --credentials      | Specifies the credentials to connect to TeamCity                               | Default: [none]

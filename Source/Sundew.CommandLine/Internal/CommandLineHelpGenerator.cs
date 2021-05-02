@@ -11,6 +11,7 @@ namespace Sundew.CommandLine.Internal
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
+    using Sundew.Base.Collections;
     using Sundew.Base.Text;
     using Sundew.CommandLine.Internal.Extensions;
     using Sundew.CommandLine.Internal.Helpers;
@@ -47,10 +48,19 @@ namespace Sundew.CommandLine.Internal
                     var verbNamePadRight = -Math.Max(textSizes.VerbNameMaxLength, textSizes.ValuesMaxLength);
                     stringBuilder.AppendFormat(
                         settings.CultureInfo,
-                        $" {{0,{verbNamePadRight}}}{Constants.HelpSeparator}{verbRegistry.Verb.HelpText}",
+                        $" {{0,{verbNamePadRight}}} {verbRegistry.HelpLines[0]}",
                         $"{HelpTextHelper.GetIndentationText(indentation)}{verbRegistry.Verb.Name}{verbRegistry.Verb.ShortName.TransformIfNotNullOrEmpty(x => $"/{x}")}",
                         verbIndentation);
                     stringBuilder.AppendLine();
+                    for (int i = 1; i < verbRegistry.HelpLines.Length; i++)
+                    {
+                        stringBuilder.AppendFormat(
+                            settings.CultureInfo,
+                            $@" {{0,{verbNamePadRight}}} {{1}}",
+                            Constants.SpaceText,
+                            verbRegistry.HelpLines[i]);
+                        stringBuilder.AppendLine();
+                    }
 
                     AppendCommandLineHelpText(verbRegistry.Builder, stringBuilder, textSizes, indent, true, settings, false);
                 }
@@ -64,7 +74,7 @@ namespace Sundew.CommandLine.Internal
 
                     foreach (var registry in verbRegistry.HelpVerbs)
                     {
-                        AppendHelpText(stringBuilder, registry, argumentsAction, textSizes, indent + 1, settings);
+                        AppendHelpText(stringBuilder, registry, null, textSizes, indent + 1, settings);
                     }
                 }
             }
@@ -76,7 +86,18 @@ namespace Sundew.CommandLine.Internal
                 {
                     if (indent == 0)
                     {
-                        stringBuilder.AppendLine(Constants.ArgumentsText);
+                        var argumentsPadRight = -(textSizes.ValuesMaxLength + 1);
+                        stringBuilder.AppendFormat($"{{0,{argumentsPadRight}}} {argumentsAction.HelpLines[0]}", Constants.ArgumentsText);
+                        stringBuilder.AppendLine();
+                        for (int i = 1; i < argumentsAction.HelpLines.Length; i++)
+                        {
+                            stringBuilder.AppendFormat(
+                                settings.CultureInfo,
+                                $@" {{0,{argumentsPadRight}}} {{1}}",
+                                Constants.SpaceText,
+                                argumentsAction.HelpLines[i]);
+                            stringBuilder.AppendLine();
+                        }
                     }
 
                     AppendCommandLineHelpText(argumentsBuilder, stringBuilder, textSizes, indent, false, settings, false);
@@ -95,7 +116,7 @@ namespace Sundew.CommandLine.Internal
         {
             if (argumentsBuilder.Options.Any() || argumentsBuilder.Switches.Any())
             {
-                foreach (var option in GetArgumentHelpInfos(argumentsBuilder.HelpOptions, argumentsBuilder.OptionsHelpOrder))
+                foreach (var option in argumentsBuilder.HelpOptions.OrderBy(x => x.Index))
                 {
                     option.AppendHelpText(stringBuilder, settings, indent, textSizes, isVerbArgument, isForNested);
                 }
@@ -106,7 +127,7 @@ namespace Sundew.CommandLine.Internal
 
         private static TextSizes Measure<TSuccess, TError>(VerbRegistry<TSuccess, TError>? verbRegistry, ArgumentsAction<TSuccess, TError>? argumentsAction)
         {
-            void GetArgumentsMax(ArgumentsBuilder argumentsBuilder, ref int nameMaxLength, ref int aliasMaxLength, ref int helpTextMaxLength, ref int valuesMaxLength, bool isForVerb, int indent)
+            void GetArgumentsMax(ArgumentsBuilder argumentsBuilder, ref TextSizes textSizes, bool isForVerb, int indent)
             {
                 var additionalIndent = isForVerb ? 1 : 0;
 
@@ -115,37 +136,37 @@ namespace Sundew.CommandLine.Internal
                     argumentsBuilder.Values.HasValues
                         ? argumentsBuilder.Values.Max(x => x.Name.Length) + Constants.LessThanText.Length + Constants.GreaterThanText.Length + indentation
                         : 0,
-                    valuesMaxLength);
+                    textSizes.ValuesMaxLength);
 
                 var argumentInfos = Concat(argumentsBuilder.Options, argumentsBuilder.Switches);
-                nameMaxLength = Math.Max(argumentInfos.Any() ? argumentInfos.Max(x => (x.Name?.Length ?? 0) + (x.Separators.NameSeparator != Constants.SpaceCharacter ? 1 : 0) + (x.IsNesting ? 1 : 0) + (x.IsChoice ? 1 : 0)) + Constants.DashText.Length + indentation : 0, nameMaxLength);
-                aliasMaxLength = Math.Max(Math.Max(argumentInfos.Any() ? argumentInfos.Max(x => x.Alias.Length + (x.Separators.AliasSeparator != Constants.SpaceCharacter ? 1 : 0) + (x.IsNesting ? 1 : 0)) + Constants.DoubleDashText.Length : 0, aliasMaxLength), tempValuesMaxLength - nameMaxLength - Constants.HelpSeparator.Length);
-                valuesMaxLength = nameMaxLength + Constants.HelpSeparator.Length + aliasMaxLength;
+                textSizes.NameMaxLength = Math.Max(argumentInfos.Any() ? argumentInfos.Max(x => (x.Name?.Length ?? 0) + (x.Separators.NameSeparator != Constants.SpaceCharacter ? 1 : 0) + (x.IsNesting ? 1 : 0)) + Constants.DashText.Length + indentation : 0, textSizes.NameMaxLength);
+                textSizes.AliasMaxLength = Math.Max(Math.Max(argumentInfos.Any() ? argumentInfos.Max(x => x.Alias.Length + (x.Separators.AliasSeparator != Constants.SpaceCharacter ? 1 : 0) + (x.IsNesting ? 1 : 0)) + Constants.DoubleDashText.Length : 0, textSizes.AliasMaxLength), tempValuesMaxLength - textSizes.NameMaxLength - Constants.HelpSeparator.Length);
+                textSizes.ValuesMaxLength = textSizes.NameMaxLength + Constants.HelpSeparator.Length + textSizes.AliasMaxLength;
 
-                var helpTextItems = argumentInfos.Select(x => x.HelpLines).Concat(argumentsBuilder.Values.Select(x => x.HelpLines)).ToArray();
-                helpTextMaxLength = Math.Max(
+                var helpTextItems = argumentInfos.SelectMany(x => x.HelpLines.Select(x => x.Length)).Concat(argumentsBuilder.Values.SelectMany(x => x.HelpLines.Select(x => x.Length))).ToArray();
+                textSizes.HelpTextMaxLength = Math.Max(
                     helpTextItems.Any()
-                    ? helpTextItems.Max(x => x.Max(l => l.Length))
+                    ? helpTextItems.Max()
                     : 0,
-                    helpTextMaxLength);
+                    textSizes.HelpTextMaxLength);
             }
 
-            void GetMax(VerbRegistry<TSuccess, TError>? verbRegistry, ArgumentsAction<TSuccess, TError>? argumentsAction, ref int verbMaxName, ref int maxName, ref int maxAlias, ref int helpTextMaxLength, ref int valuesMaxLength, int indent)
+            void GetMax(VerbRegistry<TSuccess, TError>? verbRegistry, ArgumentsAction<TSuccess, TError>? argumentsAction, ref TextSizes textSizes, int indent)
             {
                 if (verbRegistry != null)
                 {
                     if (verbRegistry.Verb != NullVerb.Instance)
                     {
-                        verbMaxName = Math.Max(verbMaxName, verbRegistry.Verb.Name.Length + verbRegistry.Verb.ShortName.GetAdjustedLengthOrDefault(1, 0) + HelpTextHelper.GetIndentation(indent));
+                        textSizes.VerbNameMaxLength = Math.Max(textSizes.VerbNameMaxLength, verbRegistry.Verb.Name.Length + verbRegistry.Verb.ShortName.GetAdjustedLengthOrDefault(1, 0) + HelpTextHelper.GetIndentation(indent));
                         verbRegistry.Builder.PrepareBuilder(verbRegistry.Verb, false);
-                        GetArgumentsMax(verbRegistry.Builder, ref maxName, ref maxAlias, ref helpTextMaxLength, ref valuesMaxLength, true, indent);
+                        GetArgumentsMax(verbRegistry.Builder, ref textSizes, true, indent);
                     }
 
                     if (verbRegistry.HasVerbs)
                     {
                         foreach (var registry in verbRegistry.HelpVerbs)
                         {
-                            GetMax(registry, argumentsAction, ref verbMaxName, ref maxName, ref maxAlias, ref helpTextMaxLength, ref valuesMaxLength, indent + 1);
+                            GetMax(registry, argumentsAction, ref textSizes, indent + 1);
                         }
                     }
                 }
@@ -153,30 +174,13 @@ namespace Sundew.CommandLine.Internal
                 if (argumentsAction != null)
                 {
                     argumentsAction.Builder.PrepareBuilder(argumentsAction.Arguments, false);
-                    GetArgumentsMax(argumentsAction.Builder, ref maxName, ref maxAlias, ref helpTextMaxLength, ref valuesMaxLength, false, indent);
+                    GetArgumentsMax(argumentsAction.Builder, ref textSizes, false, indent);
                 }
             }
 
-            var verbNameMaxLength = 0;
-            var nameMaxLength = 0;
-            var aliasMaxLength = 0;
-            var helpTextMaxLength = 0;
-            var valuesMaxLength = 0;
-            GetMax(verbRegistry, argumentsAction, ref verbNameMaxLength, ref nameMaxLength, ref aliasMaxLength, ref helpTextMaxLength, ref valuesMaxLength, 0);
-
-            return new TextSizes(verbNameMaxLength, nameMaxLength, aliasMaxLength, helpTextMaxLength, valuesMaxLength);
-        }
-
-        private static IEnumerable<IArgumentHelpInfo> GetArgumentHelpInfos(
-            IReadOnlyList<IArgumentHelpInfo> options,
-            OptionsHelpOrder optionsHelpOrder)
-        {
-            return optionsHelpOrder switch
-            {
-                OptionsHelpOrder.RequiredFirst => options.OrderByDescending(x => x.IsRequired).ThenBy(x => x.Index),
-                OptionsHelpOrder.AsAdded => options.OrderBy(x => x.Index),
-                _ => throw new ArgumentOutOfRangeException(nameof(optionsHelpOrder), optionsHelpOrder, $"{optionsHelpOrder} was out of range."),
-            };
+            var textSizes = new TextSizes(0, 0, 0, 0, 0);
+            GetMax(verbRegistry, argumentsAction, ref textSizes, 0);
+            return textSizes;
         }
 
         private static IReadOnlyList<INamedArgumentInfo> Concat(

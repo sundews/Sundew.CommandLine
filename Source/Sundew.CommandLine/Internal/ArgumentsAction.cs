@@ -10,6 +10,7 @@ namespace Sundew.CommandLine.Internal
     using System;
     using System.Threading.Tasks;
     using Sundew.Base.Primitives.Computation;
+    using Sundew.CommandLine.Internal.Helpers;
 
     internal class ArgumentsAction<TSuccess, TError> : IArgumentsBuilderProvider
     {
@@ -22,11 +23,14 @@ namespace Sundew.CommandLine.Internal
         {
             this.Arguments = arguments;
             this.Handler = handler;
+            this.HelpLines = HelpTextHelper.GetHelpLines(this.Arguments.HelpText);
         }
 
         public ArgumentsBuilder Builder { get; } = new();
 
         public IArguments Arguments { get; }
+
+        public string[] HelpLines { get; }
 
         public Func<IArguments, ValueTask<Result<TSuccess, ParserError<TError>>>> Handler { get; }
     }

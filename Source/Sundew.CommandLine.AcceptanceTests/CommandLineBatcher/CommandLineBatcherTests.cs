@@ -41,51 +41,67 @@ namespace Sundew.CommandLine.AcceptanceTests.CommandlineBatcher
             result.IsSuccess.Should().BeFalse();
             result.Error.Type.Should().Be(ParserErrorType.RequiredArgumentMissing);
             result.Error.Message.Should().Be(@"-c/--commands
--b/--batches or -bf/--batches-files or -i/--stdio");
+-b/--batches or -bf/--batches-files or -bsi/--batches-stdin");
             result.Error.ToString().Should().Be(@"Error:
   The required options were missing:
    -c/--commands
-   -b/--batches or -bf/--batches-files or -i/--stdio");
+   -b/--batches or -bf/--batches-files or -bsi/--batches-stdin");
         }
 
         [Fact]
         public void CreateHelpText_Then_ResultShouldBeExpectedResult()
         {
             var commandLineParser = new CommandLineParser<int, int>();
+            commandLineParser.AddVerb(new MatchVerb(), verb => Result.Success(0));
             commandLineParser.WithArguments(new BatchArguments(), arguments => Result.Success(0));
 
             var result = commandLineParser.CreateHelpText();
 
             result.Should().Be(@$"Help
- Arguments:
-  -c   | --commands              | The commands to be executed                                                                       | Required
-                                   Format: ""[{{command}}][|{{arguments}}]""...
-                                   Values can be injected by position with {{number}}
-                                   If no command is specified, the argument is sent to standard output
-  Batches with values                                                                                                                | Required
-   -b  | --batches               | The batches to be passed for each command                                                         | Default: [none]
-                                   Each batch can contain multiple values separated by the batch value separator
-   -bf | --batches-files         | A list of files containing batches                                                                | Default: [none]
-   -i  | --stdio                 | Indicates that batches should be read from standard input
-  -bs  | --batch-separation      | Specifies how batches are separated:                                                              | Default: command-line
-                                   [c]ommand-line, [n]ew-line, [w]indows-new-line, [u]nix-new-line
-  -bvs | --batch-value-separator | The batch value separator                                                                         | Default: |
-       | --if                    | A condition for each batch to check if it should run                                              | Default: [none]
-                                   Format: [StringComparison:]{{lhs}} {{operator}} {{rhs}}
-                                   lhs and rhs can be injected by position with {{number}}
-                                   operators: == equals, |< starts with, >| ends with, >< contains
-                                   negations: != not equals, !< not starts with, >! not ends with, <> not contains
-                                   StringComparison: O Ordinal, OI OrdinalIgnoreCase, C CurrentCulture,
-                                   CI CurrentCultureIgnoreCase, I InvariantCulture, II InvariantCultureIgnoreCase
-  -d   | --root-directory        | The directory to search for projects                                                              | Default: Current directory
-  -e   | --execution-order       | Specifies whether all commands are executed for the first [b]atch before moving to the next batch | Default: batch
-                                   or the first [c]ommand is executed for all batches before moving to the next command
-                                   - Finish first [b]atch first
-                                   - Finish first [c]ommand first
-  -mp  | --max-parallelism       | The degree of parallel execution (1-{Environment.ProcessorCount})                                                            | Default: 1
-                                   Specify ""all"" for number of cores.
-  -p   | --parallelize           | Specifies whether commands or batches run in parallel: [c]ommands, [b]atches                      | Default: commands
-  -lv  | --logging-verbosity     | Logging verbosity: [n]ormal, [e]rrors, [q]uiet, [d]etailed                                        | Default: normal
+ Verbs:
+   match/m                          Matches the specified input to patterns and maps it to key-value pairs.
+     -p   | --patterns              | The patterns (Regex) to be matched in the order they are specified                                | Required
+                                      Format: {{pattern}} => {{batch}}[,batch]*
+                                      Batches may consist of multiple values, separated by the value-separator
+                                      Batches can also contain regex group names in the format {{group-name}}
+     -f   | --format                | The format to apply to each key value pair.                                                       | Default: [none]
+     -bs  | --batch-separator       | The character use to split batches.                                                               | Default: |
+     -bvs | --batch-value-separator | The character use to split batch values.                                                          | Default: ,
+     -m   | --merge                 | Indicates whether outputs should be merged and output as one
+     -lv  | --logging-verbosity     | Logging verbosity: [n]ormal, [e]rrors, [q]uiet, [d]etailed                                        | Default: normal
+     Input                                                                                                                              | Required
+      -i  | --input                 | The input to be matched                                                                           | Default: [none]
+          | --input-stdin           | Indicates that the input should be read from standard input
+     <output-path>                  | The output path, if not specified application will output to stdout                               | Default: [none]
+ Arguments:                         Executes the specified sequence of commands per batch
+  -c      | --commands              | The commands to be executed                                                                       | Required
+                                      Format: ""[{{command}}][|{{arguments}}]""...
+                                      Values can be injected by position with {{number}}
+                                      If no command is specified, the argument is sent to standard output
+  Batches with values                                                                                                                   | Required
+   -b     | --batches               | The batches to be passed for each command                                                         | Default: [none]
+                                      Each batch can contain multiple values separated by the batch value separator
+   -bf    | --batches-files         | A list of files containing batches                                                                | Default: [none]
+   -bsi   | --batches-stdin         | Indicates that batches should be read from standard input
+  -bs     | --batch-separation      | Specifies how batches are separated:                                                              | Default: command-line
+                                      [c]ommand-line, [n]ew-line, [w]indows-new-line, [u]nix-new-line
+  -bvs    | --batch-value-separator | The batch value separator                                                                         | Default: |
+          | --if                    | A condition for each batch to check if it should run                                              | Default: [none]
+                                      Format: [StringComparison:]{{lhs}} {{operator}} {{rhs}}
+                                      lhs and rhs can be injected by position with {{number}}
+                                      operators: == equals, |< starts with, >| ends with, >< contains
+                                      negations: != not equals, !< not starts with, >! not ends with, <> not contains
+                                      StringComparison: O Ordinal, OI OrdinalIgnoreCase, C CurrentCulture,
+                                      CI CurrentCultureIgnoreCase, I InvariantCulture, II InvariantCultureIgnoreCase
+  -d      | --root-directory        | The directory to search for projects                                                              | Default: Current directory
+  -e      | --execution-order       | Specifies whether all commands are executed for the first [b]atch before moving to the next batch | Default: batch
+                                      or the first [c]ommand is executed for all batches before moving to the next command
+                                      - Finish first [b]atch first
+                                      - Finish first [c]ommand first
+  -mp     | --max-parallelism       | The degree of parallel execution (1-{Environment.ProcessorCount})                                                            | Default: 1
+                                      Specify ""all"" for number of cores.
+  -p      | --parallelize           | Specifies whether commands or batches run in parallel: [c]ommands, [b]atches                      | Default: commands
+  -lv     | --logging-verbosity     | Logging verbosity: [n]ormal, [e]rrors, [q]uiet, [d]etailed                                        | Default: normal
 ");
         }
     }

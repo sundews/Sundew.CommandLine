@@ -29,6 +29,8 @@ namespace Sundew.CommandLine.AcceptanceTests
         {
             public bool IsOn { get; private set; }
 
+            public string HelpText { get; } = "none";
+
             public void Configure(IArgumentsBuilder argumentsBuilder)
             {
                 argumentsBuilder.AddSwitch("s", "switch", this.IsOn, b => this.IsOn = b, string.Empty);

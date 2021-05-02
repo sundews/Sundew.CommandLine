@@ -31,11 +31,13 @@ namespace Sundew.CommandLine.Internal
 
         public void AppendHelpText(StringBuilder stringBuilder, Settings settings, int indent, TextSizes textSizes, bool isForVerb, bool isForNested)
         {
-            var indentText = HelpTextHelper.GetIndentationText(HelpTextHelper.GetIndentation(indent));
-            var namePadRight = -(textSizes.NameMaxLength + textSizes.AliasMaxLength + textSizes.HelpTextMaxLength + 5);
+            var additionalIndentation = isForVerb ? 1 : 0;
+
+            var indentText = HelpTextHelper.GetIndentationText(HelpTextHelper.GetIndentation(indent) + additionalIndentation + 1);
+            var namePadRight = -(textSizes.NameMaxLength + textSizes.AliasMaxLength + textSizes.HelpTextMaxLength + (Constants.HelpSeparator.Length * 2) - indentText.Length);
             stringBuilder.AppendFormat(
                 settings.CultureInfo,
-                $@"  {(isForVerb ? Constants.SpaceText : string.Empty)}{indentText}{{0,{namePadRight}}}{Constants.HelpSeparator}{Constants.RequiredText}",
+                $@" {indentText}{{0,{namePadRight}}}{Constants.HelpSeparator}{Constants.RequiredText}",
                 this.name);
             stringBuilder.AppendLine();
         }

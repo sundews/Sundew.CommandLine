@@ -51,6 +51,8 @@ namespace Sundew.CommandLine.AcceptanceTests
 
             public string Value { get; private set; } = "default";
 
+            public string HelpText { get; } = "none";
+
             public void Configure(IArgumentsBuilder argumentsBuilder)
             {
                 argumentsBuilder.AddRequired("n", "name", () => this.Name, s => this.Name = s, "A name");

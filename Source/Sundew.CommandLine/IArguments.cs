@@ -12,6 +12,10 @@ namespace Sundew.CommandLine
     /// </summary>
     public interface IArguments
     {
+        /// <summary>Gets the help text.</summary>
+        /// <value>The help text.</value>
+        string HelpText { get; }
+
         /// <summary>
         /// Configures the specified arguments builder.
         /// </summary>

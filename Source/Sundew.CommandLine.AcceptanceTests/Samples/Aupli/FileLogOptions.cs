@@ -50,6 +50,8 @@ namespace Sundew.CommandLine.AcceptanceTests.Samples.Aupli
         /// </value>
         public int MaxNumberOfLogFiles { get; private set; }
 
+        public string HelpText { get; } = "File logging options.";
+
         /// <summary>
         /// Configures the specified arguments builder.
         /// </summary>

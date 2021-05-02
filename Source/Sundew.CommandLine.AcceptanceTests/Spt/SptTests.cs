@@ -29,7 +29,7 @@ namespace Sundew.CommandLine.AcceptanceTests.Spt
 
             result.Should().Be(@"Help
  Verbs:
-   update/u                  | Update package references
+   update/u                  Update package references
      -id  | --package-ids    | The package(s) to update. (* Wildcards supported)                         | Default: *
                                Format: Id[.Version] or ""Id[ Version]"" (Pinning version is optional)
      -p   | --projects       | The project(s) to update (* Wildcards supported)                          | Default: *
@@ -40,7 +40,7 @@ namespace Sundew.CommandLine.AcceptanceTests.Spt
      -v   | --verbose        | Verbose
      -l   | --local          | Forces the source to ""Local-Sundew""
      -sr  | --skip-restore   | Skips a dotnet restore command after package update.
-   await/a                   | Awaits the specified package to be published
+   await/a                   Awaits the specified package to be published
      -s   | --source         | The source or source name to await publish                                | Default: NuGet.config: defaultPushSource
      -d   | --root-directory | The directory to search for projects                                      | Default: Current directory
      -t   | --timeout        | The wait timeout in seconds                                               | Default: 300
@@ -49,12 +49,12 @@ namespace Sundew.CommandLine.AcceptanceTests.Spt
                                Format: <PackageId>[.<Version>].
                                If the version is not provided, it must be specified by the version value
      <version>               | Specifies the NuGet Package version                                       | Default: [none]
-   prune/p                   | Prunes the matching packages for a local source
-     all                     | Prune the specified local source for all packages
+   prune/p                   Prunes the matching packages for a local source
+     all                     Prune the specified local source for all packages
        -p | --package-ids    | The packages to prune (* Wildcards supported)                             | Default: *
        -s | --source         | Local source or source name to search for packages                        | Default: Local-Sundew
        -v | --verbose        | Verbose
-   delete/d                  | Delete files
+   delete/d                  Delete files
      -d   | --root-directory | The directory to search for projects                                      | Default: Current directory
      -r   | --recursive      | Specifies whether to recurse into subdirectories.
      -v   | --verbose        | Verbose

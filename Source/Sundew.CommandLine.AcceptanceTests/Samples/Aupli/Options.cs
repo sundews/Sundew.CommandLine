@@ -50,6 +50,8 @@ namespace Sundew.CommandLine.AcceptanceTests.Samples.Aupli
         /// </value>
         public FileLogOptions? FileLogOptions { get; private set; }
 
+        public string HelpText { get; } = "Launches Aupli";
+
         /// <summary>
         /// Configures the specified arguments builder.
         /// </summary>

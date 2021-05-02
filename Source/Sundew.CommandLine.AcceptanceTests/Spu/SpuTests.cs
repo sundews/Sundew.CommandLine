@@ -43,7 +43,7 @@ namespace Sundew.CommandLine.AcceptanceTests.Spu
         public void Given_DefaultArguments_When_CreatingHelpText_Then_ResultShouldBeExpectedHelp()
         {
             const string ExpectedHelp = @"Help
- Arguments:
+ Arguments:              Runs a package update.
   -id | --package-ids    | The package(s) to update. (* Wildcards supported)                    | Default: Sundew.Base
                            Format: Id[.Version] or ""Id[ Version]"" (Pinning version is optional)
   -p  | --projects       | The project(s) to update (* Wildcards supported)                     | Default: Sundew.CommandLine
