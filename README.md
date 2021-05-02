@@ -1,6 +1,6 @@
 # Sundew.CommandLine
 
-[![Build Status](https://drosera.visualstudio.com/Sundew.CommandLine/_apis/build/status/hugener.Sundew.CommandLine?branchName=master)](https://drosera.visualstudio.com/Sundew.CommandLine/_build/latest?definitionId=1&branchName=master)
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/hugener/Sundew.CommandLine/.NET?label=GitHub%20Actions&logo=github)
 ![Nuget](https://img.shields.io/nuget/v/Sundew.CommandLine)
 
 ## Features
@@ -33,10 +33,10 @@ https://github.com/hugener/CommandLineBatcher/blob/main/Source/CommandlineBatche
 
 ### Nesting
 **Usage**  
-https://github.com/hugener/Aupli/blob/master/Source/Aupli/Program.cs  
+https://github.com/hugener/Aupli/blob/main/Source/Aupli/Program.cs  
 **Configure**  
-https://github.com/hugener/Aupli/blob/master/Source/Aupli/CommandLine/Options.cs
-https://github.com/hugener/Aupli/blob/master/Source/Aupli/CommandLine/FileLogOptions.cs
+https://github.com/hugener/Aupli/blob/main/Source/Aupli/CommandLine/Options.cs
+https://github.com/hugener/Aupli/blob/main/Source/Aupli/CommandLine/FileLogOptions.cs
 
 ### Nested verbs
 **Usage**  
