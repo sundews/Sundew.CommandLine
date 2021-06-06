@@ -7,22 +7,23 @@
 
 namespace Sundew.CommandLine.Internal
 {
+    using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
 
-    internal class ArgumentList : IEnumerable<string>
+    internal class ArgumentList : IEnumerable<ReadOnlyMemory<char>>
     {
-        private readonly IReadOnlyList<string> arguments;
+        private readonly IReadOnlyList<ReadOnlyMemory<char>> arguments;
         private int index;
 
-        public ArgumentList(IReadOnlyList<string> arguments, int index)
+        public ArgumentList(IReadOnlyList<ReadOnlyMemory<char>> arguments, int index)
         {
             this.arguments = arguments;
             this.index = index;
         }
 
-        public bool TryPeek([MaybeNullWhen(false), NotNullWhen(true)]out string argument)
+        public bool TryPeek([MaybeNullWhen(false), NotNullWhen(true)]out ReadOnlyMemory<char> argument)
         {
             if (this.index + 1 < this.arguments.Count)
             {
@@ -34,7 +35,7 @@ namespace Sundew.CommandLine.Internal
             return false;
         }
 
-        public bool TryMoveNext([MaybeNullWhen(false), NotNullWhen(true)]out string argument)
+        public bool TryMoveNext([MaybeNullWhen(false), NotNullWhen(true)]out ReadOnlyMemory<char> argument)
         {
             this.index++;
             if (this.index < this.arguments.Count)
@@ -52,7 +53,7 @@ namespace Sundew.CommandLine.Internal
             this.index--;
         }
 
-        public IEnumerator<string> GetEnumerator()
+        public IEnumerator<ReadOnlyMemory<char>> GetEnumerator()
         {
             return this.GetEnumerable().GetEnumerator();
         }
@@ -62,7 +63,7 @@ namespace Sundew.CommandLine.Internal
             return this.GetEnumerator();
         }
 
-        private IEnumerable<string> GetEnumerable()
+        private IEnumerable<ReadOnlyMemory<char>> GetEnumerable()
         {
             for (; this.index < this.arguments.Count; this.index++)
             {

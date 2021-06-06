@@ -11,6 +11,7 @@ namespace Sundew.CommandLine
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using Sundew.Base.Collections;
     using Sundew.Base.Primitives.Computation;
     using Sundew.CommandLine.Extensions;
     using Sundew.CommandLine.Internal;
@@ -140,6 +141,16 @@ namespace Sundew.CommandLine
         /// <returns>The parser result.</returns>
         public ValueTask<Result<TSuccess, ParserError<TError>>> ParseAsync(IReadOnlyList<string> arguments)
         {
+            return this.ParseAsync(arguments.ToArray(x => x.AsMemory()), 0);
+        }
+
+        /// <summary>
+        /// Parses the specified arguments.
+        /// </summary>
+        /// <param name="arguments">The arguments.</param>
+        /// <returns>The parser result.</returns>
+        public ValueTask<Result<TSuccess, ParserError<TError>>> ParseAsync(IReadOnlyList<ReadOnlyMemory<char>> arguments)
+        {
             return this.ParseAsync(arguments, 0);
         }
 
@@ -169,7 +180,7 @@ namespace Sundew.CommandLine
         /// <param name="arguments">The arguments.</param>
         /// <param name="startIndex">The start index.</param>
         /// <returns>The parser result.</returns>
-        public async ValueTask<Result<TSuccess, ParserError<TError>>> ParseAsync(IReadOnlyList<string> arguments, int startIndex)
+        public async ValueTask<Result<TSuccess, ParserError<TError>>> ParseAsync(IReadOnlyList<ReadOnlyMemory<char>> arguments, int startIndex)
         {
             if (startIndex < 0)
             {
@@ -205,7 +216,7 @@ namespace Sundew.CommandLine
             {
                 if (this.verbRegistry.HasVerbs)
                 {
-                    if (Constants.HelpRequestTexts.Contains(argumentList.FirstOrDefault() ?? string.Empty))
+                    if (Constants.HelpRequestTexts.Contains(argumentList.FirstOrDefault(), ReadOnlyMemoryCharEqualityComparer.Instance))
                     {
                         result = Result.Error(new ParserError<TError>(ParserErrorType.HelpRequested, CommandLineArgumentsParser.HelpRequestedText));
                     }
@@ -237,6 +248,16 @@ namespace Sundew.CommandLine
         /// <returns>The parser result.</returns>
         public Result<TSuccess, ParserError<TError>> Parse(IReadOnlyList<string> arguments)
         {
+            return this.Parse(arguments.ToArray(x => x.AsMemory()), 0);
+        }
+
+        /// <summary>
+        /// Parses the specified arguments.
+        /// </summary>
+        /// <param name="arguments">The arguments.</param>
+        /// <returns>The parser result.</returns>
+        public Result<TSuccess, ParserError<TError>> Parse(IReadOnlyList<ReadOnlyMemory<char>> arguments)
+        {
             return this.Parse(arguments, 0);
         }
 
@@ -267,6 +288,17 @@ namespace Sundew.CommandLine
         /// <param name="startIndex">The start index.</param>
         /// <returns>The parser result.</returns>
         public Result<TSuccess, ParserError<TError>> Parse(IReadOnlyList<string> arguments, int startIndex)
+        {
+            return this.Parse(arguments.ToArray(x => x.AsMemory()), startIndex);
+        }
+
+        /// <summary>
+        /// Parses the specified arguments.
+        /// </summary>
+        /// <param name="arguments">The arguments.</param>
+        /// <param name="startIndex">The start index.</param>
+        /// <returns>The parser result.</returns>
+        public Result<TSuccess, ParserError<TError>> Parse(IReadOnlyList<ReadOnlyMemory<char>> arguments, int startIndex)
         {
             var parseTask = this.ParseAsync(arguments, startIndex).AsTask();
             parseTask.Wait();

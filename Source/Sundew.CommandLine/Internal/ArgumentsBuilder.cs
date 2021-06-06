@@ -12,14 +12,15 @@ namespace Sundew.CommandLine.Internal
     using System.Globalization;
     using System.Linq;
     using Sundew.Base.Collections;
+    using Sundew.Base.Equality;
     using Sundew.CommandLine.Internal.Enums;
     using Sundew.CommandLine.Internal.Options;
     using Sundew.CommandLine.Internal.Values;
 
     internal sealed class ArgumentsBuilder : IArgumentsBuilder
     {
-        private readonly Dictionary<string, IOption> options = new();
-        private readonly Dictionary<string, Switch> switches = new();
+        private readonly Dictionary<ReadOnlyMemory<char>, IOption> options = new(ReadOnlyMemoryCharEqualityComparer.Instance);
+        private readonly Dictionary<ReadOnlyMemory<char>, Switch> switches = new(ReadOnlyMemoryCharEqualityComparer.Instance);
         private readonly List<IArgumentHelpInfo> helpOptions;
         private bool isConfigured;
         private int currentOptionIndex;
@@ -357,13 +358,13 @@ namespace Sundew.CommandLine.Internal
             if (!isNameNullOrEmpty)
             {
                 var isAddingNameSeparator = !char.IsWhiteSpace(separators.NameSeparator);
-                this.options.Add($"-{option.Name}{(isAddingNameSeparator ? separators.NameSeparator.ToString() : string.Empty)}", option);
+                this.options.Add($"-{option.Name}{(isAddingNameSeparator ? separators.NameSeparator.ToString() : string.Empty)}".AsMemory(), option);
             }
 
             if (!isAliasNullOrEmpty)
             {
                 var isAddingAliasSeparator = !char.IsWhiteSpace(separators.AliasSeparator);
-                this.options.Add($"--{option.Alias}{(isAddingAliasSeparator ? separators.AliasSeparator.ToString() : string.Empty)}", option);
+                this.options.Add($"--{option.Alias}{(isAddingAliasSeparator ? separators.AliasSeparator.ToString() : string.Empty)}".AsMemory(), option);
             }
 
             this.helpOptions.Add(option);
@@ -385,12 +386,12 @@ namespace Sundew.CommandLine.Internal
         {
             if (!string.IsNullOrEmpty(@switch.Name))
             {
-                this.switches.Add($"-{@switch.Name}", @switch);
+                this.switches.Add($"-{@switch.Name}".AsMemory(), @switch);
             }
 
             if (!string.IsNullOrEmpty(@switch.Alias))
             {
-                this.switches.Add($"--{@switch.Alias}", @switch);
+                this.switches.Add($"--{@switch.Alias}".AsMemory(), @switch);
             }
 
             this.helpOptions.Add(@switch);

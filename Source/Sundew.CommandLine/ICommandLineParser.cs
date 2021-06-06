@@ -7,6 +7,7 @@
 
 namespace Sundew.CommandLine
 {
+    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
     using Sundew.Base.Primitives.Computation;
@@ -33,6 +34,21 @@ namespace Sundew.CommandLine
         /// <returns>The parser result.</returns>
         Result<TSuccess, ParserError<TError>> Parse(IReadOnlyList<string> arguments);
 
+        /// <summary>
+        /// Parses the specified arguments.
+        /// </summary>
+        /// <param name="arguments">The arguments.</param>
+        /// <param name="startIndex">The start index.</param>
+        /// <returns>The parser result.</returns>
+        Result<TSuccess, ParserError<TError>> Parse(IReadOnlyList<ReadOnlyMemory<char>> arguments, int startIndex);
+
+        /// <summary>
+        /// Parses the specified arguments.
+        /// </summary>
+        /// <param name="arguments">The arguments.</param>
+        /// <returns>The parser result.</returns>
+        Result<TSuccess, ParserError<TError>> Parse(IReadOnlyList<ReadOnlyMemory<char>> arguments);
+
         /// <summary>Parses the specified arguments.</summary>
         /// <param name="arguments">The arguments.</param>
         /// <returns>The parser result.</returns>
@@ -53,6 +69,13 @@ namespace Sundew.CommandLine
         /// <returns>The parser result.</returns>
         ValueTask<Result<TSuccess, ParserError<TError>>> ParseAsync(IReadOnlyList<string> arguments);
 
+        /// <summary>
+        /// Parses the specified arguments.
+        /// </summary>
+        /// <param name="arguments">The arguments.</param>
+        /// <returns>The parser result.</returns>
+        ValueTask<Result<TSuccess, ParserError<TError>>> ParseAsync(IReadOnlyList<ReadOnlyMemory<char>> arguments);
+
         /// <summary>Parses the specified arguments.</summary>
         /// <param name="arguments">The arguments.</param>
         /// <returns>The parser result.</returns>
@@ -72,6 +95,6 @@ namespace Sundew.CommandLine
         /// <param name="arguments">The arguments.</param>
         /// <param name="startIndex">The start index.</param>
         /// <returns>The parser result.</returns>
-        ValueTask<Result<TSuccess, ParserError<TError>>> ParseAsync(IReadOnlyList<string> arguments, int startIndex);
+        ValueTask<Result<TSuccess, ParserError<TError>>> ParseAsync(IReadOnlyList<ReadOnlyMemory<char>> arguments, int startIndex);
     }
 }

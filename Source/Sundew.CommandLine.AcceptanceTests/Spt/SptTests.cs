@@ -14,6 +14,16 @@ namespace Sundew.CommandLine.AcceptanceTests.Spt
     public class SptTests
     {
         [Fact]
+        public void Given_CommandLineWithEmptyString_Then_ResultShouldContainEmptyString()
+        {
+            var commandLineParser = new CommandLineParser<int, int>();
+            var updateVerb = commandLineParser.AddVerb(new UpdateVerb(), ExecuteAsync);
+            var result = commandLineParser.Parse(@"update -s "" -pr");
+
+            updateVerb.Source.Should().BeEmpty();
+        }
+
+        [Fact]
         public void Given_DefaultArguments_When_CreatingHelpText_Then_ResultShouldBeExpectedHelp()
         {
             var commandLineParser = new CommandLineParser<int, int>();

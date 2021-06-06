@@ -48,6 +48,6 @@ namespace Sundew.CommandLine.Internal
         public const string GreaterThanText = ">";
         public static readonly string NestedArgumentSerializationFormat = $"Serialization error: Option: {{0}} with value: {{1}}.{Environment.NewLine}Inner exception:{Environment.NewLine}{{2}}";
         public static readonly string NestedArgumentDeserializationFormat = $"Deserialization error: Option: {{0}} with argument: {{1}}.{Environment.NewLine}Inner exception:{Environment.NewLine}{{2}}";
-        public static readonly string[] HelpRequestTexts = { "?", "-?", "-h", "--help" };
+        public static readonly ReadOnlyMemory<char>[] HelpRequestTexts = { "?".AsMemory(), "-?".AsMemory(), "-h".AsMemory(), "--help".AsMemory() };
     }
 }

@@ -7,6 +7,7 @@
 
 namespace Sundew.CommandLine.Internal.Verbs
 {
+    using System;
     using System.Collections.Generic;
 
     internal interface IVerbRegistry<TSuccess, TError> : IArgumentsBuilderProvider
@@ -15,6 +16,6 @@ namespace Sundew.CommandLine.Internal.Verbs
 
         IEnumerable<VerbRegistry<TSuccess, TError>> VerbRegistries { get; }
 
-        bool TryGetValue(string verb, out VerbRegistry<TSuccess, TError> verbRegistry);
+        bool TryGetValue(ReadOnlyMemory<char> verb, out VerbRegistry<TSuccess, TError> verbRegistry);
     }
 }

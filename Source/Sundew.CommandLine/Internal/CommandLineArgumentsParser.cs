@@ -29,18 +29,19 @@ namespace Sundew.CommandLine.Internal
                 argumentsBuilder.CultureInfo = settings.CultureInfo;
                 argumentsBuilder.Separators = settings.Separators;
                 Result.IfError<ParserError>? currentResult = null;
-                foreach (var argument in argumentList)
+                foreach (var argumentMemory in argumentList)
                 {
+                    var argument = argumentMemory.Span;
                     if (argument[0] == Constants.ArgumentStartCharacter)
                     {
-                        var actualArgument = argument;
-                        var argumentValueSeparatorIndex = actualArgument.IndexOf(
-                            Constants.EqualSignText,
+                        var actualArgument = argumentMemory;
+                        var argumentValueSeparatorIndex = argument.IndexOf(
+                            Constants.EqualSignText.AsSpan(),
                             StringComparison.OrdinalIgnoreCase);
                         if (argumentValueSeparatorIndex > -1)
                         {
                             argumentValueSeparatorIndex++;
-                            actualArgument = argument.Substring(0, argumentValueSeparatorIndex);
+                            actualArgument = argumentMemory.Slice(0, argumentValueSeparatorIndex);
                         }
 
                         if (argumentsBuilder.Options.TryGet(actualArgument, out var option))
@@ -54,11 +55,11 @@ namespace Sundew.CommandLine.Internal
                             ReadOnlySpan<char> argumentValue = null;
                             if (argumentValueSeparatorIndex > -1)
                             {
-                                argumentValue = RemoveValueEscapeIfNeeded(argument.Substring(argumentValueSeparatorIndex).AsSpan());
+                                argumentValue = RemoveValueEscapeIfNeeded(argument.Slice(argumentValueSeparatorIndex));
                             }
                             else if (argumentList.TryMoveNext(out var nextArgument))
                             {
-                                argumentValue = RemoveValueEscapeIfNeeded(nextArgument.AsSpan());
+                                argumentValue = RemoveValueEscapeIfNeeded(nextArgument.Span);
                             }
                             else
                             {
@@ -75,7 +76,7 @@ namespace Sundew.CommandLine.Internal
 
                             currentResult = deserializedResult;
                         }
-                        else if (argumentsBuilder.Switches.TryGet(argument, out var @switch))
+                        else if (argumentsBuilder.Switches.TryGet(argumentMemory, out var @switch))
                         {
                             @switch.Set();
                             if (@switch.Owner != null)
@@ -98,9 +99,9 @@ namespace Sundew.CommandLine.Internal
 
                             return Result.Error(new ParserError(
                                 ParserErrorType.UnknownOption,
-                                string.Format(settings.CultureInfo, Constants.UnknownOptionFormat, argument)));
+                                string.Format(settings.CultureInfo, Constants.UnknownOptionFormat, argument.ToString())));
                         }
-                        else if (Constants.HelpRequestTexts.Contains(argument))
+                        else if (Constants.HelpRequestTexts.Contains(argumentMemory, ReadOnlyMemoryCharEqualityComparer.Instance))
                         {
                             return Result.Error(new ParserError(ParserErrorType.HelpRequested, HelpRequestedText));
                         }
@@ -108,10 +109,10 @@ namespace Sundew.CommandLine.Internal
                         {
                             return Result.Error(new ParserError(
                                 ParserErrorType.UnknownOption,
-                                string.Format(settings.CultureInfo, Constants.UnknownOptionFormat, argument)));
+                                string.Format(settings.CultureInfo, Constants.UnknownOptionFormat, argument.ToString())));
                         }
                     }
-                    else if (Constants.HelpRequestTexts.Contains(argument))
+                    else if (Constants.HelpRequestTexts.Contains(argumentMemory, ReadOnlyMemoryCharEqualityComparer.Instance))
                     {
                         return Result.Error(new ParserError(ParserErrorType.HelpRequested, HelpRequestedText));
                     }
@@ -121,7 +122,7 @@ namespace Sundew.CommandLine.Internal
                     }
                     else
                     {
-                        return Result.Error(new ParserError(ParserErrorType.UnknownVerb, argument));
+                        return Result.Error(new ParserError(ParserErrorType.UnknownVerb, argument.ToString()));
                     }
                 }
             }

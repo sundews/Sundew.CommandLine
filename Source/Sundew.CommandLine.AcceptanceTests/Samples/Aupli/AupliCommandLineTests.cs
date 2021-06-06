@@ -179,11 +179,23 @@ namespace Sundew.CommandLine.AcceptanceTests.Samples.Aupli
   The argument for the option: -lp/--log-path is missing.";
             var commandLineParser = new CommandLineParser<FileLogOptions, int>();
             commandLineParser.WithArguments(new FileLogOptions(string.Empty), options => Result.Success(options));
-            var parserResult = commandLineParser.Parse($@"-lp """);
+            var parserResult = commandLineParser.Parse($@"-lp");
 
             var result = parserResult.Error.ToString();
 
             result.Should().Be(expectedText);
+        }
+
+        [Fact]
+        public void Given_a_commandline_with_an_option_with_an_empty_argument_Then_Result_should_have_empty_string()
+        {
+            var commandLineParser = new CommandLineParser<FileLogOptions, int>();
+            var fileLogOptions = commandLineParser.WithArguments(new FileLogOptions(string.Empty), options => Result.Success(options));
+
+            var parserResult = commandLineParser.Parse($@"-lp """);
+
+            parserResult.IsSuccess.Should().BeTrue();
+            fileLogOptions.LogPath.Should().BeEmpty();
         }
 
         [Fact]

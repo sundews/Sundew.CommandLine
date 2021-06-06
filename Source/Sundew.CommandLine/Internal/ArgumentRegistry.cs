@@ -7,20 +7,21 @@
 
 namespace Sundew.CommandLine.Internal
 {
+    using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Linq;
 
     internal sealed class ArgumentRegistry<TValue> : IEnumerable<TValue>
     {
-        private readonly IReadOnlyDictionary<string, TValue> dictionary;
+        private readonly IReadOnlyDictionary<ReadOnlyMemory<char>, TValue> dictionary;
 
-        public ArgumentRegistry(IReadOnlyDictionary<string, TValue> dictionary)
+        public ArgumentRegistry(IReadOnlyDictionary<ReadOnlyMemory<char>, TValue> dictionary)
         {
             this.dictionary = dictionary;
         }
 
-        public bool TryGet(string key, out TValue value)
+        public bool TryGet(ReadOnlyMemory<char> key, out TValue value)
         {
             return this.dictionary.TryGetValue(key, out value);
         }
