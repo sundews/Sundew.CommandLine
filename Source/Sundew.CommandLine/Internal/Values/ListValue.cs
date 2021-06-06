@@ -89,7 +89,7 @@ namespace Sundew.CommandLine.Internal.Values
             {
                 foreach (var argument in argumentList)
                 {
-                    SerializationHelper.DeserializeTo(this.List, this.deserialize, CommandLineArgumentsParser.RemoveValueEscapeIfNeeded(argument.AsSpan()), settings);
+                    SerializationHelper.DeserializeTo(this.List, this.deserialize, CommandLineArgumentsParser.RemoveValueEscapeIfNeeded(argument.Span), settings);
                 }
             }
 

@@ -22,7 +22,7 @@ namespace Sundew.CommandLine.UnitTests.Internals
 
             var result = commandLine.AsMemory().ParseCommandLineArguments().ToArray();
 
-            result.Should().Equal("-fl", "--max-size", "4000 -cl");
+            result.Select(x => x.ToString()).Should().Equal("-fl", "--max-size", "4000 -cl");
         }
     }
 }

@@ -50,7 +50,7 @@ namespace Sundew.CommandLine.Internal.Values
             foreach (var argument in argumentList)
             {
                 var value = this.values[valueIndex];
-                result = value.DeserializeFrom(CommandLineArgumentsParser.RemoveValueEscapeIfNeeded(argument.AsSpan()), argumentList, settings);
+                result = value.DeserializeFrom(CommandLineArgumentsParser.RemoveValueEscapeIfNeeded(argument.Span), argumentList, settings);
                 if (!result)
                 {
                     return result;

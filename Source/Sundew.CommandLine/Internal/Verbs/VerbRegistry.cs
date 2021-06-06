@@ -12,11 +12,12 @@ namespace Sundew.CommandLine.Internal.Verbs
     using System.Linq;
     using System.Threading.Tasks;
     using Sundew.Base.Primitives.Computation;
+    using Sundew.Base.Text;
     using Sundew.CommandLine.Internal.Helpers;
 
     internal class VerbRegistry<TSuccess, TError> : IVerbBuilder<TSuccess, TError>, IVerbRegistry<TSuccess, TError>
     {
-        private readonly Dictionary<string, VerbRegistry<TSuccess, TError>> verbRegistries = new();
+        private readonly Dictionary<ReadOnlyMemory<char>, VerbRegistry<TSuccess, TError>> verbRegistries = new(ReadOnlyMemoryCharEqualityComparer.Instance);
         private readonly List<VerbRegistry<TSuccess, TError>> helpVerbses = new();
 
         public VerbRegistry(IVerb verb, Func<IVerb, ValueTask<Result<TSuccess, ParserError<TError>>>> handler, Action<IVerbBuilder<TSuccess, TError>>? verbBuilderAction)
@@ -79,17 +80,17 @@ namespace Sundew.CommandLine.Internal.Verbs
             where TVerb : IVerb
         {
             var verbRegistry = new VerbRegistry<TSuccess, TError>(verb, parsedVerb => verbHandler((TVerb)parsedVerb), verbBuilderAction);
-            this.verbRegistries.Add(verb.Name, verbRegistry);
+            this.verbRegistries.Add(verb.Name.AsMemory(), verbRegistry);
             this.helpVerbses.Add(verbRegistry);
-            if (!string.IsNullOrEmpty(verb.ShortName))
+            if (!verb.ShortName.IsNullOrEmpty())
             {
-                this.verbRegistries.Add(verb.ShortName!, verbRegistry);
+                this.verbRegistries.Add(verb.ShortName!.AsMemory(), verbRegistry);
             }
 
             return verb;
         }
 
-        public bool TryGetValue(string verb, out VerbRegistry<TSuccess, TError> verbRegistry)
+        public bool TryGetValue(ReadOnlyMemory<char> verb, out VerbRegistry<TSuccess, TError> verbRegistry)
         {
             return this.verbRegistries.TryGetValue(verb, out verbRegistry);
         }
