@@ -39,7 +39,7 @@ namespace Sundew.CommandLine.Extensions
                     switch (character)
                     {
                         case slash:
-                            if (isInQuote && splitContext.GetNextOrDefault(index) == doubleQuote)
+                            if (splitContext.GetNextOrDefault(index) == doubleQuote)
                             {
                                 isInEscape = true;
                                 return SplitAction.Ignore;
@@ -49,8 +49,7 @@ namespace Sundew.CommandLine.Extensions
                         case doubleQuote:
                             if (!actualIsInEscape)
                             {
-                                isInEscape = true;
-                                isInQuote = true;
+                                isInQuote = !isInQuote;
                             }
 
                             return actualIsInEscape ? SplitAction.Include : SplitAction.Ignore;

@@ -18,8 +18,9 @@ namespace Sundew.CommandLine.AcceptanceTests.Spt
         {
             var commandLineParser = new CommandLineParser<int, int>();
             var updateVerb = commandLineParser.AddVerb(new UpdateVerb(), ExecuteAsync);
-            var result = commandLineParser.Parse(@"update -s "" -pr");
+            var result = commandLineParser.Parse(@"update -s """" -pr");
 
+            updateVerb.AllowPrerelease.Should().BeTrue();
             updateVerb.Source.Should().BeEmpty();
         }
 

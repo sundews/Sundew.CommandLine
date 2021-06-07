@@ -53,9 +53,9 @@ Features:
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Sundew.Base.Collections" Version="8.0.0-u20210606-213948-dev-NamedFormatProvider" />
-    <PackageReference Include="Sundew.Base.Primitives" Version="8.0.0-u20210606-213948-dev-NamedFormatProvider" />
-    <PackageReference Include="Sundew.Base.Text" Version="8.0.0-u20210606-213948-dev-NamedFormatProvider" />
+    <PackageReference Include="Sundew.Base.Collections" Version="8.0.0-u20210607-221237-dev-NamedFormatProvider" />
+    <PackageReference Include="Sundew.Base.Primitives" Version="8.0.0-u20210607-221237-dev-NamedFormatProvider" />
+    <PackageReference Include="Sundew.Base.Text" Version="8.0.0-u20210607-221237-dev-NamedFormatProvider" />
     <PackageReference Include="Sundew.Packaging.Publish" Version="7.0.0-u20210605-231657-pre">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

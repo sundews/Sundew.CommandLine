@@ -32,7 +32,7 @@ namespace Sundew.CommandLine.Internal
                 foreach (var argumentMemory in argumentList)
                 {
                     var argument = argumentMemory.Span;
-                    if (argument[0] == Constants.ArgumentStartCharacter)
+                    if (!argument.IsEmpty && argument[0] == Constants.ArgumentStartCharacter)
                     {
                         var actualArgument = argumentMemory;
                         var argumentValueSeparatorIndex = argument.IndexOf(
@@ -122,7 +122,7 @@ namespace Sundew.CommandLine.Internal
                     }
                     else
                     {
-                        return Result.Error(new ParserError(ParserErrorType.UnknownVerb, argument.ToString()));
+                        return Result.Error(new ParserError(ParserErrorType.UnknownVerb, argument.IsEmpty ? Constants.Empty : argument.ToString()));
                     }
                 }
             }
@@ -141,7 +141,7 @@ namespace Sundew.CommandLine.Internal
 
         internal static ReadOnlySpan<char> RemoveValueEscapeIfNeeded(ReadOnlySpan<char> span)
         {
-            if (span.Length > 1 && span[0] == Constants.EscapeArgumentStartCharacter)
+            if (!span.IsEmpty && span.Length > 1 && span[0] == Constants.EscapeArgumentStartCharacter)
             {
                 var secondCharacter = span[1];
                 if (secondCharacter == Constants.ArgumentStartCharacter || secondCharacter == Constants.EscapeArgumentStartCharacter)

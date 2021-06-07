@@ -146,10 +146,10 @@ namespace Sundew.CommandLine.AcceptanceTests.Samples.Aupli
         public void Given_a_commandline_without_a_required_argument_Then_ResultErrorToString_should_be_verb_not_registered()
         {
             string expectedText = $@"Error:
-  The verb """" is unknown.";
+  The verb <empty> is unknown.";
             var commandLineParser = new CommandLineParser<Options, int>();
             commandLineParser.WithArguments(new Options(false, false), options => Result.Success(options));
-            var parserResult = commandLineParser.Parse($@"-fl """"""""");
+            var parserResult = commandLineParser.Parse($@"-fl """"");
 
             var result = parserResult.Error.ToString();
 
@@ -192,7 +192,7 @@ namespace Sundew.CommandLine.AcceptanceTests.Samples.Aupli
             var commandLineParser = new CommandLineParser<FileLogOptions, int>();
             var fileLogOptions = commandLineParser.WithArguments(new FileLogOptions(string.Empty), options => Result.Success(options));
 
-            var parserResult = commandLineParser.Parse($@"-lp """);
+            var parserResult = commandLineParser.Parse($@"-lp """"");
 
             parserResult.IsSuccess.Should().BeTrue();
             fileLogOptions.LogPath.Should().BeEmpty();
