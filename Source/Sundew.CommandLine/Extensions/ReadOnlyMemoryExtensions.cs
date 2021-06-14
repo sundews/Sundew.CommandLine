@@ -9,7 +9,7 @@ namespace Sundew.CommandLine.Extensions
 {
     using System;
     using System.Collections.Generic;
-    using Sundew.Base.Text;
+    using Sundew.Base.Memory;
 
     /// <summary>
     /// Extends the ReadOnlyMemory of char with Command Line parsing.
@@ -21,23 +21,25 @@ namespace Sundew.CommandLine.Extensions
         /// </summary>
         /// <param name="input">The input.</param>
         /// <returns>The arguments.</returns>
-        public static IEnumerable<string> ParseCommandLineArguments(this ReadOnlyMemory<char> input)
+        public static IEnumerable<ReadOnlyMemory<char>> ParseCommandLineArguments(this ReadOnlyMemory<char> input)
         {
             const char doubleQuote = '\"';
             const char slash = '\\';
             const char space = ' ';
             var isInQuote = false;
             var isInEscape = false;
+            var previousWasSpace = false;
             return input.Split(
-                (character, index, _) =>
+                (character, index, splitContext) =>
                 {
                     var actualIsInEscape = isInEscape;
+                    var actualPreviousWasSpace = previousWasSpace;
                     isInEscape = false;
+                    previousWasSpace = false;
                     switch (character)
                     {
                         case slash:
-                            var nextIndex = index + 1;
-                            if (isInQuote && input.Length > nextIndex && input.Span[nextIndex] == doubleQuote)
+                            if (splitContext.GetNextOrDefault(index) == doubleQuote)
                             {
                                 isInEscape = true;
                                 return SplitAction.Ignore;
@@ -47,16 +49,21 @@ namespace Sundew.CommandLine.Extensions
                         case doubleQuote:
                             if (!actualIsInEscape)
                             {
-                                isInEscape = true;
-                                isInQuote = true;
+                                isInQuote = !isInQuote;
                             }
 
                             return actualIsInEscape ? SplitAction.Include : SplitAction.Ignore;
                         case space:
+                            previousWasSpace = true;
                             if (actualIsInEscape)
                             {
                                 isInQuote = false;
                                 return SplitAction.Split;
+                            }
+
+                            if (actualPreviousWasSpace)
+                            {
+                                return SplitAction.Ignore;
                             }
 
                             return isInQuote ? SplitAction.Include : SplitAction.Split;
@@ -64,7 +71,7 @@ namespace Sundew.CommandLine.Extensions
                             return SplitAction.Include;
                     }
                 },
-                StringSplitOptions.RemoveEmptyEntries);
+                SplitOptions.None);
         }
     }
 }

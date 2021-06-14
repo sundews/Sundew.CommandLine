@@ -104,13 +104,14 @@ namespace Sundew.CommandLine.Internal.Options
             {
                 foreach (var argument in argumentList)
                 {
-                    if (argument[0] == Constants.ArgumentStartCharacter)
+                    var argumentSpan = argument.Span;
+                    if (argumentSpan[0] == Constants.ArgumentStartCharacter)
                     {
                         argumentList.MoveBack();
                         break;
                     }
 
-                    currentResult = this.DeserializeFrom(CommandLineArgumentsParser.RemoveValueEscapeIfNeeded(argument.AsSpan()), settings);
+                    currentResult = this.DeserializeFrom(CommandLineArgumentsParser.RemoveValueEscapeIfNeeded(argumentSpan), settings);
                 }
             }
 

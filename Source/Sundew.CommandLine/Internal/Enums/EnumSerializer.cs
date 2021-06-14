@@ -11,6 +11,7 @@ namespace Sundew.CommandLine.Internal.Enums
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
+    using Sundew.Base.Memory;
     using Sundew.Base.Primitives;
     using Sundew.Base.Text;
 
@@ -18,9 +19,9 @@ namespace Sundew.CommandLine.Internal.Enums
         where TEnum : Enum
     {
         private const string EnumValueSeparator = ", ";
-        private readonly Dictionary<string, TEnum> values = new();
-        private readonly Dictionary<TEnum, string> enums = new();
-        private readonly Dictionary<TEnum, string> shortEnums = new();
+        private readonly Dictionary<ReadOnlyMemory<char>, TEnum> values = new(ReadOnlyMemoryCharEqualityComparer.Instance);
+        private readonly Dictionary<TEnum, ReadOnlyMemory<char>> enums = new();
+        private readonly Dictionary<TEnum, ReadOnlyMemory<char>> shortEnums = new();
         private readonly string[] possibleValues;
 
         public EnumSerializer(IEnumerable<TEnum> enumOptions)
@@ -29,36 +30,36 @@ namespace Sundew.CommandLine.Internal.Enums
             foreach (var enumOption in actualEnumOptions)
             {
                 var name = Enum.GetName(typeof(TEnum), enumOption);
-                var fullName = name.Split(
-                    (character, index, builder) =>
+                var fullName = name.AsMemory().Split(
+                    (character, index, splitContext) =>
                     {
                         if (index == 0)
                         {
-                            builder.Append(char.ToLowerInvariant(character));
+                            splitContext.Append(char.ToLowerInvariant(character));
                             return SplitAction.Ignore;
                         }
 
                         if (char.IsUpper(character))
                         {
-                            builder.Append('-');
-                            builder.Append(char.ToLowerInvariant(character));
+                            splitContext.Append('-');
+                            splitContext.Append(char.ToLowerInvariant(character));
                             return SplitAction.Ignore;
                         }
 
                         return SplitAction.Include;
                     },
-                    StringSplitOptions.RemoveEmptyEntries).Single();
+                    SplitOptions.RemoveEmptyEntries).Single();
                 this.values.Add(fullName, enumOption);
                 this.enums.Add(enumOption, fullName);
-                var shortName = fullName.Substring(0, 1);
+                var shortName = fullName.Slice(0, 1);
                 if (this.values.ContainsKey(shortName))
                 {
                     if (fullName.Length > 6)
                     {
-                        var dashIndex = fullName.IndexOf('-');
+                        var dashIndex = fullName.Span.IndexOf('-');
                         if (dashIndex > -1)
                         {
-                            shortName = fullName.Substring(0, dashIndex);
+                            shortName = fullName.Slice(0, dashIndex);
                         }
                     }
                 }
@@ -75,7 +76,7 @@ namespace Sundew.CommandLine.Internal.Enums
             for (var index = 0; index < actualEnumOptions.Count; index++)
             {
                 var enumOption = actualEnumOptions[index];
-                var name = this.enums[enumOption];
+                var name = this.enums[enumOption].ToString();
                 if (this.shortEnums.TryGetValue(enumOption, out var shortName))
                 {
                     name = $"[{shortName}]{name.Substring(shortName.Length, name.Length - shortName.Length)}";
@@ -91,13 +92,13 @@ namespace Sundew.CommandLine.Internal.Enums
 
         public ReadOnlySpan<char> Serialize(TEnum enumOption)
         {
-            return this.enums[enumOption].AsSpan();
+            return this.enums[enumOption].Span;
         }
 
         public TEnum Deserialize(ReadOnlySpan<char> value)
         {
             var valueAsString = value.ToString();
-            if (this.values.TryGetValue(valueAsString, out var enumValue) || valueAsString.TryParseEnum<TEnum>(out enumValue, true))
+            if (this.values.TryGetValue(valueAsString.AsMemory(), out var enumValue) || valueAsString.TryParseEnum<TEnum>(out enumValue, true))
             {
                 return enumValue;
             }

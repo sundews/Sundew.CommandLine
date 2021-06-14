@@ -146,10 +146,10 @@ namespace Sundew.CommandLine.AcceptanceTests.Samples.Aupli
         public void Given_a_commandline_without_a_required_argument_Then_ResultErrorToString_should_be_verb_not_registered()
         {
             string expectedText = $@"Error:
-  The verb """" is unknown.";
+  The verb <empty> is unknown.";
             var commandLineParser = new CommandLineParser<Options, int>();
             commandLineParser.WithArguments(new Options(false, false), options => Result.Success(options));
-            var parserResult = commandLineParser.Parse($@"-fl """"""""");
+            var parserResult = commandLineParser.Parse($@"-fl """"");
 
             var result = parserResult.Error.ToString();
 
@@ -179,11 +179,23 @@ namespace Sundew.CommandLine.AcceptanceTests.Samples.Aupli
   The argument for the option: -lp/--log-path is missing.";
             var commandLineParser = new CommandLineParser<FileLogOptions, int>();
             commandLineParser.WithArguments(new FileLogOptions(string.Empty), options => Result.Success(options));
-            var parserResult = commandLineParser.Parse($@"-lp """);
+            var parserResult = commandLineParser.Parse($@"-lp");
 
             var result = parserResult.Error.ToString();
 
             result.Should().Be(expectedText);
+        }
+
+        [Fact]
+        public void Given_a_commandline_with_an_option_with_an_empty_argument_Then_Result_should_have_empty_string()
+        {
+            var commandLineParser = new CommandLineParser<FileLogOptions, int>();
+            var fileLogOptions = commandLineParser.WithArguments(new FileLogOptions(string.Empty), options => Result.Success(options));
+
+            var parserResult = commandLineParser.Parse($@"-lp """"");
+
+            parserResult.IsSuccess.Should().BeTrue();
+            fileLogOptions.LogPath.Should().BeEmpty();
         }
 
         [Fact]
