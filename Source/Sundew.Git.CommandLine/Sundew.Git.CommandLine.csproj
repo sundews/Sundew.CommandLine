@@ -5,6 +5,7 @@
     <DocumentationFile>$(OutputPath)/$(AssemblyName).xml</DocumentationFile>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <WarningsAsErrors />
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <ItemGroup>
