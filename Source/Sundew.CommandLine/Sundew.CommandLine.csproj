@@ -57,10 +57,10 @@ Features:
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Sundew.Base.Collections" Version="8.0.13" />
-    <PackageReference Include="Sundew.Base.Primitives" Version="8.0.13" />
-    <PackageReference Include="Sundew.Base.Text" Version="8.0.13" />
-    <PackageReference Include="Sundew.Packaging.Publish" Version="7.0.0">
+    <PackageReference Include="Sundew.Base.Collections" Version="8.0.14" />
+    <PackageReference Include="Sundew.Base.Primitives" Version="8.0.14" />
+    <PackageReference Include="Sundew.Base.Text" Version="8.0.14" />
+    <PackageReference Include="Sundew.Packaging.Publish" Version="7.0.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
