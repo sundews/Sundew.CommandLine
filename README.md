@@ -17,30 +17,30 @@
 ## Samples
 ### Optional, optional list and switch
 **Usage**  
-https://github.com/hugener/Sundew.Packaging.Tool/blob/main/Source/Sundew.Packaging.Tool/Program.cs  
+https://github.com/sundews/Sundew.Packaging/blob/main/Source/Sundew.Packaging.Tool/Program.cs  
 **Configure**  
-https://github.com/hugener/Sundew.Packaging.Tool/blob/main/Source/Sundew.Packaging.Tool/UpdateVerb.cs
+https://github.com/sundews/Sundew.Packaging/blob/main/Source/Sundew.Packaging.Tool/UpdateVerb.cs
 
 ### Required value
 **Configure**  
-https://github.com/hugener/Sundew.Packaging.Tool/blob/main/Source/Sundew.Packaging.Tool/AwaitPublishVerb.cs
+https://github.com/sundews/Sundew.Packaging/blob/main/Source/Sundew.Packaging.Tool/AwaitPublishVerb.cs
 
 ### Required list, require any of and enum
 **Usage**  
-https://github.com/hugener/CommandLineBatcher/blob/main/Source/CommandlineBatcher/Program.cs  
+https://github.com/sundews/CommandLineBatcher/blob/main/Source/CommandlineBatcher/Program.cs  
 **Configure**  
-https://github.com/hugener/CommandLineBatcher/blob/main/Source/CommandlineBatcher/BatchArguments.cs
+https://github.com/sundews/CommandLineBatcher/blob/main/Source/CommandlineBatcher/BatchArguments.cs
 
 ### Nesting
 **Usage**  
-https://github.com/hugener/Aupli/blob/main/Source/Aupli/Program.cs  
+https://github.com/sundews/Aupli/blob/main/Source/Aupli/Program.cs  
 **Configure**  
-https://github.com/hugener/Aupli/blob/main/Source/Aupli/CommandLine/Options.cs
-https://github.com/hugener/Aupli/blob/main/Source/Aupli/CommandLine/FileLogOptions.cs
+https://github.com/sundews/Aupli/blob/main/Source/Aupli/CommandLine/Options.cs
+https://github.com/sundews/Aupli/blob/main/Source/Aupli/CommandLine/FileLogOptions.cs
 
 ### Nested verbs
 **Usage**  
-https://github.com/hugener/Sundew.Packaging.Tool/blob/main/Source/Sundew.Packaging.Tool/Program.cs  
+https://github.com/sundews/Sundew.Packaging/blob/main/Source/Sundew.Packaging.Tool/Program.cs  
 **Configure**  
-https://github.com/hugener/Sundew.Packaging.Tool/blob/main/Source/Sundew.Packaging.Tool/PruneLocalSourceVerb.cs
-https://github.com/hugener/Sundew.Packaging.Tool/blob/main/Source/Sundew.Packaging.Tool/PruneLocalSource/AllVerb.cs
+https://github.com/sundews/Sundew.Packaging/blob/main/Source/Sundew.Packaging.Tool/PruneLocalSourceVerb.cs
+https://github.com/sundews/Sundew.Packaging/blob/main/Source/Sundew.Packaging.Tool/PruneLocalSource/AllVerb.cs
