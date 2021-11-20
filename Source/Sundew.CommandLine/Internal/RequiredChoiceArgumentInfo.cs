@@ -5,53 +5,52 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.Internal
+namespace Sundew.CommandLine.Internal;
+
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Sundew.CommandLine.Internal.Helpers;
+
+internal class RequiredChoiceArgumentInfo : IArgumentHelpInfo, IArgumentMissingInfo
 {
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using Sundew.CommandLine.Internal.Helpers;
+    private const string Or = " or ";
+    private readonly string name;
+    private readonly List<IArgumentInfo> choiceOptions;
 
-    internal class RequiredChoiceArgumentInfo : IArgumentHelpInfo, IArgumentMissingInfo
+    public RequiredChoiceArgumentInfo(string name, List<IArgumentInfo> choiceOptions, int index)
     {
-        private const string Or = " or ";
-        private readonly string name;
-        private readonly List<IArgumentInfo> choiceOptions;
+        this.name = name;
+        this.choiceOptions = choiceOptions;
+        this.Index = index;
+    }
 
-        public RequiredChoiceArgumentInfo(string name, List<IArgumentInfo> choiceOptions, int index)
+    public bool IsRequired => true;
+
+    public int Index { get; }
+
+    public void AppendHelpText(StringBuilder stringBuilder, Settings settings, int indent, TextSizes textSizes, bool isForVerb, bool isForNested)
+    {
+        var additionalIndentation = isForVerb ? 1 : 0;
+
+        var indentText = HelpTextHelper.GetIndentationText(HelpTextHelper.GetIndentation(indent) + additionalIndentation + 1);
+        var namePadRight = -(textSizes.NameMaxLength + textSizes.AliasMaxLength + textSizes.HelpTextMaxLength + (Constants.HelpSeparator.Length * 2) - indentText.Length);
+        stringBuilder.AppendFormat(
+            settings.CultureInfo,
+            $@" {indentText}{{0,{namePadRight}}}{Constants.HelpSeparator}{Constants.RequiredText}",
+            this.name);
+        stringBuilder.AppendLine();
+    }
+
+    public void AppendMissingArgumentsHint(StringBuilder stringBuilder)
+    {
+        stringBuilder.Append(this.choiceOptions[0].Usage);
+        foreach (var choiceOption in this.choiceOptions.Skip(1))
         {
-            this.name = name;
-            this.choiceOptions = choiceOptions;
-            this.Index = index;
+            stringBuilder.Append(Or);
+            stringBuilder.Append(choiceOption.Usage);
         }
 
-        public bool IsRequired => true;
-
-        public int Index { get; }
-
-        public void AppendHelpText(StringBuilder stringBuilder, Settings settings, int indent, TextSizes textSizes, bool isForVerb, bool isForNested)
-        {
-            var additionalIndentation = isForVerb ? 1 : 0;
-
-            var indentText = HelpTextHelper.GetIndentationText(HelpTextHelper.GetIndentation(indent) + additionalIndentation + 1);
-            var namePadRight = -(textSizes.NameMaxLength + textSizes.AliasMaxLength + textSizes.HelpTextMaxLength + (Constants.HelpSeparator.Length * 2) - indentText.Length);
-            stringBuilder.AppendFormat(
-                settings.CultureInfo,
-                $@" {indentText}{{0,{namePadRight}}}{Constants.HelpSeparator}{Constants.RequiredText}",
-                this.name);
-            stringBuilder.AppendLine();
-        }
-
-        public void AppendMissingArgumentsHint(StringBuilder stringBuilder)
-        {
-            stringBuilder.Append(this.choiceOptions[0].Usage);
-            foreach (var choiceOption in this.choiceOptions.Skip(1))
-            {
-                stringBuilder.Append(Or);
-                stringBuilder.Append(choiceOption.Usage);
-            }
-
-            stringBuilder.AppendLine();
-        }
+        stringBuilder.AppendLine();
     }
 }

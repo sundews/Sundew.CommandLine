@@ -5,9 +5,8 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.AcceptanceTests.Spu
-{
-    using System;
+namespace Sundew.CommandLine.AcceptanceTests.Spu;
 
-    public record PackageId(string Id, Version? Version = null);
-}
+using System;
+
+public record PackageId(string Id, Version? Version = null);

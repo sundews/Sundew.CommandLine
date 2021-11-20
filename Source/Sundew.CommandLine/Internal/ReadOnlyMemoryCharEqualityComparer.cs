@@ -5,24 +5,23 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.Internal
+namespace Sundew.CommandLine.Internal;
+
+using System;
+using System.Collections.Generic;
+using Sundew.Base.Equality;
+
+internal class ReadOnlyMemoryCharEqualityComparer : IEqualityComparer<ReadOnlyMemory<char>>
 {
-    using System;
-    using System.Collections.Generic;
-    using Sundew.Base.Equality;
+    public static ReadOnlyMemoryCharEqualityComparer Instance { get; } = new ReadOnlyMemoryCharEqualityComparer();
 
-    internal class ReadOnlyMemoryCharEqualityComparer : IEqualityComparer<ReadOnlyMemory<char>>
+    public bool Equals(ReadOnlyMemory<char> x, ReadOnlyMemory<char> y)
     {
-        public static ReadOnlyMemoryCharEqualityComparer Instance { get; } = new ReadOnlyMemoryCharEqualityComparer();
+        return x.Span.SequenceEqual(y.Span);
+    }
 
-        public bool Equals(ReadOnlyMemory<char> x, ReadOnlyMemory<char> y)
-        {
-            return x.Span.SequenceEqual(y.Span);
-        }
-
-        public int GetHashCode(ReadOnlyMemory<char> obj)
-        {
-            return EqualityHelper.GetItemsHashCode(obj.Span);
-        }
+    public int GetHashCode(ReadOnlyMemory<char> obj)
+    {
+        return EqualityHelper.GetItemsHashCode(obj.Span);
     }
 }

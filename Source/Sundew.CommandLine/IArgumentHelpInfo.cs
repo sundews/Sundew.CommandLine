@@ -5,17 +5,16 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine
+namespace Sundew.CommandLine;
+
+using System.Text;
+using Sundew.CommandLine.Internal;
+
+internal interface IArgumentHelpInfo
 {
-    using System.Text;
-    using Sundew.CommandLine.Internal;
+    bool IsRequired { get; }
 
-    internal interface IArgumentHelpInfo
-    {
-        bool IsRequired { get; }
+    int Index { get; }
 
-        int Index { get; }
-
-        void AppendHelpText(StringBuilder stringBuilder, Settings settings, int indent, TextSizes textSizes, bool isForVerb, bool isForNested);
-    }
+    void AppendHelpText(StringBuilder stringBuilder, Settings settings, int indent, TextSizes textSizes, bool isForVerb, bool isForNested);
 }

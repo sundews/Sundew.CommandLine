@@ -5,16 +5,15 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.AcceptanceTests.Spt
-{
-    using System.Text.RegularExpressions;
-    using NuGet.Versioning;
+namespace Sundew.CommandLine.AcceptanceTests.Spt;
 
-    public record PackageId(string Id, string? VersionPattern = null);
+using System.Text.RegularExpressions;
+using NuGet.Versioning;
 
-    public record PackageIdAndVersion(string Id, NuGetVersion NuGetVersion);
+public record PackageId(string Id, string? VersionPattern = null);
 
-    public record PackageUpdate(string Id, NuGetVersion NuGetVersion, NuGetVersion UpdatedNuGetVersion) : PackageIdAndVersion(Id, NuGetVersion);
+public record PackageIdAndVersion(string Id, NuGetVersion NuGetVersion);
 
-    public record VersionMatcher(Regex Regex, string Pattern);
-}
+public record PackageUpdate(string Id, NuGetVersion NuGetVersion, NuGetVersion UpdatedNuGetVersion) : PackageIdAndVersion(Id, NuGetVersion);
+
+public record VersionMatcher(Regex Regex, string Pattern);

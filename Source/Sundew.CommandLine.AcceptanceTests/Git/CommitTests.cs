@@ -5,37 +5,37 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.AcceptanceTests.Git
+namespace Sundew.CommandLine.AcceptanceTests.Git;
+
+using FluentAssertions;
+using Sundew.Base.Primitives.Computation;
+using Sundew.Git.CommandLine;
+using Xunit;
+
+public class CommitTests
 {
-    using FluentAssertions;
-    using Sundew.Base.Primitives.Computation;
-    using Sundew.Git.CommandLine;
-    using Xunit;
-
-    public class CommitTests
+    [Fact]
+    public void GenerateAndParse_Then_ResultShouldBeExpectedResult()
     {
-        [Fact]
-        public void GenerateAndParse_Then_ResultShouldBeExpectedResult()
-        {
-            const string expectedMessage = @"message";
-            var expectedResult = 0;
+        const string expectedMessage = @"message";
+        var expectedResult = 0;
 
-            var commandLineGenerator = new CommandLineGenerator();
-            var commandLineParser = new CommandLineParser<int, int>();
-            var push = commandLineParser.AddVerb(new Commit(), pushVerb => Result.Success(expectedResult));
+        var commandLineGenerator = new CommandLineGenerator();
+        var commandLineParser = new CommandLineParser<int, int>();
+        var push = commandLineParser.AddVerb(new Commit(), pushVerb => Result.Success(expectedResult));
 
-            var generateResult = commandLineGenerator.Generate(new Commit(expectedMessage), true);
-            var parseResult = commandLineParser.Parse(generateResult.Value);
+        var generateResult = commandLineGenerator.Generate(new Commit(expectedMessage), true);
+        var parseResult = commandLineParser.Parse(generateResult.Value);
 
-            parseResult.IsSuccess.Should().BeTrue();
-            parseResult.Value.Should().Be(expectedResult);
-            push.Message.Should().Be(expectedMessage);
-        }
+        parseResult.IsSuccess.Should().BeTrue();
+        parseResult.Value.Should().Be(expectedResult);
+        push.Message.Should().Be(expectedMessage);
+    }
 
-        [Fact]
-        public void CreateHelpText_Then_ResultShouldBeExpectedResult()
-        {
-            const string expectedText = @"Help
+    [Fact]
+    public void CreateHelpText_Then_ResultShouldBeExpectedResult()
+    {
+        const string expectedText = @"Help
  Verbs:
    commit/c          Record changes to the repository.
      -m | --message= | Use the given <msg> as the commit message.                                                                         | Default: [none]
@@ -43,12 +43,11 @@ namespace Sundew.CommandLine.AcceptanceTests.Git
      -v | --verbose  | Show unified diff between the HEAD commit and what would be committed at the bottom of the commit message template
                        to help the user describe the commit by reminding what changes the commit has.
 ";
-            var commandLineParser = new CommandLineParser<int, int>();
-            commandLineParser.AddVerb(new Commit(), verb => Result.Success(0));
+        var commandLineParser = new CommandLineParser<int, int>();
+        commandLineParser.AddVerb(new Commit(), verb => Result.Success(0));
 
-            var result = commandLineParser.CreateHelpText();
+        var result = commandLineParser.CreateHelpText();
 
-            result.Should().Be(expectedText);
-        }
+        result.Should().Be(expectedText);
     }
 }

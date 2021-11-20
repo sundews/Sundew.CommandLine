@@ -5,12 +5,11 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine
-{
-    using System.Text;
+namespace Sundew.CommandLine;
 
-    internal interface IArgumentMissingInfo
-    {
-        void AppendMissingArgumentsHint(StringBuilder stringBuilder);
-    }
+using System.Text;
+
+internal interface IArgumentMissingInfo
+{
+    void AppendMissingArgumentsHint(StringBuilder stringBuilder);
 }

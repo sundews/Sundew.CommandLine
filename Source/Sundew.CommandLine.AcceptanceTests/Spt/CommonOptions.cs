@@ -5,24 +5,23 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.AcceptanceTests.Spt
+namespace Sundew.CommandLine.AcceptanceTests.Spt;
+
+using System;
+using Sundew.CommandLine;
+
+public class CommonOptions
 {
-    using System;
-    using Sundew.CommandLine;
+    internal const string LocalSundewName = "Local-Sundew";
+    internal const string VersionGroupName = "Version";
 
-    public class CommonOptions
+    public static void AddVerbose(IArgumentsBuilder argumentsBuilder, bool verbose, Action<bool> setValue)
     {
-        internal const string LocalSundewName = "Local-Sundew";
-        internal const string VersionGroupName = "Version";
+        argumentsBuilder.AddSwitch("v", "verbose", verbose, setValue, "Verbose");
+    }
 
-        public static void AddVerbose(IArgumentsBuilder argumentsBuilder, bool verbose, Action<bool> setValue)
-        {
-            argumentsBuilder.AddSwitch("v", "verbose", verbose, setValue, "Verbose");
-        }
-
-        public static void AddRootDirectory(IArgumentsBuilder argumentsBuilder, Func<string?> serialize, Action<string> deserialize)
-        {
-            argumentsBuilder.AddOptional("d", "root-directory", serialize, deserialize, "The directory to search for projects", true, defaultValueText: "Current directory");
-        }
+    public static void AddRootDirectory(IArgumentsBuilder argumentsBuilder, Func<string?> serialize, Action<string> deserialize)
+    {
+        argumentsBuilder.AddOptional("d", "root-directory", serialize, deserialize, "The directory to search for projects", true, defaultValueText: "Current directory");
     }
 }

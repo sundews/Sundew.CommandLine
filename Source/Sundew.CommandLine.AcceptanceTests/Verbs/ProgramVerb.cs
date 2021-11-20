@@ -5,20 +5,19 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.AcceptanceTests.Verbs
+namespace Sundew.CommandLine.AcceptanceTests.Verbs;
+
+public class ProgramVerb : IVerb
 {
-    public class ProgramVerb : IVerb
+    public IVerb? NextVerb => null;
+
+    public string HelpText { get; } = string.Empty;
+
+    public string Name { get; } = "program";
+
+    public string? ShortName { get; } = null;
+
+    public void Configure(IArgumentsBuilder argumentsBuilder)
     {
-        public IVerb? NextVerb => null;
-
-        public string HelpText { get; } = string.Empty;
-
-        public string Name { get; } = "program";
-
-        public string? ShortName { get; } = null;
-
-        public void Configure(IArgumentsBuilder argumentsBuilder)
-        {
-        }
     }
 }

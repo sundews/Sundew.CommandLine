@@ -5,27 +5,26 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.Internal.Verbs
+namespace Sundew.CommandLine.Internal.Verbs;
+
+internal class NullVerb : IVerb
 {
-    internal class NullVerb : IVerb
+    public static readonly IVerb Instance = new NullVerb();
+
+    private NullVerb()
     {
-        public static readonly IVerb Instance = new NullVerb();
+        this.NextVerb = default;
+    }
 
-        private NullVerb()
-        {
-            this.NextVerb = default;
-        }
+    public IVerb? NextVerb { get; }
 
-        public IVerb? NextVerb { get; }
+    public string Name { get; } = default!;
 
-        public string Name { get; } = default!;
+    public string? ShortName { get; } = null;
 
-        public string? ShortName { get; } = null;
+    public string HelpText { get; } = string.Empty;
 
-        public string HelpText { get; } = string.Empty;
-
-        public void Configure(IArgumentsBuilder argumentsBuilder)
-        {
-        }
+    public void Configure(IArgumentsBuilder argumentsBuilder)
+    {
     }
 }

@@ -5,34 +5,33 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine
+namespace Sundew.CommandLine;
+
+/// <summary>
+/// Specifies the type of generator error.
+/// </summary>
+public enum GeneratorErrorType
 {
     /// <summary>
-    /// Specifies the type of generator error.
+    /// A serialization exception occured.
     /// </summary>
-    public enum GeneratorErrorType
-    {
-        /// <summary>
-        /// A serialization exception occured.
-        /// </summary>
-        SerializationException,
+    SerializationException,
 
-        /// <summary>
-        /// The required option missing.
-        /// </summary>
-        RequiredOptionMissing,
+    /// <summary>
+    /// The required option missing.
+    /// </summary>
+    RequiredOptionMissing,
 
-        /// <summary>The required values missing.</summary>
-        RequiredValuesMissing,
+    /// <summary>The required values missing.</summary>
+    RequiredValuesMissing,
 
-        /// <summary>
-        /// The inner generator error.
-        /// </summary>
-        InnerGeneratorError,
+    /// <summary>
+    /// The inner generator error.
+    /// </summary>
+    InnerGeneratorError,
 
-        /// <summary>
-        /// The verbs missing.
-        /// </summary>
-        VerbsMissing,
-    }
+    /// <summary>
+    /// The verbs missing.
+    /// </summary>
+    VerbsMissing,
 }

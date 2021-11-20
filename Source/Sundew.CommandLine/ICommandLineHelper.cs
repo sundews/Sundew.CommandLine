@@ -5,17 +5,16 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine
+namespace Sundew.CommandLine;
+
+/// <summary>
+/// Interface for implementing the command line parser.
+/// </summary>
+public interface ICommandLineHelper
 {
     /// <summary>
-    /// Interface for implementing the command line parser.
+    /// Creates the help text.
     /// </summary>
-    public interface ICommandLineHelper
-    {
-        /// <summary>
-        /// Creates the help text.
-        /// </summary>
-        /// <returns>The help text.</returns>
-        string CreateHelpText();
-    }
+    /// <returns>The help text.</returns>
+    string CreateHelpText();
 }

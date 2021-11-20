@@ -5,36 +5,35 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.AcceptanceTests
+namespace Sundew.CommandLine.AcceptanceTests;
+
+using FluentAssertions;
+using Sundew.Base.Primitives.Computation;
+using Xunit;
+
+public class EmptyArgumentsTests
 {
-    using FluentAssertions;
-    using Sundew.Base.Primitives.Computation;
-    using Xunit;
-
-    public class EmptyArgumentsTests
+    [Theory]
+    [InlineData(null)]
+    [InlineData("")]
+    public void Given_a_purely_optional_commandline_parsing_null_or_an_empty_string_should_succeed(string commandLine)
     {
-        [Theory]
-        [InlineData(null)]
-        [InlineData("")]
-        public void Given_a_purely_optional_commandline_parsing_null_or_an_empty_string_should_succeed(string commandLine)
+        var testee = new CommandLineParser<Args, int>();
+        testee.WithArguments(new Args(), args => Result.Success(args));
+        var result = testee.Parse(commandLine);
+
+        result.Value.IsOn.Should().BeFalse();
+    }
+
+    private class Args : IArguments
+    {
+        public bool IsOn { get; private set; }
+
+        public string HelpText { get; } = "none";
+
+        public void Configure(IArgumentsBuilder argumentsBuilder)
         {
-            var testee = new CommandLineParser<Args, int>();
-            testee.WithArguments(new Args(), args => Result.Success(args));
-            var result = testee.Parse(commandLine);
-
-            result.Value.IsOn.Should().BeFalse();
-        }
-
-        private class Args : IArguments
-        {
-            public bool IsOn { get; private set; }
-
-            public string HelpText { get; } = "none";
-
-            public void Configure(IArgumentsBuilder argumentsBuilder)
-            {
-                argumentsBuilder.AddSwitch("s", "switch", this.IsOn, b => this.IsOn = b, string.Empty);
-            }
+            argumentsBuilder.AddSwitch("s", "switch", this.IsOn, b => this.IsOn = b, string.Empty);
         }
     }
 }

@@ -5,38 +5,37 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.Git.CommandLine.LargeFileSystem
+namespace Sundew.Git.CommandLine.LargeFileSystem;
+
+using Sundew.CommandLine;
+
+/// <summary>Ensures that git lfs is setup properly.</summary>
+/// <seealso cref="Sundew.Git.CommandLine.LargeFileSystem.ILfsVerb" />
+public class Install : ILfsVerb
 {
-    using Sundew.CommandLine;
+    /// <summary>Gets the next verb.</summary>
+    /// <value>The next verb.</value>
+    public IVerb? NextVerb => null;
 
-    /// <summary>Ensures that git lfs is setup properly.</summary>
-    /// <seealso cref="Sundew.Git.CommandLine.LargeFileSystem.ILfsVerb" />
-    public class Install : ILfsVerb
+    /// <summary>Gets the help text.</summary>
+    /// <value>The help text.</value>
+    public string HelpText { get; } = "Installs lfs into git hooks";
+
+    /// <summary>Gets the name.</summary>
+    /// <value>The name.</value>
+    public string Name { get; } = "install";
+
+    /// <summary>
+    /// Gets the short name.
+    /// </summary>
+    /// <value>
+    /// The short name.
+    /// </value>
+    public string? ShortName { get; } = null;
+
+    /// <summary>Configures the specified arguments builder.</summary>
+    /// <param name="argumentsBuilder">The arguments builder.</param>
+    public void Configure(IArgumentsBuilder argumentsBuilder)
     {
-        /// <summary>Gets the next verb.</summary>
-        /// <value>The next verb.</value>
-        public IVerb? NextVerb => null;
-
-        /// <summary>Gets the help text.</summary>
-        /// <value>The help text.</value>
-        public string HelpText { get; } = "Installs lfs into git hooks";
-
-        /// <summary>Gets the name.</summary>
-        /// <value>The name.</value>
-        public string Name { get; } = "install";
-
-        /// <summary>
-        /// Gets the short name.
-        /// </summary>
-        /// <value>
-        /// The short name.
-        /// </value>
-        public string? ShortName { get; } = null;
-
-        /// <summary>Configures the specified arguments builder.</summary>
-        /// <param name="argumentsBuilder">The arguments builder.</param>
-        public void Configure(IArgumentsBuilder argumentsBuilder)
-        {
-        }
     }
 }

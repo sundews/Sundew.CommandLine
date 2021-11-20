@@ -5,16 +5,15 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.Internal
+namespace Sundew.CommandLine.Internal;
+
+using System.Collections.Generic;
+
+internal interface IListSerializationInfo<TItem>
 {
-    using System.Collections.Generic;
+    IList<TItem> List { get; }
 
-    internal interface IListSerializationInfo<TItem>
-    {
-        IList<TItem> List { get; }
+    Serialize<TItem> Serialize { get; }
 
-        Serialize<TItem> Serialize { get; }
-
-        bool UseDoubleQuotes { get; }
-    }
+    bool UseDoubleQuotes { get; }
 }

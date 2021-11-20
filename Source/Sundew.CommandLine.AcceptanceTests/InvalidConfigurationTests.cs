@@ -5,35 +5,34 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.AcceptanceTests
+namespace Sundew.CommandLine.AcceptanceTests;
+
+using FluentAssertions;
+using Sundew.Base.Primitives.Computation;
+using Xunit;
+
+public class InvalidConfigurationTests
 {
-    using FluentAssertions;
-    using Sundew.Base.Primitives.Computation;
-    using Xunit;
-
-    public class InvalidConfigurationTests
+    [Fact]
+    public void Parse_When_NoArgumentsNorVerbsAreConfigured_Then_ResultIsSuccessShouldBeFalse()
     {
-        [Fact]
-        public void Parse_When_NoArgumentsNorVerbsAreConfigured_Then_ResultIsSuccessShouldBeFalse()
-        {
-            var testee = new CommandLineParser<int, int>();
+        var testee = new CommandLineParser<int, int>();
 
-            var result = testee.Parse("test");
+        var result = testee.Parse("test");
 
-            result.IsSuccess.Should().BeFalse();
-            result.Error.Type.Should().Be(ParserErrorType.ArgumentsAndVerbsAreNotConfigured);
-        }
+        result.IsSuccess.Should().BeFalse();
+        result.Error.Type.Should().Be(ParserErrorType.ArgumentsAndVerbsAreNotConfigured);
+    }
 
-        [Fact]
-        public void Parse_When_VerbsAreConfiguredButNoArgumentsAndArgumentIsNotAVerb_Then_ResultIsSuccessShouldBeFalse()
-        {
-            var testee = new CommandLineParser<int, int>();
-            testee.AddVerb(new Verbs.BuildVerb(), verb => Result.Success(0));
+    [Fact]
+    public void Parse_When_VerbsAreConfiguredButNoArgumentsAndArgumentIsNotAVerb_Then_ResultIsSuccessShouldBeFalse()
+    {
+        var testee = new CommandLineParser<int, int>();
+        testee.AddVerb(new Verbs.BuildVerb(), verb => Result.Success(0));
 
-            var result = testee.Parse("test");
+        var result = testee.Parse("test");
 
-            result.IsSuccess.Should().BeFalse();
-            result.Error.Type.Should().Be(ParserErrorType.ArgumentsNotConfiguredOrUnknownVerb);
-        }
+        result.IsSuccess.Should().BeFalse();
+        result.Error.Type.Should().Be(ParserErrorType.ArgumentsNotConfiguredOrUnknownVerb);
     }
 }

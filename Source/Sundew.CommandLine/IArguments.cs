@@ -5,21 +5,20 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine
-{
-    /// <summary>
-    /// Interface for configuring verbs and arguments.
-    /// </summary>
-    public interface IArguments
-    {
-        /// <summary>Gets the help text.</summary>
-        /// <value>The help text.</value>
-        string HelpText { get; }
+namespace Sundew.CommandLine;
 
-        /// <summary>
-        /// Configures the specified arguments builder.
-        /// </summary>
-        /// <param name="argumentsBuilder">The arguments builder.</param>
-        void Configure(IArgumentsBuilder argumentsBuilder);
-    }
+/// <summary>
+/// Interface for configuring verbs and arguments.
+/// </summary>
+public interface IArguments
+{
+    /// <summary>Gets the help text.</summary>
+    /// <value>The help text.</value>
+    string HelpText { get; }
+
+    /// <summary>
+    /// Configures the specified arguments builder.
+    /// </summary>
+    /// <param name="argumentsBuilder">The arguments builder.</param>
+    void Configure(IArgumentsBuilder argumentsBuilder);
 }

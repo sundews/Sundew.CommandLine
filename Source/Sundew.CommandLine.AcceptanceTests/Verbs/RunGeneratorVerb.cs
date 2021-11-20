@@ -5,53 +5,52 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.AcceptanceTests.Verbs
+namespace Sundew.CommandLine.AcceptanceTests.Verbs;
+
+using System.Collections.Generic;
+using Sundew.Base.Primitives;
+
+public enum Mode
 {
-    using System.Collections.Generic;
-    using Sundew.Base.Primitives;
+    Static,
 
-    public enum Mode
+    Dynamic,
+}
+
+public class RunGeneratorVerb : IVerb
+{
+    private readonly List<string> files;
+
+    public RunGeneratorVerb()
+        : this(Mode.Static, false, new List<string>())
     {
-        Static,
-
-        Dynamic,
     }
 
-    public class RunGeneratorVerb : IVerb
+    public RunGeneratorVerb(Mode mode, bool attachDebugger, List<string> files)
     {
-        private readonly List<string> files;
+        this.Mode = mode;
+        this.AttachDebugger = attachDebugger;
+        this.files = files;
+    }
 
-        public RunGeneratorVerb()
-            : this(Mode.Static, false, new List<string>())
-        {
-        }
+    public IReadOnlyList<string> Files => this.files;
 
-        public RunGeneratorVerb(Mode mode, bool attachDebugger, List<string> files)
-        {
-            this.Mode = mode;
-            this.AttachDebugger = attachDebugger;
-            this.files = files;
-        }
+    public bool AttachDebugger { get; private set; }
 
-        public IReadOnlyList<string> Files => this.files;
+    public Mode Mode { get; private set; }
 
-        public bool AttachDebugger { get; private set; }
+    string IVerb.Name => "run";
 
-        public Mode Mode { get; private set; }
+    public string? ShortName { get; } = null;
 
-        string IVerb.Name => "run";
+    public IVerb? NextVerb => null;
 
-        public string? ShortName { get; } = null;
+    string IArguments.HelpText => "Runs the generator";
 
-        public IVerb? NextVerb => null;
-
-        string IArguments.HelpText => "Runs the generator";
-
-        public void Configure(IArgumentsBuilder argumentsBuilder)
-        {
-            argumentsBuilder.AddOptional("m", "mode", () => this.Mode.ToString(), s => this.Mode = s.ParseEnum<Mode>(), "The generator mode");
-            argumentsBuilder.AddSwitch("d", "debug", this.AttachDebugger, value => this.AttachDebugger = value, "Attaches the debugger");
-            argumentsBuilder.AddOptionalValues("files", this.files, "The files to process");
-        }
+    public void Configure(IArgumentsBuilder argumentsBuilder)
+    {
+        argumentsBuilder.AddOptional("m", "mode", () => this.Mode.ToString(), s => this.Mode = s.ParseEnum<Mode>(), "The generator mode");
+        argumentsBuilder.AddSwitch("d", "debug", this.AttachDebugger, value => this.AttachDebugger = value, "Attaches the debugger");
+        argumentsBuilder.AddOptionalValues("files", this.files, "The files to process");
     }
 }

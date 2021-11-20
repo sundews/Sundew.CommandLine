@@ -5,50 +5,49 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.AcceptanceTests.Samples.KuandoBusylightForTeamCity
+namespace Sundew.CommandLine.AcceptanceTests.Samples.KuandoBusylightForTeamCity;
+
+using System.Net;
+using System.Security;
+
+public class CredentialOptions : IArguments, ICredentials
 {
-    using System.Net;
-    using System.Security;
-
-    public class CredentialOptions : IArguments, ICredentials
-    {
-        public CredentialOptions()
+    public CredentialOptions()
         : this(default!, default!)
+    {
+    }
+
+    public CredentialOptions(string userName, SecureString password)
+    {
+        this.UserName = userName;
+        this.Password = password;
+    }
+
+    public string UserName { get; private set; }
+
+    public SecureString Password { get; private set; }
+
+    public string HelpText { get; } = "The credentials";
+
+    public void Configure(IArgumentsBuilder argumentsBuilder)
+    {
+        argumentsBuilder.AddRequired("u", "username", () => this.UserName, userName => this.UserName = userName, "Specifies the username");
+        argumentsBuilder.AddRequired("p", "password", () => FromSecureString(this.Password), password => this.Password = ToSecureString(password), "Specifies the password");
+    }
+
+    private static string FromSecureString(SecureString password)
+    {
+        return new NetworkCredential(string.Empty, password).Password;
+    }
+
+    private static SecureString ToSecureString(string password)
+    {
+        var secureString = new SecureString();
+        foreach (var character in password)
         {
+            secureString.AppendChar(character);
         }
 
-        public CredentialOptions(string userName, SecureString password)
-        {
-            this.UserName = userName;
-            this.Password = password;
-        }
-
-        public string UserName { get; private set; }
-
-        public SecureString Password { get; private set; }
-
-        public string HelpText { get; } = "The credentials";
-
-        public void Configure(IArgumentsBuilder argumentsBuilder)
-        {
-            argumentsBuilder.AddRequired("u", "username", () => this.UserName, userName => this.UserName = userName, "Specifies the username");
-            argumentsBuilder.AddRequired("p", "password", () => FromSecureString(this.Password), password => this.Password = ToSecureString(password), "Specifies the password");
-        }
-
-        private static string FromSecureString(SecureString password)
-        {
-            return new NetworkCredential(string.Empty, password).Password;
-        }
-
-        private static SecureString ToSecureString(string password)
-        {
-            var secureString = new SecureString();
-            foreach (var character in password)
-            {
-                secureString.AppendChar(character);
-            }
-
-            return secureString;
-        }
+        return secureString;
     }
 }

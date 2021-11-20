@@ -5,24 +5,23 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.Internal
+namespace Sundew.CommandLine.Internal;
+
+using System;
+using System.Text;
+using Sundew.Base.Primitives.Computation;
+
+internal interface IValue : IArgumentInfo, IArgumentMissingInfo
 {
-    using System;
-    using System.Text;
-    using Sundew.Base.Primitives.Computation;
+    bool IsRequired { get; }
 
-    internal interface IValue : IArgumentInfo, IArgumentMissingInfo
-    {
-        bool IsRequired { get; }
+    bool IsList { get; }
 
-        bool IsList { get; }
+    string Name { get; }
 
-        string Name { get; }
+    string? DefaultValueHelpText { get; }
 
-        string? DefaultValueHelpText { get; }
+    Result.IfError<ParserError> DeserializeFrom(ReadOnlySpan<char> argument, ArgumentList argumentList, Settings settings);
 
-        Result.IfError<ParserError> DeserializeFrom(ReadOnlySpan<char> argument, ArgumentList argumentList, Settings settings);
-
-        Result.IfError<GeneratorError> SerializeTo(StringBuilder stringBuilder, Settings settings);
-    }
+    Result.IfError<GeneratorError> SerializeTo(StringBuilder stringBuilder, Settings settings);
 }

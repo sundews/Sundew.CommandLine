@@ -5,62 +5,62 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.AcceptanceTests.CommandlineBatcher
+namespace Sundew.CommandLine.AcceptanceTests.CommandlineBatcher;
+
+using System;
+using System.Linq;
+using FluentAssertions;
+using Sundew.Base.Primitives.Computation;
+using Xunit;
+
+public class CommandLineBatcherTests
 {
-    using System;
-    using System.Linq;
-    using FluentAssertions;
-    using Sundew.Base.Primitives.Computation;
-    using Xunit;
-
-    public class CommandLineBatcherTests
+    [Fact]
+    public void Parse_Then_BatchArgumentsShouldBeAsExpected()
     {
-        [Fact]
-        public void Parse_Then_BatchArgumentsShouldBeAsExpected()
-        {
-            var commandLineParser = new CommandLineParser<int, int>();
-            var batchArguments = commandLineParser.WithArguments(new BatchArguments(), arguments => Result.Success(0));
+        var commandLineParser = new CommandLineParser<int, int>();
+        var batchArguments = commandLineParser.WithArguments(new BatchArguments(), arguments => Result.Success(0));
 
-            var result = commandLineParser.Parse(@"-c ""git|tag -a {0}_{1} -m \""Release: {1} {0}\"""" ""git|push https://github.com {0}_{1}"" -b ""1.0.1"" Sundew.CommandLine");
+        var result = commandLineParser.Parse(@"-c ""git|tag -a {0}_{1} -m \""Release: {1} {0}\"""" ""git|push https://github.com {0}_{1}"" -b ""1.0.1"" Sundew.CommandLine");
 
-            result.IsSuccess.Should().BeTrue();
-            batchArguments.Commands.Should().BeEquivalentTo(
-                new[]
-                {
-                    new Command("git", @"tag -a {0}_{1} -m ""Release: {1} {0}"""),
-                    new Command("git", @"push https://github.com {0}_{1}"),
-                });
-            batchArguments.Batches!.SelectMany(x => x.Arguments).Should().Equal("1.0.1", "Sundew.CommandLine");
-        }
+        result.IsSuccess.Should().BeTrue();
+        batchArguments.Commands.Should().BeEquivalentTo(
+            new[]
+            {
+                new Command("git", @"tag -a {0}_{1} -m ""Release: {1} {0}"""),
+                new Command("git", @"push https://github.com {0}_{1}"),
+            });
+        batchArguments.Batches!.SelectMany(x => x.Arguments).Should().Equal("1.0.1", "Sundew.CommandLine");
+    }
 
-        [Fact]
-        public void Parse_When_ChoiceValueIsMissing_Then_BatchArgumentsShouldBeAsExpected()
-        {
-            var commandLineParser = new CommandLineParser<int, int>();
-            commandLineParser.WithArguments(new BatchArguments(), arguments => Result.Success(0));
+    [Fact]
+    public void Parse_When_ChoiceValueIsMissing_Then_BatchArgumentsShouldBeAsExpected()
+    {
+        var commandLineParser = new CommandLineParser<int, int>();
+        commandLineParser.WithArguments(new BatchArguments(), arguments => Result.Success(0));
 
-            var result = commandLineParser.Parse(string.Empty);
+        var result = commandLineParser.Parse(string.Empty);
 
-            result.IsSuccess.Should().BeFalse();
-            result.Error.Type.Should().Be(ParserErrorType.RequiredArgumentMissing);
-            result.Error.Message.Should().Be(@"-c/--commands
+        result.IsSuccess.Should().BeFalse();
+        result.Error.Type.Should().Be(ParserErrorType.RequiredArgumentMissing);
+        result.Error.Message.Should().Be(@"-c/--commands
 -b/--batches or -bf/--batches-files or -bsi/--batches-stdin");
-            result.Error.ToString().Should().Be(@"Error:
+        result.Error.ToString().Should().Be(@"Error:
   The required options were missing:
    -c/--commands
    -b/--batches or -bf/--batches-files or -bsi/--batches-stdin");
-        }
+    }
 
-        [Fact]
-        public void CreateHelpText_Then_ResultShouldBeExpectedResult()
-        {
-            var commandLineParser = new CommandLineParser<int, int>();
-            commandLineParser.AddVerb(new MatchVerb(), verb => Result.Success(0));
-            commandLineParser.WithArguments(new BatchArguments(), arguments => Result.Success(0));
+    [Fact]
+    public void CreateHelpText_Then_ResultShouldBeExpectedResult()
+    {
+        var commandLineParser = new CommandLineParser<int, int>();
+        commandLineParser.AddVerb(new MatchVerb(), verb => Result.Success(0));
+        commandLineParser.WithArguments(new BatchArguments(), arguments => Result.Success(0));
 
-            var result = commandLineParser.CreateHelpText();
+        var result = commandLineParser.CreateHelpText();
 
-            result.Should().Be($@"Help
+        result.Should().Be($@"Help
  Verbs:
    match/m                           Matches the specified input to patterns and maps it to batches.
      -p    | --patterns              | The patterns (Regex) to be matched in the order they are specified                                | Required
@@ -108,6 +108,5 @@ namespace Sundew.CommandLine.AcceptanceTests.CommandlineBatcher
   -p       | --parallelize           | Specifies whether commands or batches run in parallel: [c]ommands, [b]atches                      | Default: commands
   -lv      | --logging-verbosity     | Logging verbosity: [n]ormal, [e]rrors, [q]uiet, [d]etailed                                        | Default: normal
 ");
-        }
     }
 }

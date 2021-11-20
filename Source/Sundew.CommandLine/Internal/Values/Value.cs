@@ -5,121 +5,120 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.Internal.Values
+namespace Sundew.CommandLine.Internal.Values;
+
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Text;
+using Sundew.Base.Primitives.Computation;
+using Sundew.Base.Text;
+using Sundew.CommandLine.Internal.Extensions;
+using Sundew.CommandLine.Internal.Helpers;
+
+internal class Value : IValue
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Text;
-    using Sundew.Base.Primitives.Computation;
-    using Sundew.Base.Text;
-    using Sundew.CommandLine.Internal.Extensions;
-    using Sundew.CommandLine.Internal.Helpers;
+    private readonly Serialize serialize;
+    private readonly Deserialize deserialize;
+    private readonly bool useDoubleQuotes;
+    private readonly string defaultValue;
+    private bool hasBeenSet;
 
-    internal class Value : IValue
+    public Value(
+        string name,
+        Serialize serialize,
+        Deserialize deserialize,
+        bool isRequired,
+        string helpText,
+        bool useDoubleQuotes,
+        CultureInfo cultureInfo,
+        string? defaultValueHelpText)
     {
-        private readonly Serialize serialize;
-        private readonly Deserialize deserialize;
-        private readonly bool useDoubleQuotes;
-        private readonly string defaultValue;
-        private bool hasBeenSet;
+        this.serialize = serialize;
+        this.deserialize = deserialize;
+        this.Name = name.Uncapitalize(cultureInfo);
+        this.HelpLines = HelpTextHelper.GetHelpLines(helpText);
+        this.DefaultValueHelpText = defaultValueHelpText;
+        this.useDoubleQuotes = useDoubleQuotes;
+        this.IsRequired = isRequired;
+        this.defaultValue = this.serialize(cultureInfo).ToString();
+    }
 
-        public Value(
-            string name,
-            Serialize serialize,
-            Deserialize deserialize,
-            bool isRequired,
-            string helpText,
-            bool useDoubleQuotes,
-            CultureInfo cultureInfo,
-            string? defaultValueHelpText)
+    public bool IsRequired { get; }
+
+    public bool IsList => false;
+
+    public string Usage => $"<{this.Name}>";
+
+    public string Name { get; }
+
+    public IReadOnlyList<string> HelpLines { get; }
+
+    public string? DefaultValueHelpText { get; }
+
+    public void ResetToDefault(CultureInfo cultureInfo)
+    {
+        this.deserialize(this.defaultValue.AsSpan(), cultureInfo);
+    }
+
+    public Result.IfError<ParserError> DeserializeFrom(ReadOnlySpan<char> argument, ArgumentList argumentList, Settings settings)
+    {
+        if (this.hasBeenSet)
         {
-            this.serialize = serialize;
-            this.deserialize = deserialize;
-            this.Name = name.Uncapitalize(cultureInfo);
-            this.HelpLines = HelpTextHelper.GetHelpLines(helpText);
-            this.DefaultValueHelpText = defaultValueHelpText;
-            this.useDoubleQuotes = useDoubleQuotes;
-            this.IsRequired = isRequired;
-            this.defaultValue = this.serialize(cultureInfo).ToString();
+            return Result.Error(new ParserError(ParserErrorType.OnlySingleValueAllowed, Constants.OnlyASingleValueIsAllowedErrorText));
         }
 
-        public bool IsRequired { get; }
-
-        public bool IsList => false;
-
-        public string Usage => $"<{this.Name}>";
-
-        public string Name { get; }
-
-        public IReadOnlyList<string> HelpLines { get; }
-
-        public string? DefaultValueHelpText { get; }
-
-        public void ResetToDefault(CultureInfo cultureInfo)
+        try
         {
-            this.deserialize(this.defaultValue.AsSpan(), cultureInfo);
+            this.deserialize(argument, settings.CultureInfo);
+        }
+        catch (Exception e)
+        {
+            throw new SerializationException(null, string.Format(settings.CultureInfo, Constants.ListDeserializationErrorFormat, argument.ToString()), e);
         }
 
-        public Result.IfError<ParserError> DeserializeFrom(ReadOnlySpan<char> argument, ArgumentList argumentList, Settings settings)
+        this.hasBeenSet = true;
+        return Result.Success();
+    }
+
+    public Result.IfError<GeneratorError> SerializeTo(StringBuilder stringBuilder, Settings settings)
+    {
+        var serializedValue = this.SerializeValue(settings);
+        if (serializedValue.IsEmpty)
         {
-            if (this.hasBeenSet)
+            if (this.IsRequired)
             {
-                return Result.Error(new ParserError(ParserErrorType.OnlySingleValueAllowed, Constants.OnlyASingleValueIsAllowedErrorText));
+                return Result.Error(new GeneratorError(GeneratorErrorType.RequiredValuesMissing));
             }
-
-            try
-            {
-                this.deserialize(argument, settings.CultureInfo);
-            }
-            catch (Exception e)
-            {
-                throw new SerializationException(null, string.Format(settings.CultureInfo, Constants.ListDeserializationErrorFormat, argument.ToString()), e);
-            }
-
-            this.hasBeenSet = true;
-            return Result.Success();
-        }
-
-        public Result.IfError<GeneratorError> SerializeTo(StringBuilder stringBuilder, Settings settings)
-        {
-            var serializedValue = this.SerializeValue(settings);
-            if (serializedValue.IsEmpty)
-            {
-                if (this.IsRequired)
-                {
-                    return Result.Error(new GeneratorError(GeneratorErrorType.RequiredValuesMissing));
-                }
-
-                return Result.Success();
-            }
-
-            SerializationHelper.AppendQuotes(stringBuilder, this.useDoubleQuotes);
-            SerializationHelper.EscapeValuesIfNeeded(stringBuilder, serializedValue);
-            stringBuilder.Append(serializedValue);
-            SerializationHelper.AppendQuotes(stringBuilder, this.useDoubleQuotes);
 
             return Result.Success();
         }
 
-        public void AppendMissingArgumentsHint(StringBuilder stringBuilder)
-        {
-            stringBuilder.AppendLine(this.Usage);
-        }
+        SerializationHelper.AppendQuotes(stringBuilder, this.useDoubleQuotes);
+        SerializationHelper.EscapeValuesIfNeeded(stringBuilder, serializedValue);
+        stringBuilder.Append(serializedValue);
+        SerializationHelper.AppendQuotes(stringBuilder, this.useDoubleQuotes);
 
-        private ReadOnlySpan<char> SerializeValue(Settings settings)
+        return Result.Success();
+    }
+
+    public void AppendMissingArgumentsHint(StringBuilder stringBuilder)
+    {
+        stringBuilder.AppendLine(this.Usage);
+    }
+
+    private ReadOnlySpan<char> SerializeValue(Settings settings)
+    {
+        try
         {
-            try
-            {
-                return this.serialize(settings.CultureInfo);
-            }
-            catch (Exception e)
-            {
-                throw new SerializationException(
-                    this,
-                    string.Format(settings.CultureInfo, Constants.ValueSerializationErrorText),
-                    e);
-            }
+            return this.serialize(settings.CultureInfo);
+        }
+        catch (Exception e)
+        {
+            throw new SerializationException(
+                this,
+                string.Format(settings.CultureInfo, Constants.ValueSerializationErrorText),
+                e);
         }
     }
 }

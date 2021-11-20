@@ -5,21 +5,20 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.AcceptanceTests.Samples.KuandoBusylightForTeamCity
+namespace Sundew.CommandLine.AcceptanceTests.Samples.KuandoBusylightForTeamCity;
+
+using System;
+using System.Collections.Generic;
+
+public interface IRunOptions
 {
-    using System;
-    using System.Collections.Generic;
+    string HostName { get; }
 
-    public interface IRunOptions
-    {
-        string HostName { get; }
+    string BuildTypeId { get; }
 
-        string BuildTypeId { get; }
+    ICredentials? Credentials { get; }
 
-        ICredentials? Credentials { get; }
+    TimeSpan RefreshInterval { get; }
 
-        TimeSpan RefreshInterval { get; }
-
-        IReadOnlyList<string> HidDeviceIds { get; }
-    }
+    IReadOnlyList<string> HidDeviceIds { get; }
 }

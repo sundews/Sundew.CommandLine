@@ -5,34 +5,33 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine
+namespace Sundew.CommandLine;
+
+using System;
+
+/// <summary>
+/// An exception for indicating an error during serialization or deserialization of an argumentInfo.
+/// </summary>
+/// <seealso cref="System.Exception" />
+public sealed class SerializationException : Exception
 {
-    using System;
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SerializationException"/> class.
+    /// </summary>
+    /// <param name="argumentInfo">The argumentInfo.</param>
+    /// <param name="message">The message.</param>
+    /// <param name="innerException">The inner exception.</param>
+    internal SerializationException(IArgumentInfo? argumentInfo, string message, Exception innerException)
+        : base(message, innerException)
+    {
+        this.ArgumentInfo = argumentInfo;
+    }
 
     /// <summary>
-    /// An exception for indicating an error during serialization or deserialization of an argumentInfo.
+    /// Gets the argumentInfo where the exception occured.
     /// </summary>
-    /// <seealso cref="System.Exception" />
-    public sealed class SerializationException : Exception
-    {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SerializationException"/> class.
-        /// </summary>
-        /// <param name="argumentInfo">The argumentInfo.</param>
-        /// <param name="message">The message.</param>
-        /// <param name="innerException">The inner exception.</param>
-        internal SerializationException(IArgumentInfo? argumentInfo, string message, Exception innerException)
-            : base(message, innerException)
-        {
-            this.ArgumentInfo = argumentInfo;
-        }
-
-        /// <summary>
-        /// Gets the argumentInfo where the exception occured.
-        /// </summary>
-        /// <value>
-        /// The argumentInfo.
-        /// </value>
-        public IArgumentInfo? ArgumentInfo { get; }
-    }
+    /// <value>
+    /// The argumentInfo.
+    /// </value>
+    public IArgumentInfo? ArgumentInfo { get; }
 }

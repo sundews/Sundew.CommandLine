@@ -5,13 +5,12 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.AcceptanceTests.CommandlineBatcher
+namespace Sundew.CommandLine.AcceptanceTests.CommandlineBatcher;
+
+public enum Verbosity
 {
-    public enum Verbosity
-    {
-        Normal,
-        Errors,
-        Quiet,
-        Detailed,
-    }
+    Normal,
+    Errors,
+    Quiet,
+    Detailed,
 }

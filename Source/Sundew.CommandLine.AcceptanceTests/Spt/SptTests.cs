@@ -5,40 +5,40 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.AcceptanceTests.Spt
+namespace Sundew.CommandLine.AcceptanceTests.Spt;
+
+using FluentAssertions;
+using Sundew.Base.Primitives.Computation;
+using Xunit;
+
+public class SptTests
 {
-    using FluentAssertions;
-    using Sundew.Base.Primitives.Computation;
-    using Xunit;
-
-    public class SptTests
+    [Fact]
+    public void Given_CommandLineWithEmptyString_Then_ResultShouldContainEmptyString()
     {
-        [Fact]
-        public void Given_CommandLineWithEmptyString_Then_ResultShouldContainEmptyString()
+        var commandLineParser = new CommandLineParser<int, int>();
+        var updateVerb = commandLineParser.AddVerb(new UpdateVerb(), ExecuteAsync);
+        var result = commandLineParser.Parse(@"update -s """" -pr");
+
+        updateVerb.AllowPrerelease.Should().BeTrue();
+        updateVerb.Source.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void Given_DefaultArguments_When_CreatingHelpText_Then_ResultShouldBeExpectedHelp()
+    {
+        var commandLineParser = new CommandLineParser<int, int>();
+        commandLineParser.AddVerb(new UpdateVerb(), ExecuteAsync);
+        commandLineParser.AddVerb(new AwaitPublishVerb(), ExecuteAsync);
+        commandLineParser.AddVerb(new PruneLocalSourceVerb(), v => Result.Error(ParserError.From(-1)), builder =>
         {
-            var commandLineParser = new CommandLineParser<int, int>();
-            var updateVerb = commandLineParser.AddVerb(new UpdateVerb(), ExecuteAsync);
-            var result = commandLineParser.Parse(@"update -s """" -pr");
+            builder.AddVerb(new AllVerb(), ExecuteAsync);
+        });
+        commandLineParser.AddVerb(new DeleteVerb(), ExecuteAsync);
 
-            updateVerb.AllowPrerelease.Should().BeTrue();
-            updateVerb.Source.Should().BeEmpty();
-        }
+        var result = commandLineParser.CreateHelpText();
 
-        [Fact]
-        public void Given_DefaultArguments_When_CreatingHelpText_Then_ResultShouldBeExpectedHelp()
-        {
-            var commandLineParser = new CommandLineParser<int, int>();
-            commandLineParser.AddVerb(new UpdateVerb(), ExecuteAsync);
-            commandLineParser.AddVerb(new AwaitPublishVerb(), ExecuteAsync);
-            commandLineParser.AddVerb(new PruneLocalSourceVerb(), v => Result.Error(ParserError.From(-1)), builder =>
-            {
-                builder.AddVerb(new AllVerb(), ExecuteAsync);
-            });
-            commandLineParser.AddVerb(new DeleteVerb(), ExecuteAsync);
-
-            var result = commandLineParser.CreateHelpText();
-
-            result.Should().Be(@"Help
+        result.Should().Be(@"Help
  Verbs:
    update/u                  Update package references
      -id  | --package-ids    | The package(s) to update. (* Wildcards supported)                         | Default: *
@@ -71,11 +71,10 @@ namespace Sundew.CommandLine.AcceptanceTests.Spt
      -v   | --verbose        | Verbose
      <files>                 | The files to be deleted                                                   | Required
 ");
-        }
+    }
 
-        private static Result<int, ParserError<int>> ExecuteAsync(object arg)
-        {
-            return Result.Error(ParserError.From(-1));
-        }
+    private static Result<int, ParserError<int>> ExecuteAsync(object arg)
+    {
+        return Result.Error(ParserError.From(-1));
     }
 }

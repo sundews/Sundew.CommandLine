@@ -5,11 +5,10 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.AcceptanceTests.CommandlineBatcher
+namespace Sundew.CommandLine.AcceptanceTests.CommandlineBatcher;
+
+public enum ExecutionOrder
 {
-    public enum ExecutionOrder
-    {
-        Batch,
-        Command,
-    }
+    Batch,
+    Command,
 }

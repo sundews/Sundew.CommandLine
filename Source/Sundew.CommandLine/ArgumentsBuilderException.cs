@@ -5,19 +5,18 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine
-{
-    using System;
+namespace Sundew.CommandLine;
 
-    /// <summary>Exception thrown when the <see cref="IArgumentsBuilder"/> detects an invalid pattern.</summary>
-    /// <seealso cref="System.Exception" />
-    public class ArgumentsBuilderException : Exception
-    {
-        /// <summary>Initializes a new instance of the <see cref="ArgumentsBuilderException"/> class.</summary>
-        /// <param name="message">The message that describes the error.</param>
-        public ArgumentsBuilderException(string message)
+using System;
+
+/// <summary>Exception thrown when the <see cref="IArgumentsBuilder"/> detects an invalid pattern.</summary>
+/// <seealso cref="System.Exception" />
+public class ArgumentsBuilderException : Exception
+{
+    /// <summary>Initializes a new instance of the <see cref="ArgumentsBuilderException"/> class.</summary>
+    /// <param name="message">The message that describes the error.</param>
+    public ArgumentsBuilderException(string message)
         : base(message)
-        {
-        }
+    {
     }
 }

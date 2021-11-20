@@ -5,39 +5,39 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.AcceptanceTests.Git
+namespace Sundew.CommandLine.AcceptanceTests.Git;
+
+using FluentAssertions;
+using Sundew.Base.Primitives.Computation;
+using Sundew.Git.CommandLine;
+using Xunit;
+
+public class PushTests
 {
-    using FluentAssertions;
-    using Sundew.Base.Primitives.Computation;
-    using Sundew.Git.CommandLine;
-    using Xunit;
-
-    public class PushTests
+    [Fact]
+    public void GenerateAndParse_Then_ResultShouldBeExpectedResult()
     {
-        [Fact]
-        public void GenerateAndParse_Then_ResultShouldBeExpectedResult()
-        {
-            const string expectedRepository = @"repository";
-            const string expectedRefspec = @"refspec";
-            var expectedResult = 0;
+        const string expectedRepository = @"repository";
+        const string expectedRefspec = @"refspec";
+        var expectedResult = 0;
 
-            var commandLineGenerator = new CommandLineGenerator();
-            var commandLineParser = new CommandLineParser<int, int>();
-            var push = commandLineParser.AddVerb(new Push(), pushVerb => Result.Success(expectedResult));
+        var commandLineGenerator = new CommandLineGenerator();
+        var commandLineParser = new CommandLineParser<int, int>();
+        var push = commandLineParser.AddVerb(new Push(), pushVerb => Result.Success(expectedResult));
 
-            var generateResult = commandLineGenerator.Generate(new Push(new Repository(expectedRepository, new Refspec(expectedRefspec))));
-            var parseResult = commandLineParser.Parse(generateResult.Value);
+        var generateResult = commandLineGenerator.Generate(new Push(new Repository(expectedRepository, new Refspec(expectedRefspec))));
+        var parseResult = commandLineParser.Parse(generateResult.Value);
 
-            parseResult.IsSuccess.Should().BeTrue();
-            parseResult.Value.Should().Be(expectedResult);
-            push.Repository.Name.Should().Be(expectedRepository);
-            push.Repository.Refspec.ToString().Should().Be(expectedRefspec);
-        }
+        parseResult.IsSuccess.Should().BeTrue();
+        parseResult.Value.Should().Be(expectedResult);
+        push.Repository.Name.Should().Be(expectedRepository);
+        push.Repository.Refspec.ToString().Should().Be(expectedRefspec);
+    }
 
-        [Fact]
-        public void CreateHelpText_Then_ResultShouldBeExpectedResult()
-        {
-            const string expectedText = @"Help
+    [Fact]
+    public void CreateHelpText_Then_ResultShouldBeExpectedResult()
+    {
+        const string expectedText = @"Help
  Verbs:
    push                   Update remote refs along with associated objects.
      -o | --push-option=  | Transmit the given string to the server, which passes them to the pre-receive as well as the post-receive hook.    | Default: [none]
@@ -45,12 +45,11 @@ namespace Sundew.CommandLine.AcceptanceTests.Git
                             to help the user describe the commit by reminding what changes the commit has.
      <repository refspec> | The repository and refspec.                                                                                        | Default: [none]
 ";
-            var commandLineParser = new CommandLineParser<int, int>();
-            commandLineParser.AddVerb(new Push(), verb => Result.Success(0));
+        var commandLineParser = new CommandLineParser<int, int>();
+        commandLineParser.AddVerb(new Push(), verb => Result.Success(0));
 
-            var result = commandLineParser.CreateHelpText();
+        var result = commandLineParser.CreateHelpText();
 
-            result.Should().Be(expectedText);
-        }
+        result.Should().Be(expectedText);
     }
 }

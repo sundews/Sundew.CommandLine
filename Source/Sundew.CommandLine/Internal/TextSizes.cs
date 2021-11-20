@@ -5,27 +5,26 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.Internal
+namespace Sundew.CommandLine.Internal;
+
+internal ref struct TextSizes
 {
-    internal ref struct TextSizes
+    public TextSizes(int verbNameMaxLength, int nameMaxLength, int aliasMaxLength, int helpTextMaxLength, int valuesMaxLength)
     {
-        public TextSizes(int verbNameMaxLength, int nameMaxLength, int aliasMaxLength, int helpTextMaxLength, int valuesMaxLength)
-        {
-            this.VerbNameMaxLength = verbNameMaxLength;
-            this.NameMaxLength = nameMaxLength;
-            this.AliasMaxLength = aliasMaxLength;
-            this.HelpTextMaxLength = helpTextMaxLength;
-            this.ValuesMaxLength = valuesMaxLength;
-        }
-
-        public int VerbNameMaxLength { get; set; }
-
-        public int NameMaxLength { get; set; }
-
-        public int AliasMaxLength { get; set; }
-
-        public int HelpTextMaxLength { get; set; }
-
-        public int ValuesMaxLength { get; set; }
+        this.VerbNameMaxLength = verbNameMaxLength;
+        this.NameMaxLength = nameMaxLength;
+        this.AliasMaxLength = aliasMaxLength;
+        this.HelpTextMaxLength = helpTextMaxLength;
+        this.ValuesMaxLength = valuesMaxLength;
     }
+
+    public int VerbNameMaxLength { get; set; }
+
+    public int NameMaxLength { get; set; }
+
+    public int AliasMaxLength { get; set; }
+
+    public int HelpTextMaxLength { get; set; }
+
+    public int ValuesMaxLength { get; set; }
 }

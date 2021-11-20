@@ -5,13 +5,12 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.AcceptanceTests.CommandlineBatcher
+namespace Sundew.CommandLine.AcceptanceTests.CommandlineBatcher;
+
+public enum BatchSeparation
 {
-    public enum BatchSeparation
-    {
-        CommandLine,
-        NewLine,
-        WindowsNewLine,
-        UnixNewLine,
-    }
+    CommandLine,
+    NewLine,
+    WindowsNewLine,
+    UnixNewLine,
 }

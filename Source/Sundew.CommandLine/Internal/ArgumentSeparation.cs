@@ -5,18 +5,17 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.Internal
+namespace Sundew.CommandLine.Internal;
+
+/// <summary>Specifies how arguments and values are separated from each other.</summary>
+public enum ArgumentSeparation
 {
-    /// <summary>Specifies how arguments and values are separated from each other.</summary>
-    public enum ArgumentSeparation
-    {
-        /// <summary>  The separation is used for the name.</summary>
-        Name = 1,
+    /// <summary>  The separation is used for the name.</summary>
+    Name = 1,
 
-        /// <summary>  The separation is used for the alias.</summary>
-        Alias = 2,
+    /// <summary>  The separation is used for the alias.</summary>
+    Alias = 2,
 
-        /// <summary>  The separation is used for the name and the alias.</summary>
-        NameAndAlias = Name | Alias,
-    }
+    /// <summary>  The separation is used for the name and the alias.</summary>
+    NameAndAlias = Name | Alias,
 }

@@ -5,32 +5,31 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.AcceptanceTests.Verbs
+namespace Sundew.CommandLine.AcceptanceTests.Verbs;
+
+public class ExecuteVerb : IVerb
 {
-    public class ExecuteVerb : IVerb
+    private readonly TestsVerb testsVerb;
+
+    public ExecuteVerb()
     {
-        private readonly TestsVerb testsVerb;
+        this.testsVerb = default!;
+    }
 
-        public ExecuteVerb()
-        {
-            this.testsVerb = default!;
-        }
+    public ExecuteVerb(TestsVerb testsVerb)
+    {
+        this.testsVerb = testsVerb;
+    }
 
-        public ExecuteVerb(TestsVerb testsVerb)
-        {
-            this.testsVerb = testsVerb;
-        }
+    public IVerb? NextVerb => null;
 
-        public IVerb? NextVerb => null;
+    public string Name { get; } = "execute";
 
-        public string Name { get; } = "execute";
+    public string? ShortName { get; } = null;
 
-        public string? ShortName { get; } = null;
+    public string HelpText { get; } = string.Empty;
 
-        public string HelpText { get; } = string.Empty;
-
-        public void Configure(IArgumentsBuilder argumentsBuilder)
-        {
-        }
+    public void Configure(IArgumentsBuilder argumentsBuilder)
+    {
     }
 }

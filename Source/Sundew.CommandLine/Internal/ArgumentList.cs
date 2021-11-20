@@ -5,70 +5,69 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.Internal
+namespace Sundew.CommandLine.Internal;
+
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+
+internal class ArgumentList : IEnumerable<ReadOnlyMemory<char>>
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Diagnostics.CodeAnalysis;
+    private readonly IReadOnlyList<ReadOnlyMemory<char>> arguments;
+    private int index;
 
-    internal class ArgumentList : IEnumerable<ReadOnlyMemory<char>>
+    public ArgumentList(IReadOnlyList<ReadOnlyMemory<char>> arguments, int index)
     {
-        private readonly IReadOnlyList<ReadOnlyMemory<char>> arguments;
-        private int index;
+        this.arguments = arguments;
+        this.index = index;
+    }
 
-        public ArgumentList(IReadOnlyList<ReadOnlyMemory<char>> arguments, int index)
+    public bool TryPeek([MaybeNullWhen(false), NotNullWhen(true)]out ReadOnlyMemory<char> argument)
+    {
+        if (this.index + 1 < this.arguments.Count)
         {
-            this.arguments = arguments;
-            this.index = index;
+            argument = this.arguments[this.index];
+            return true;
         }
 
-        public bool TryPeek([MaybeNullWhen(false), NotNullWhen(true)]out ReadOnlyMemory<char> argument)
-        {
-            if (this.index + 1 < this.arguments.Count)
-            {
-                argument = this.arguments[this.index];
-                return true;
-            }
+        argument = default!;
+        return false;
+    }
 
-            argument = default!;
-            return false;
+    public bool TryMoveNext([MaybeNullWhen(false), NotNullWhen(true)]out ReadOnlyMemory<char> argument)
+    {
+        this.index++;
+        if (this.index < this.arguments.Count)
+        {
+            argument = this.arguments[this.index];
+            return true;
         }
 
-        public bool TryMoveNext([MaybeNullWhen(false), NotNullWhen(true)]out ReadOnlyMemory<char> argument)
-        {
-            this.index++;
-            if (this.index < this.arguments.Count)
-            {
-                argument = this.arguments[this.index];
-                return true;
-            }
+        argument = default!;
+        return false;
+    }
 
-            argument = default!;
-            return false;
-        }
+    public void MoveBack()
+    {
+        this.index--;
+    }
 
-        public void MoveBack()
-        {
-            this.index--;
-        }
+    public IEnumerator<ReadOnlyMemory<char>> GetEnumerator()
+    {
+        return this.GetEnumerable().GetEnumerator();
+    }
 
-        public IEnumerator<ReadOnlyMemory<char>> GetEnumerator()
-        {
-            return this.GetEnumerable().GetEnumerator();
-        }
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return this.GetEnumerator();
+    }
 
-        IEnumerator IEnumerable.GetEnumerator()
+    private IEnumerable<ReadOnlyMemory<char>> GetEnumerable()
+    {
+        for (; this.index < this.arguments.Count; this.index++)
         {
-            return this.GetEnumerator();
-        }
-
-        private IEnumerable<ReadOnlyMemory<char>> GetEnumerable()
-        {
-            for (; this.index < this.arguments.Count; this.index++)
-            {
-                yield return this.arguments[this.index];
-            }
+            yield return this.arguments[this.index];
         }
     }
 }

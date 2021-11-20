@@ -5,35 +5,34 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.Internal.Extensions
-{
-    using System;
-    using System.Runtime.InteropServices;
-    using System.Text;
+namespace Sundew.CommandLine.Internal.Extensions;
 
-    internal static class StringBuilderExtensions
+using System;
+using System.Runtime.InteropServices;
+using System.Text;
+
+internal static class StringBuilderExtensions
+{
+    public static StringBuilder Append(this StringBuilder stringBuilder, ReadOnlySpan<char> span)
     {
-        public static StringBuilder Append(this StringBuilder stringBuilder, ReadOnlySpan<char> span)
+        if (span.Length > 0)
         {
-            if (span.Length > 0)
+            unsafe
             {
-                unsafe
+                fixed (char* charPointer = &MemoryMarshal.GetReference(span))
                 {
-                    fixed (char* charPointer = &MemoryMarshal.GetReference(span))
-                    {
-                        stringBuilder.Append(charPointer, span.Length);
-                    }
+                    stringBuilder.Append(charPointer, span.Length);
                 }
             }
-
-            return stringBuilder;
         }
 
-        public static StringBuilder AppendLine(this StringBuilder stringBuilder, ReadOnlySpan<char> span)
-        {
-            stringBuilder.Append(span);
-            stringBuilder.AppendLine();
-            return stringBuilder;
-        }
+        return stringBuilder;
+    }
+
+    public static StringBuilder AppendLine(this StringBuilder stringBuilder, ReadOnlySpan<char> span)
+    {
+        stringBuilder.Append(span);
+        stringBuilder.AppendLine();
+        return stringBuilder;
     }
 }

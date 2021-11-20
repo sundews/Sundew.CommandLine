@@ -5,26 +5,25 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.AcceptanceTests
+namespace Sundew.CommandLine.AcceptanceTests;
+
+using FluentAssertions;
+using Sundew.Base.Primitives.Computation;
+using Sundew.CommandLine.AcceptanceTests.Verbs;
+using Xunit;
+
+public class VerbWithoutArgumentTests
 {
-    using FluentAssertions;
-    using Sundew.Base.Primitives.Computation;
-    using Sundew.CommandLine.AcceptanceTests.Verbs;
-    using Xunit;
-
-    public class VerbWithoutArgumentTests
+    [Fact]
+    public void Given_a_commandline_that_only_contains_verbs_When_parsed_with_a_verb_that_ignores_values_Then_parsing_should_fail_with_verb_not_registered()
     {
-        [Fact]
-        public void Given_a_commandline_that_only_contains_verbs_When_parsed_with_a_verb_that_ignores_values_Then_parsing_should_fail_with_verb_not_registered()
-        {
-            const int expectedResult = 97;
-            var commandLineParser = new CommandLineParser<int, int>();
-            commandLineParser.AddVerb(new ParameterLessVerb(), parameterLessVerb => Result.Success(expectedResult));
+        const int expectedResult = 97;
+        var commandLineParser = new CommandLineParser<int, int>();
+        commandLineParser.AddVerb(new ParameterLessVerb(), parameterLessVerb => Result.Success(expectedResult));
 
-            var result = commandLineParser.Parse(new[] { "run", "and", "fail" });
+        var result = commandLineParser.Parse(new[] { "run", "and", "fail" });
 
-            result.IsSuccess.Should().BeFalse();
-            result.Error.Type.Should().Be(ParserErrorType.UnknownVerb);
-        }
+        result.IsSuccess.Should().BeFalse();
+        result.Error.Type.Should().Be(ParserErrorType.UnknownVerb);
     }
 }

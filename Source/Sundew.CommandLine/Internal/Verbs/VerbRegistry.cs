@@ -5,94 +5,93 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.Internal.Verbs
+namespace Sundew.CommandLine.Internal.Verbs;
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Sundew.Base.Primitives.Computation;
+using Sundew.Base.Text;
+using Sundew.CommandLine.Internal.Helpers;
+
+internal class VerbRegistry<TSuccess, TError> : IVerbBuilder<TSuccess, TError>, IVerbRegistry<TSuccess, TError>
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using Sundew.Base.Primitives.Computation;
-    using Sundew.Base.Text;
-    using Sundew.CommandLine.Internal.Helpers;
+    private readonly Dictionary<ReadOnlyMemory<char>, VerbRegistry<TSuccess, TError>> verbRegistries = new(ReadOnlyMemoryCharEqualityComparer.Instance);
+    private readonly List<VerbRegistry<TSuccess, TError>> helpVerbses = new();
 
-    internal class VerbRegistry<TSuccess, TError> : IVerbBuilder<TSuccess, TError>, IVerbRegistry<TSuccess, TError>
+    public VerbRegistry(IVerb verb, Func<IVerb, ValueTask<Result<TSuccess, ParserError<TError>>>> handler, Action<IVerbBuilder<TSuccess, TError>>? verbBuilderAction)
     {
-        private readonly Dictionary<ReadOnlyMemory<char>, VerbRegistry<TSuccess, TError>> verbRegistries = new(ReadOnlyMemoryCharEqualityComparer.Instance);
-        private readonly List<VerbRegistry<TSuccess, TError>> helpVerbses = new();
+        this.Verb = verb;
+        this.Handler = handler;
+        this.HelpLines = HelpTextHelper.GetHelpLines(verb.HelpText);
+        verbBuilderAction?.Invoke(this);
+    }
 
-        public VerbRegistry(IVerb verb, Func<IVerb, ValueTask<Result<TSuccess, ParserError<TError>>>> handler, Action<IVerbBuilder<TSuccess, TError>>? verbBuilderAction)
+    public ArgumentsBuilder Builder { get; } = new();
+
+    public bool HasVerbs => this.verbRegistries.Any();
+
+    public IEnumerable<VerbRegistry<TSuccess, TError>> VerbRegistries => this.verbRegistries.Values;
+
+    public IEnumerable<VerbRegistry<TSuccess, TError>> HelpVerbs => this.helpVerbses;
+
+    public IVerb Verb { get; }
+
+    public Func<IVerb, ValueTask<Result<TSuccess, ParserError<TError>>>> Handler { get; }
+
+    public string[] HelpLines { get; }
+
+    public TVerb AddVerb<TVerb>(
+        TVerb verb,
+        Func<TVerb, Result<TSuccess, ParserError<TError>>> verbHandler)
+        where TVerb : IVerb
+    {
+        this.AddVerb(verb, verbHandler, null);
+        return verb;
+    }
+
+    public TVerb AddVerb<TVerb>(
+        TVerb verb,
+        Func<TVerb, ValueTask<Result<TSuccess, ParserError<TError>>>> verbHandler)
+        where TVerb : IVerb
+    {
+        this.AddVerb(verb, verbHandler, null);
+        return verb;
+    }
+
+    public TVerb AddVerb<TVerb>(
+        TVerb verb,
+        Func<TVerb, Result<TSuccess, ParserError<TError>>> verbHandler,
+        Action<IVerbBuilder<TSuccess, TError>>? verbBuilderAction)
+        where TVerb : IVerb
+    {
+        this.AddVerb(
+            verb,
+            parsedVerb => new ValueTask<Result<TSuccess, ParserError<TError>>>(verbHandler(parsedVerb)),
+            verbBuilderAction);
+        return verb;
+    }
+
+    public TVerb AddVerb<TVerb>(
+        TVerb verb,
+        Func<TVerb, ValueTask<Result<TSuccess, ParserError<TError>>>> verbHandler,
+        Action<IVerbBuilder<TSuccess, TError>>? verbBuilderAction)
+        where TVerb : IVerb
+    {
+        var verbRegistry = new VerbRegistry<TSuccess, TError>(verb, parsedVerb => verbHandler((TVerb)parsedVerb), verbBuilderAction);
+        this.verbRegistries.Add(verb.Name.AsMemory(), verbRegistry);
+        this.helpVerbses.Add(verbRegistry);
+        if (!verb.ShortName.IsNullOrEmpty())
         {
-            this.Verb = verb;
-            this.Handler = handler;
-            this.HelpLines = HelpTextHelper.GetHelpLines(verb.HelpText);
-            verbBuilderAction?.Invoke(this);
+            this.verbRegistries.Add(verb.ShortName!.AsMemory(), verbRegistry);
         }
 
-        public ArgumentsBuilder Builder { get; } = new();
+        return verb;
+    }
 
-        public bool HasVerbs => this.verbRegistries.Any();
-
-        public IEnumerable<VerbRegistry<TSuccess, TError>> VerbRegistries => this.verbRegistries.Values;
-
-        public IEnumerable<VerbRegistry<TSuccess, TError>> HelpVerbs => this.helpVerbses;
-
-        public IVerb Verb { get; }
-
-        public Func<IVerb, ValueTask<Result<TSuccess, ParserError<TError>>>> Handler { get; }
-
-        public string[] HelpLines { get; }
-
-        public TVerb AddVerb<TVerb>(
-            TVerb verb,
-            Func<TVerb, Result<TSuccess, ParserError<TError>>> verbHandler)
-            where TVerb : IVerb
-        {
-            this.AddVerb(verb, verbHandler, null);
-            return verb;
-        }
-
-        public TVerb AddVerb<TVerb>(
-            TVerb verb,
-            Func<TVerb, ValueTask<Result<TSuccess, ParserError<TError>>>> verbHandler)
-            where TVerb : IVerb
-        {
-            this.AddVerb(verb, verbHandler, null);
-            return verb;
-        }
-
-        public TVerb AddVerb<TVerb>(
-            TVerb verb,
-            Func<TVerb, Result<TSuccess, ParserError<TError>>> verbHandler,
-            Action<IVerbBuilder<TSuccess, TError>>? verbBuilderAction)
-            where TVerb : IVerb
-        {
-            this.AddVerb(
-                verb,
-                parsedVerb => new ValueTask<Result<TSuccess, ParserError<TError>>>(verbHandler(parsedVerb)),
-                verbBuilderAction);
-            return verb;
-        }
-
-        public TVerb AddVerb<TVerb>(
-            TVerb verb,
-            Func<TVerb, ValueTask<Result<TSuccess, ParserError<TError>>>> verbHandler,
-            Action<IVerbBuilder<TSuccess, TError>>? verbBuilderAction)
-            where TVerb : IVerb
-        {
-            var verbRegistry = new VerbRegistry<TSuccess, TError>(verb, parsedVerb => verbHandler((TVerb)parsedVerb), verbBuilderAction);
-            this.verbRegistries.Add(verb.Name.AsMemory(), verbRegistry);
-            this.helpVerbses.Add(verbRegistry);
-            if (!verb.ShortName.IsNullOrEmpty())
-            {
-                this.verbRegistries.Add(verb.ShortName!.AsMemory(), verbRegistry);
-            }
-
-            return verb;
-        }
-
-        public bool TryGetValue(ReadOnlyMemory<char> verb, out VerbRegistry<TSuccess, TError> verbRegistry)
-        {
-            return this.verbRegistries.TryGetValue(verb, out verbRegistry);
-        }
+    public bool TryGetValue(ReadOnlyMemory<char> verb, out VerbRegistry<TSuccess, TError> verbRegistry)
+    {
+        return this.verbRegistries.TryGetValue(verb, out verbRegistry);
     }
 }

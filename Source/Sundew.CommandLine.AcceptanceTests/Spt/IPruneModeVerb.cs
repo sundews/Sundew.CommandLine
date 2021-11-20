@@ -5,11 +5,10 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.AcceptanceTests.Spt
-{
-    using Sundew.CommandLine;
+namespace Sundew.CommandLine.AcceptanceTests.Spt;
 
-    public interface IPruneModeVerb : IVerb
-    {
-    }
+using Sundew.CommandLine;
+
+public interface IPruneModeVerb : IVerb
+{
 }

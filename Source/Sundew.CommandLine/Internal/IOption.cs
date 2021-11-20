@@ -5,18 +5,17 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.Internal
+namespace Sundew.CommandLine.Internal;
+
+using System;
+using System.Text;
+using Sundew.Base.Primitives.Computation;
+
+internal interface IOption : INamedArgumentInfo, IArgumentHelpInfo, IArgumentMissingInfo
 {
-    using System;
-    using System.Text;
-    using Sundew.Base.Primitives.Computation;
+    Result<bool, GeneratorError> SerializeTo(StringBuilder stringBuilder, Settings settings, bool useAliases);
 
-    internal interface IOption : INamedArgumentInfo, IArgumentHelpInfo, IArgumentMissingInfo
-    {
-        Result<bool, GeneratorError> SerializeTo(StringBuilder stringBuilder, Settings settings, bool useAliases);
+    Result.IfError<ParserError> DeserializeFrom(CommandLineArgumentsParser commandLineArgumentsParser, ArgumentList argumentList, ReadOnlySpan<char> value, Settings settings);
 
-        Result.IfError<ParserError> DeserializeFrom(CommandLineArgumentsParser commandLineArgumentsParser, ArgumentList argumentList, ReadOnlySpan<char> value, Settings settings);
-
-        void AppendDefaultText(StringBuilder stringBuilder, Settings settings, bool isNested);
-    }
+    void AppendDefaultText(StringBuilder stringBuilder, Settings settings, bool isNested);
 }

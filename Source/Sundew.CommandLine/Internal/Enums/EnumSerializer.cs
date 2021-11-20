@@ -5,110 +5,109 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.Internal.Enums
+namespace Sundew.CommandLine.Internal.Enums;
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using Sundew.Base.Memory;
+using Sundew.Base.Primitives;
+using Sundew.Base.Text;
+
+internal class EnumSerializer<TEnum>
+    where TEnum : Enum
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using Sundew.Base.Memory;
-    using Sundew.Base.Primitives;
-    using Sundew.Base.Text;
+    private const string EnumValueSeparator = ", ";
+    private readonly Dictionary<ReadOnlyMemory<char>, TEnum> values = new(ReadOnlyMemoryCharEqualityComparer.Instance);
+    private readonly Dictionary<TEnum, ReadOnlyMemory<char>> enums = new();
+    private readonly Dictionary<TEnum, ReadOnlyMemory<char>> shortEnums = new();
+    private readonly string[] possibleValues;
 
-    internal class EnumSerializer<TEnum>
-        where TEnum : Enum
+    public EnumSerializer(IEnumerable<TEnum> enumOptions)
     {
-        private const string EnumValueSeparator = ", ";
-        private readonly Dictionary<ReadOnlyMemory<char>, TEnum> values = new(ReadOnlyMemoryCharEqualityComparer.Instance);
-        private readonly Dictionary<TEnum, ReadOnlyMemory<char>> enums = new();
-        private readonly Dictionary<TEnum, ReadOnlyMemory<char>> shortEnums = new();
-        private readonly string[] possibleValues;
-
-        public EnumSerializer(IEnumerable<TEnum> enumOptions)
+        var actualEnumOptions = enumOptions.ToList();
+        foreach (var enumOption in actualEnumOptions)
         {
-            var actualEnumOptions = enumOptions.ToList();
-            foreach (var enumOption in actualEnumOptions)
-            {
-                var name = Enum.GetName(typeof(TEnum), enumOption);
-                var fullName = name.AsMemory().Split(
-                    (character, index, splitContext) =>
-                    {
-                        if (index == 0)
-                        {
-                            splitContext.Append(char.ToLowerInvariant(character));
-                            return SplitAction.Ignore;
-                        }
-
-                        if (char.IsUpper(character))
-                        {
-                            splitContext.Append('-');
-                            splitContext.Append(char.ToLowerInvariant(character));
-                            return SplitAction.Ignore;
-                        }
-
-                        return SplitAction.Include;
-                    },
-                    SplitOptions.RemoveEmptyEntries).Single();
-                this.values.Add(fullName, enumOption);
-                this.enums.Add(enumOption, fullName);
-                var shortName = fullName.Slice(0, 1);
-                if (this.values.ContainsKey(shortName))
+            var name = Enum.GetName(typeof(TEnum), enumOption);
+            var fullName = name.AsMemory().Split(
+                (character, index, splitContext) =>
                 {
-                    if (fullName.Length > 6)
+                    if (index == 0)
                     {
-                        var dashIndex = fullName.Span.IndexOf('-');
-                        if (dashIndex > -1)
-                        {
-                            shortName = fullName.Slice(0, dashIndex);
-                        }
+                        splitContext.Append(char.ToLowerInvariant(character));
+                        return SplitAction.Ignore;
+                    }
+
+                    if (char.IsUpper(character))
+                    {
+                        splitContext.Append('-');
+                        splitContext.Append(char.ToLowerInvariant(character));
+                        return SplitAction.Ignore;
+                    }
+
+                    return SplitAction.Include;
+                },
+                SplitOptions.RemoveEmptyEntries).Single();
+            this.values.Add(fullName, enumOption);
+            this.enums.Add(enumOption, fullName);
+            var shortName = fullName.Slice(0, 1);
+            if (this.values.ContainsKey(shortName))
+            {
+                if (fullName.Length > 6)
+                {
+                    var dashIndex = fullName.Span.IndexOf('-');
+                    if (dashIndex > -1)
+                    {
+                        shortName = fullName.Slice(0, dashIndex);
                     }
                 }
-
-                if (!this.values.ContainsKey(shortName))
-                {
-                    this.values.Add(shortName, enumOption);
-                    this.shortEnums.Add(enumOption, shortName);
-                }
             }
 
-            var stringBuilder = new StringBuilder();
-            this.possibleValues = new string[actualEnumOptions.Count + 1];
-            for (var index = 0; index < actualEnumOptions.Count; index++)
+            if (!this.values.ContainsKey(shortName))
             {
-                var enumOption = actualEnumOptions[index];
-                var name = this.enums[enumOption].ToString();
-                if (this.shortEnums.TryGetValue(enumOption, out var shortName))
-                {
-                    name = $"[{shortName}]{name.Substring(shortName.Length, name.Length - shortName.Length)}";
-                }
-
-                this.possibleValues[index + 1] = name;
-                stringBuilder.Append(name);
-                stringBuilder.Append(EnumValueSeparator);
+                this.values.Add(shortName, enumOption);
+                this.shortEnums.Add(enumOption, shortName);
             }
-
-            this.possibleValues[0] = stringBuilder.ToString(EnumValueSeparator);
         }
 
-        public ReadOnlySpan<char> Serialize(TEnum enumOption)
+        var stringBuilder = new StringBuilder();
+        this.possibleValues = new string[actualEnumOptions.Count + 1];
+        for (var index = 0; index < actualEnumOptions.Count; index++)
         {
-            return this.enums[enumOption].Span;
-        }
-
-        public TEnum Deserialize(ReadOnlySpan<char> value)
-        {
-            var valueAsString = value.ToString();
-            if (this.values.TryGetValue(valueAsString.AsMemory(), out var enumValue) || valueAsString.TryParseEnum<TEnum>(out enumValue, true))
+            var enumOption = actualEnumOptions[index];
+            var name = this.enums[enumOption].ToString();
+            if (this.shortEnums.TryGetValue(enumOption, out var shortName))
             {
-                return enumValue;
+                name = $"[{shortName}]{name.Substring(shortName.Length, name.Length - shortName.Length)}";
             }
 
-            throw new ArgumentException($"{valueAsString} didn't match a value in enum type {typeof(TEnum)}");
+            this.possibleValues[index + 1] = name;
+            stringBuilder.Append(name);
+            stringBuilder.Append(EnumValueSeparator);
         }
 
-        public string[] GetAllValues()
+        this.possibleValues[0] = stringBuilder.ToString(EnumValueSeparator);
+    }
+
+    public ReadOnlySpan<char> Serialize(TEnum enumOption)
+    {
+        return this.enums[enumOption].Span;
+    }
+
+    public TEnum Deserialize(ReadOnlySpan<char> value)
+    {
+        var valueAsString = value.ToString();
+        if (this.values.TryGetValue(valueAsString.AsMemory(), out var enumValue) || valueAsString.TryParseEnum<TEnum>(out enumValue, true))
         {
-            return this.possibleValues;
+            return enumValue;
         }
+
+        throw new ArgumentException($"{valueAsString} didn't match a value in enum type {typeof(TEnum)}");
+    }
+
+    public string[] GetAllValues()
+    {
+        return this.possibleValues;
     }
 }

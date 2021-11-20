@@ -5,10 +5,9 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.Internal
+namespace Sundew.CommandLine.Internal;
+
+internal interface IArgumentsBuilderProvider
 {
-    internal interface IArgumentsBuilderProvider
-    {
-        ArgumentsBuilder Builder { get; }
-    }
+    ArgumentsBuilder Builder { get; }
 }

@@ -5,14 +5,13 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.AcceptanceTests.Samples.KuandoBusylightForTeamCity
+namespace Sundew.CommandLine.AcceptanceTests.Samples.KuandoBusylightForTeamCity;
+
+using System.Security;
+
+public interface ICredentials
 {
-    using System.Security;
+    string UserName { get; }
 
-    public interface ICredentials
-    {
-        string UserName { get; }
-
-        SecureString Password { get; }
-    }
+    SecureString Password { get; }
 }

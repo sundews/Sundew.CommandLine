@@ -5,30 +5,29 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine
+namespace Sundew.CommandLine;
+
+using System.Collections.Generic;
+using System.Globalization;
+
+/// <summary>
+/// Interface for implementing getting argument info.
+/// </summary>
+public interface IArgumentInfo
 {
-    using System.Collections.Generic;
-    using System.Globalization;
+    /// <summary>Gets the usage.</summary>
+    /// <value>The usage.</value>
+    string Usage { get; }
 
     /// <summary>
-    /// Interface for implementing getting argument info.
+    /// Gets the help lines.
     /// </summary>
-    public interface IArgumentInfo
-    {
-        /// <summary>Gets the usage.</summary>
-        /// <value>The usage.</value>
-        string Usage { get; }
+    /// <value>
+    /// The help lines.
+    /// </value>
+    IReadOnlyList<string> HelpLines { get; }
 
-        /// <summary>
-        /// Gets the help lines.
-        /// </summary>
-        /// <value>
-        /// The help lines.
-        /// </value>
-        IReadOnlyList<string> HelpLines { get; }
-
-        /// <summary>Resets to default.</summary>
-        /// <param name="cultureInfo">The culture information.</param>
-        void ResetToDefault(CultureInfo cultureInfo);
-    }
+    /// <summary>Resets to default.</summary>
+    /// <param name="cultureInfo">The culture information.</param>
+    void ResetToDefault(CultureInfo cultureInfo);
 }

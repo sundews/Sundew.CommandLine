@@ -5,100 +5,99 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.Internal.Values
+namespace Sundew.CommandLine.Internal.Values;
+
+using System;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Text;
+using Sundew.Base.Collections;
+using Sundew.Base.Primitives.Computation;
+using Sundew.Base.Text;
+using Sundew.CommandLine.Internal.Helpers;
+
+internal sealed class ListValue<TValue> : IValue, IListSerializationInfo<TValue>
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq;
-    using System.Text;
-    using Sundew.Base.Collections;
-    using Sundew.Base.Primitives.Computation;
-    using Sundew.Base.Text;
-    using Sundew.CommandLine.Internal.Helpers;
+    private readonly Deserialize<TValue> deserialize;
 
-    internal sealed class ListValue<TValue> : IValue, IListSerializationInfo<TValue>
+    public ListValue(
+        string name,
+        IList<TValue> list,
+        Serialize<TValue> serialize,
+        Deserialize<TValue> deserialize,
+        bool isRequired,
+        string helpText,
+        bool useDoubleQuotes,
+        string? defaultValueHelpText)
     {
-        private readonly Deserialize<TValue> deserialize;
+        this.Name = name.Uncapitalize(CultureInfo.InvariantCulture);
+        this.List = list;
+        this.deserialize = deserialize;
+        this.Serialize = serialize;
+        this.IsRequired = isRequired;
+        this.HelpLines = HelpTextHelper.GetHelpLines(helpText);
+        this.UseDoubleQuotes = useDoubleQuotes;
+        this.DefaultValueHelpText = defaultValueHelpText;
+        this.DefaultList = this.List.ToList();
+    }
 
-        public ListValue(
-            string name,
-            IList<TValue> list,
-            Serialize<TValue> serialize,
-            Deserialize<TValue> deserialize,
-            bool isRequired,
-            string helpText,
-            bool useDoubleQuotes,
-            string? defaultValueHelpText)
+    public string Name { get; }
+
+    public IList<TValue> List { get; }
+
+    public Serialize<TValue> Serialize { get; }
+
+    public bool IsRequired { get; }
+
+    public bool IsList => true;
+
+    public bool UseDoubleQuotes { get; }
+
+    public string? DefaultValueHelpText { get; }
+
+    public string Usage => $"<{this.Name}>";
+
+    public IReadOnlyList<string> HelpLines { get; }
+
+    public bool IsNesting { get; }
+
+    public List<TValue> DefaultList { get; }
+
+    public void ResetToDefault(CultureInfo cultureInfo)
+    {
+        this.List.Clear();
+        this.List.AddRange(this.DefaultList);
+    }
+
+    public Result.IfError<GeneratorError> SerializeTo(StringBuilder stringBuilder, Settings settings)
+    {
+        var wasSerialized = SerializationHelper.SerializeTo(this, this.List, stringBuilder, settings, null);
+        if (!wasSerialized && this.IsRequired)
         {
-            this.Name = name.Uncapitalize(CultureInfo.InvariantCulture);
-            this.List = list;
-            this.deserialize = deserialize;
-            this.Serialize = serialize;
-            this.IsRequired = isRequired;
-            this.HelpLines = HelpTextHelper.GetHelpLines(helpText);
-            this.UseDoubleQuotes = useDoubleQuotes;
-            this.DefaultValueHelpText = defaultValueHelpText;
-            this.DefaultList = this.List.ToList();
+            return Result.Error(new GeneratorError(GeneratorErrorType.RequiredValuesMissing));
         }
 
-        public string Name { get; }
+        return Result.Success();
+    }
 
-        public IList<TValue> List { get; }
-
-        public Serialize<TValue> Serialize { get; }
-
-        public bool IsRequired { get; }
-
-        public bool IsList => true;
-
-        public bool UseDoubleQuotes { get; }
-
-        public string? DefaultValueHelpText { get; }
-
-        public string Usage => $"<{this.Name}>";
-
-        public IReadOnlyList<string> HelpLines { get; }
-
-        public bool IsNesting { get; }
-
-        public List<TValue> DefaultList { get; }
-
-        public void ResetToDefault(CultureInfo cultureInfo)
+    public Result.IfError<ParserError> DeserializeFrom(ReadOnlySpan<char> value, ArgumentList argumentList, Settings settings)
+    {
+        this.List.Clear();
+        SerializationHelper.DeserializeTo(this.List, this.deserialize, value, settings);
+        if (argumentList.TryMoveNext(out _))
         {
-            this.List.Clear();
-            this.List.AddRange(this.DefaultList);
-        }
-
-        public Result.IfError<GeneratorError> SerializeTo(StringBuilder stringBuilder, Settings settings)
-        {
-            var wasSerialized = SerializationHelper.SerializeTo(this, this.List, stringBuilder, settings, null);
-            if (!wasSerialized && this.IsRequired)
+            foreach (var argument in argumentList)
             {
-                return Result.Error(new GeneratorError(GeneratorErrorType.RequiredValuesMissing));
+                SerializationHelper.DeserializeTo(this.List, this.deserialize, CommandLineArgumentsParser.RemoveValueEscapeIfNeeded(argument.Span), settings);
             }
-
-            return Result.Success();
         }
 
-        public Result.IfError<ParserError> DeserializeFrom(ReadOnlySpan<char> value, ArgumentList argumentList, Settings settings)
-        {
-            this.List.Clear();
-            SerializationHelper.DeserializeTo(this.List, this.deserialize, value, settings);
-            if (argumentList.TryMoveNext(out _))
-            {
-                foreach (var argument in argumentList)
-                {
-                    SerializationHelper.DeserializeTo(this.List, this.deserialize, CommandLineArgumentsParser.RemoveValueEscapeIfNeeded(argument.Span), settings);
-                }
-            }
+        return Result.Success();
+    }
 
-            return Result.Success();
-        }
-
-        public void AppendMissingArgumentsHint(StringBuilder stringBuilder)
-        {
-            stringBuilder.AppendLine(this.Usage);
-        }
+    public void AppendMissingArgumentsHint(StringBuilder stringBuilder)
+    {
+        stringBuilder.AppendLine(this.Usage);
     }
 }

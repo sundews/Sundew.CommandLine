@@ -5,33 +5,32 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.Internal
+namespace Sundew.CommandLine.Internal;
+
+using System;
+using System.Threading.Tasks;
+using Sundew.Base.Primitives.Computation;
+using Sundew.CommandLine.Internal.Helpers;
+
+internal class ArgumentsAction<TSuccess, TError> : IArgumentsBuilderProvider
 {
-    using System;
-    using System.Threading.Tasks;
-    using Sundew.Base.Primitives.Computation;
-    using Sundew.CommandLine.Internal.Helpers;
-
-    internal class ArgumentsAction<TSuccess, TError> : IArgumentsBuilderProvider
+    public ArgumentsAction(IArguments arguments, Func<IArguments, Result<TSuccess, ParserError<TError>>> handler)
+        : this(arguments, arguments => new ValueTask<Result<TSuccess, ParserError<TError>>>(handler(arguments)))
     {
-        public ArgumentsAction(IArguments arguments, Func<IArguments, Result<TSuccess, ParserError<TError>>> handler)
-         : this(arguments, arguments => new ValueTask<Result<TSuccess, ParserError<TError>>>(handler(arguments)))
-        {
-        }
-
-        public ArgumentsAction(IArguments arguments, Func<IArguments, ValueTask<Result<TSuccess, ParserError<TError>>>> handler)
-        {
-            this.Arguments = arguments;
-            this.Handler = handler;
-            this.HelpLines = HelpTextHelper.GetHelpLines(this.Arguments.HelpText);
-        }
-
-        public ArgumentsBuilder Builder { get; } = new();
-
-        public IArguments Arguments { get; }
-
-        public string[] HelpLines { get; }
-
-        public Func<IArguments, ValueTask<Result<TSuccess, ParserError<TError>>>> Handler { get; }
     }
+
+    public ArgumentsAction(IArguments arguments, Func<IArguments, ValueTask<Result<TSuccess, ParserError<TError>>>> handler)
+    {
+        this.Arguments = arguments;
+        this.Handler = handler;
+        this.HelpLines = HelpTextHelper.GetHelpLines(this.Arguments.HelpText);
+    }
+
+    public ArgumentsBuilder Builder { get; } = new();
+
+    public IArguments Arguments { get; }
+
+    public string[] HelpLines { get; }
+
+    public Func<IArguments, ValueTask<Result<TSuccess, ParserError<TError>>>> Handler { get; }
 }

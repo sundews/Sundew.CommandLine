@@ -5,24 +5,23 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.UnitTests.Internals
+namespace Sundew.CommandLine.UnitTests.Internals;
+
+using System;
+using System.Linq;
+using FluentAssertions;
+using Sundew.CommandLine.Extensions;
+using Xunit;
+
+public class StringExtensionTests
 {
-    using System;
-    using System.Linq;
-    using FluentAssertions;
-    using Sundew.CommandLine.Extensions;
-    using Xunit;
-
-    public class StringExtensionTests
+    [Fact]
+    public void SplitBasedCommandLineTokenizer_Then_QuotesAreNotProperlyTerminated_Then_ResultShouldContainRemainderInLastElement()
     {
-        [Fact]
-        public void SplitBasedCommandLineTokenizer_Then_QuotesAreNotProperlyTerminated_Then_ResultShouldContainRemainderInLastElement()
-        {
-            var commandLine = $@"-fl --max-size ""4000 -cl";
+        var commandLine = $@"-fl --max-size ""4000 -cl";
 
-            var result = commandLine.AsMemory().ParseCommandLineArguments().ToArray();
+        var result = commandLine.AsMemory().ParseCommandLineArguments().ToArray();
 
-            result.Select(x => x.ToString()).Should().Equal("-fl", "--max-size", "4000 -cl");
-        }
+        result.Select(x => x.ToString()).Should().Equal("-fl", "--max-size", "4000 -cl");
     }
 }

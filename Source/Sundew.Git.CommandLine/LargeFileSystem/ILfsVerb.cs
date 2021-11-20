@@ -5,13 +5,12 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.Git.CommandLine.LargeFileSystem
-{
-    using Sundew.CommandLine;
+namespace Sundew.Git.CommandLine.LargeFileSystem;
 
-    /// <summary>Interface for limiting the verbs to be used with <see cref="Lfs"/>.</summary>
-    /// <seealso cref="Sundew.CommandLine.IVerb" />
-    public interface ILfsVerb : IVerb
-    {
-    }
+using Sundew.CommandLine;
+
+/// <summary>Interface for limiting the verbs to be used with <see cref="Lfs"/>.</summary>
+/// <seealso cref="Sundew.CommandLine.IVerb" />
+public interface ILfsVerb : IVerb
+{
 }

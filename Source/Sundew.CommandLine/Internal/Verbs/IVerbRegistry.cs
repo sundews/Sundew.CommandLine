@@ -5,17 +5,16 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.Internal.Verbs
+namespace Sundew.CommandLine.Internal.Verbs;
+
+using System;
+using System.Collections.Generic;
+
+internal interface IVerbRegistry<TSuccess, TError> : IArgumentsBuilderProvider
 {
-    using System;
-    using System.Collections.Generic;
+    bool HasVerbs { get; }
 
-    internal interface IVerbRegistry<TSuccess, TError> : IArgumentsBuilderProvider
-    {
-        bool HasVerbs { get; }
+    IEnumerable<VerbRegistry<TSuccess, TError>> VerbRegistries { get; }
 
-        IEnumerable<VerbRegistry<TSuccess, TError>> VerbRegistries { get; }
-
-        bool TryGetValue(ReadOnlyMemory<char> verb, out VerbRegistry<TSuccess, TError> verbRegistry);
-    }
+    bool TryGetValue(ReadOnlyMemory<char> verb, out VerbRegistry<TSuccess, TError> verbRegistry);
 }

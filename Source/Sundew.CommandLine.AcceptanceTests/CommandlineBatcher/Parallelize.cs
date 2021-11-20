@@ -5,11 +5,10 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.AcceptanceTests.CommandlineBatcher
+namespace Sundew.CommandLine.AcceptanceTests.CommandlineBatcher;
+
+public enum Parallelize
 {
-    public enum Parallelize
-    {
-        Commands,
-        Batches,
-    }
+    Commands,
+    Batches,
 }

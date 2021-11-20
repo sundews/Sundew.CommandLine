@@ -5,105 +5,104 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.Internal.Values
+namespace Sundew.CommandLine.Internal.Values;
+
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Linq;
+using System.Text;
+using Sundew.Base.Primitives.Computation;
+using Sundew.CommandLine.Internal.Helpers;
+
+internal class ValueRegistry : IEnumerable<IValue>
 {
-    using System;
-    using System.Collections;
-    using System.Collections.Generic;
-    using System.Globalization;
-    using System.Linq;
-    using System.Text;
-    using Sundew.Base.Primitives.Computation;
-    using Sundew.CommandLine.Internal.Helpers;
+    private const string CannotAddARequiredValueAfterAnOptionalValueText = "Cannot add a required value after an optional value.";
+    private const string CannotAddAnythingAfterAListOfValuesText = "Cannot add anything after a list of values.";
+    private readonly List<IValue> values = new();
 
-    internal class ValueRegistry : IEnumerable<IValue>
+    public bool HasValues => this.values.Any();
+
+    public void Add(IValue value)
     {
-        private const string CannotAddARequiredValueAfterAnOptionalValueText = "Cannot add a required value after an optional value.";
-        private const string CannotAddAnythingAfterAListOfValuesText = "Cannot add anything after a list of values.";
-        private readonly List<IValue> values = new();
-
-        public bool HasValues => this.values.Any();
-
-        public void Add(IValue value)
+        var lastValue = this.values.LastOrDefault();
+        if (lastValue != null)
         {
-            var lastValue = this.values.LastOrDefault();
-            if (lastValue != null)
+            if (!lastValue.IsRequired && value.IsRequired)
             {
-                if (!lastValue.IsRequired && value.IsRequired)
-                {
-                    throw new ArgumentsBuilderException(CannotAddARequiredValueAfterAnOptionalValueText);
-                }
-
-                if (lastValue.IsList)
-                {
-                    throw new ArgumentsBuilderException(CannotAddAnythingAfterAListOfValuesText);
-                }
+                throw new ArgumentsBuilderException(CannotAddARequiredValueAfterAnOptionalValueText);
             }
 
-            this.values.Add(value);
-        }
-
-        public Result.IfError<ParserError> DeserializeFrom(ArgumentsBuilder argumentsBuilder, ArgumentList argumentList, Settings settings)
-        {
-            Result.IfError<ParserError> result = Result.Success();
-            var valueIndex = 0;
-            foreach (var argument in argumentList)
+            if (lastValue.IsList)
             {
-                var value = this.values[valueIndex];
-                result = value.DeserializeFrom(CommandLineArgumentsParser.RemoveValueEscapeIfNeeded(argument.Span), argumentList, settings);
-                if (!result)
-                {
-                    return result;
-                }
-
-                argumentsBuilder.RequiredArguments.Remove(value);
-                if (!value.IsList)
-                {
-                    valueIndex++;
-                }
-            }
-
-            return result;
-        }
-
-        public Result.IfError<GeneratorError> SerializeTo(StringBuilder stringBuilder, Settings settings)
-        {
-            Result.IfError<GeneratorError> result = Result.Success();
-            foreach (var value in this.values)
-            {
-                result = value.SerializeTo(stringBuilder, settings);
-                if (!result)
-                {
-                    return result;
-                }
-
-                stringBuilder.Append(Constants.SpaceCharacter);
-            }
-
-            return result;
-        }
-
-        public void AppendHelpText(StringBuilder stringBuilder, TextSizes textSizes, int indent, bool isForVerb, Settings settings)
-        {
-            foreach (var value in this.values)
-            {
-                HelpTextHelper.AppendHelpText(stringBuilder, value, textSizes, indent, isForVerb, settings);
+                throw new ArgumentsBuilderException(CannotAddAnythingAfterAListOfValuesText);
             }
         }
 
-        public IEnumerator<IValue> GetEnumerator()
+        this.values.Add(value);
+    }
+
+    public Result.IfError<ParserError> DeserializeFrom(ArgumentsBuilder argumentsBuilder, ArgumentList argumentList, Settings settings)
+    {
+        Result.IfError<ParserError> result = Result.Success();
+        var valueIndex = 0;
+        foreach (var argument in argumentList)
         {
-            return this.values.GetEnumerator();
+            var value = this.values[valueIndex];
+            result = value.DeserializeFrom(CommandLineArgumentsParser.RemoveValueEscapeIfNeeded(argument.Span), argumentList, settings);
+            if (!result)
+            {
+                return result;
+            }
+
+            argumentsBuilder.RequiredArguments.Remove(value);
+            if (!value.IsList)
+            {
+                valueIndex++;
+            }
         }
 
-        IEnumerator IEnumerable.GetEnumerator()
+        return result;
+    }
+
+    public Result.IfError<GeneratorError> SerializeTo(StringBuilder stringBuilder, Settings settings)
+    {
+        Result.IfError<GeneratorError> result = Result.Success();
+        foreach (var value in this.values)
         {
-            return this.GetEnumerator();
+            result = value.SerializeTo(stringBuilder, settings);
+            if (!result)
+            {
+                return result;
+            }
+
+            stringBuilder.Append(Constants.SpaceCharacter);
         }
 
-        public void ResetToDefault(CultureInfo cultureInfo)
+        return result;
+    }
+
+    public void AppendHelpText(StringBuilder stringBuilder, TextSizes textSizes, int indent, bool isForVerb, Settings settings)
+    {
+        foreach (var value in this.values)
         {
-            this.values.ForEach(x => x.ResetToDefault(cultureInfo));
+            HelpTextHelper.AppendHelpText(stringBuilder, value, textSizes, indent, isForVerb, settings);
         }
+    }
+
+    public IEnumerator<IValue> GetEnumerator()
+    {
+        return this.values.GetEnumerator();
+    }
+
+    IEnumerator IEnumerable.GetEnumerator()
+    {
+        return this.GetEnumerator();
+    }
+
+    public void ResetToDefault(CultureInfo cultureInfo)
+    {
+        this.values.ForEach(x => x.ResetToDefault(cultureInfo));
     }
 }

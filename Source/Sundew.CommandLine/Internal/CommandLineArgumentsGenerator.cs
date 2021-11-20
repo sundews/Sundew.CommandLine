@@ -5,68 +5,67 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.Internal
+namespace Sundew.CommandLine.Internal;
+
+using System.Text;
+using Sundew.Base.Primitives.Computation;
+
+internal static class CommandLineArgumentsGenerator
 {
-    using System.Text;
-    using Sundew.Base.Primitives.Computation;
-
-    internal static class CommandLineArgumentsGenerator
+    public static Result.IfError<GeneratorError> Generate(IArguments arguments, StringBuilder stringBuilder, Settings settings, bool useAliases)
     {
-        public static Result.IfError<GeneratorError> Generate(IArguments arguments, StringBuilder stringBuilder, Settings settings, bool useAliases)
+        var argumentsBuilder = new ArgumentsBuilder
         {
-            var argumentsBuilder = new ArgumentsBuilder
+            Separators = settings.Separators,
+            CultureInfo = settings.CultureInfo,
+        };
+
+        arguments.Configure(argumentsBuilder);
+        try
+        {
+            foreach (var option in argumentsBuilder.Options)
             {
-                Separators = settings.Separators,
-                CultureInfo = settings.CultureInfo,
-            };
-
-            arguments.Configure(argumentsBuilder);
-            try
-            {
-                foreach (var option in argumentsBuilder.Options)
+                var serializeResult = option.SerializeTo(stringBuilder, settings, useAliases);
+                if (!serializeResult)
                 {
-                    var serializeResult = option.SerializeTo(stringBuilder, settings, useAliases);
-                    if (!serializeResult)
-                    {
-                        return Result.Error(serializeResult.Error);
-                    }
-
-                    if (serializeResult.Value)
-                    {
-                        stringBuilder.Append(Constants.SpaceCharacter);
-                    }
+                    return Result.Error(serializeResult.Error);
                 }
 
-                foreach (var @switch in argumentsBuilder.Switches)
+                if (serializeResult.Value)
                 {
-                    if (@switch.IsSet)
-                    {
-                        @switch.SerializeTo(stringBuilder, useAliases);
-                        stringBuilder.Append(Constants.SpaceCharacter);
-                    }
-                }
-
-                if (argumentsBuilder.Values.HasValues)
-                {
-                    var valuesSerializeResult = argumentsBuilder.Values.SerializeTo(stringBuilder, settings);
-                    if (!valuesSerializeResult)
-                    {
-                        return valuesSerializeResult;
-                    }
-                }
-
-                var lastCharacterIndex = stringBuilder.Length - 1;
-                if (stringBuilder.Length > 0 && stringBuilder[lastCharacterIndex] == Constants.SpaceCharacter)
-                {
-                    stringBuilder.Remove(lastCharacterIndex, 1);
+                    stringBuilder.Append(Constants.SpaceCharacter);
                 }
             }
-            catch (SerializationException e)
+
+            foreach (var @switch in argumentsBuilder.Switches)
             {
-                return Result.Error(new GeneratorError(e));
+                if (@switch.IsSet)
+                {
+                    @switch.SerializeTo(stringBuilder, useAliases);
+                    stringBuilder.Append(Constants.SpaceCharacter);
+                }
             }
 
-            return Result.Success();
+            if (argumentsBuilder.Values.HasValues)
+            {
+                var valuesSerializeResult = argumentsBuilder.Values.SerializeTo(stringBuilder, settings);
+                if (!valuesSerializeResult)
+                {
+                    return valuesSerializeResult;
+                }
+            }
+
+            var lastCharacterIndex = stringBuilder.Length - 1;
+            if (stringBuilder.Length > 0 && stringBuilder[lastCharacterIndex] == Constants.SpaceCharacter)
+            {
+                stringBuilder.Remove(lastCharacterIndex, 1);
+            }
         }
+        catch (SerializationException e)
+        {
+            return Result.Error(new GeneratorError(e));
+        }
+
+        return Result.Success();
     }
 }
