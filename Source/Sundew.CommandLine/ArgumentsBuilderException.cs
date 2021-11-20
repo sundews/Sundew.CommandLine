@@ -11,7 +11,6 @@ namespace Sundew.CommandLine
 
     /// <summary>Exception thrown when the <see cref="IArgumentsBuilder"/> detects an invalid pattern.</summary>
     /// <seealso cref="System.Exception" />
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1032:Implement standard exception constructors", Justification = "Exception only intended for catching.")]
     public class ArgumentsBuilderException : Exception
     {
         /// <summary>Initializes a new instance of the <see cref="ArgumentsBuilderException"/> class.</summary>

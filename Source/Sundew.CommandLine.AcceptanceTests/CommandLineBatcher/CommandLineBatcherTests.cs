@@ -25,8 +25,11 @@ namespace Sundew.CommandLine.AcceptanceTests.CommandlineBatcher
 
             result.IsSuccess.Should().BeTrue();
             batchArguments.Commands.Should().BeEquivalentTo(
-                new Command("git", @"tag -a {0}_{1} -m ""Release: {1} {0}"""),
-                new Command("git", @"push https://github.com {0}_{1}"));
+                new[]
+                {
+                    new Command("git", @"tag -a {0}_{1} -m ""Release: {1} {0}"""),
+                    new Command("git", @"push https://github.com {0}_{1}"),
+                });
             batchArguments.Batches!.SelectMany(x => x.Arguments).Should().Equal("1.0.1", "Sundew.CommandLine");
         }
 

@@ -31,5 +31,12 @@ namespace Sundew.CommandLine
         /// <summary>Gets the culture information.</summary>
         /// <value>The culture information.</value>
         public CultureInfo CultureInfo { get; }
+
+        /// <summary>
+        /// sasd.
+        /// </summary>
+        public class Wooooaaw
+        {
+        }
     }
 }

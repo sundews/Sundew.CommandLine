@@ -13,7 +13,6 @@ namespace Sundew.CommandLine
     /// An exception for indicating an error during serialization or deserialization of an argumentInfo.
     /// </summary>
     /// <seealso cref="System.Exception" />
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1032:Implement standard exception constructors", Justification = "Exception only for catching and not for throwing.")]
     public sealed class SerializationException : Exception
     {
         /// <summary>

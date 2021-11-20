@@ -81,19 +81,19 @@ namespace Sundew.CommandLine.Internal.Options
                 }
 
                 var error = result.Error;
-                switch (error.Type)
+                return error.Type switch
                 {
-                    case GeneratorErrorType.SerializationException:
-                        throw new SerializationException(
-                            this,
-                            string.Format(settings.CultureInfo, Constants.NestedArgumentSerializationFormat, this.Usage, this.options, error.SerializationException),
-                            error.SerializationException!);
-                    case GeneratorErrorType.RequiredOptionMissing:
-                    case GeneratorErrorType.InnerGeneratorError:
-                        return result.Convert(false, innerGeneratorError => new GeneratorError(this, innerGeneratorError));
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(error.Type), error.Type, string.Format(settings.CultureInfo, Constants.ErrorTypeNotSupportedFormat, error.Type));
-                }
+                    GeneratorErrorType.SerializationException => throw new SerializationException(
+                        this,
+                        string.Format(settings.CultureInfo, Constants.NestedArgumentSerializationFormat, this.Usage, this.options, error.SerializationException),
+                        error.SerializationException!),
+                    GeneratorErrorType.RequiredOptionMissing => result.Convert(false, innerGeneratorError => new GeneratorError(this, innerGeneratorError)),
+                    GeneratorErrorType.InnerGeneratorError => result.Convert(false, innerGeneratorError => new GeneratorError(this, innerGeneratorError)),
+                    _ => throw new ArgumentOutOfRangeException(
+                        nameof(error.Type),
+                        error.Type,
+                        string.Format(settings.CultureInfo, Constants.ErrorTypeNotSupportedFormat, error.Type)),
+                };
             }
 
             return Result.Success(false);

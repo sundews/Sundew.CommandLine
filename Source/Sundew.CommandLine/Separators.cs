@@ -14,10 +14,9 @@ namespace Sundew.CommandLine
     /// <summary>
     /// Defines the argument-value separators.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1815:Override equals and operator equals on value types", Justification = "By design, not intended for equality.")]
     public readonly struct Separators
     {
-        private static readonly Regex InvalidSeparatorRegex = new Regex("\"|-");
+        private static readonly Regex InvalidSeparatorRegex = new("\"|-");
         private readonly char nameSeparator;
         private readonly char aliasSeparator;
 

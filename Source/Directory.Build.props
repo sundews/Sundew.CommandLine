@@ -3,8 +3,9 @@
    <Deterministic>true</Deterministic>
    <Version>9.0</Version>
    <OutputPath>bin/$(Configuration)</OutputPath>
-   <LangVersion>latest</LangVersion>
+   <LangVersion>preview</LangVersion>
    <Nullable>enable</Nullable>
    <SppGetLatestVersionSources>https://api.nuget.org/v3/index.json</SppGetLatestVersionSources>
  </PropertyGroup>
+  <Import Project="Directory.Build.props.user" Condition="Exists('Directory.Build.props.user')"/>
 </Project>
