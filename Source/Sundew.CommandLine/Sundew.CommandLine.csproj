@@ -58,7 +58,7 @@ Features:
     </PackageReference>
     <PackageReference Include="Sundew.Base.Collections" Version="8.1.1" />
     <PackageReference Include="Sundew.Base.Primitives" Version="8.1.1" />
-    <PackageReference Include="Sundew.Base.Text" Version="8.1.1" />
+    <PackageReference Include="Sundew.Base.Text" Version="8.2.0+37f28db0c1" />
     <PackageReference Include="Sundew.Packaging.Publish" Version="8.0.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
