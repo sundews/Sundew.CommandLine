@@ -103,7 +103,7 @@ public class CommandLineBatcherTests
                                        or the first [c]ommand is executed for all batches before moving to the next command
                                        - Finish first [b]atch first
                                        - Finish first [c]ommand first
-  -mp      | --max-parallelism       | The degree of parallel execution (1-{Environment.ProcessorCount})                                                           | Default: 1
+  -mp      | --max-parallelism       | The degree of parallel execution (1-{Environment.ProcessorCount})                                                            | Default: 1
                                        Specify ""all"" for number of cores.
   -p       | --parallelize           | Specifies whether commands or batches run in parallel: [c]ommands, [b]atches                      | Default: commands
   -lv      | --logging-verbosity     | Logging verbosity: [n]ormal, [e]rrors, [q]uiet, [d]etailed                                        | Default: normal
