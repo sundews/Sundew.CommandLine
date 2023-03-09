@@ -12,7 +12,7 @@ using Sundew.Base.Primitives.Computation;
 
 internal static class CommandLineArgumentsGenerator
 {
-    public static Result.IfError<GeneratorError> Generate(IArguments arguments, StringBuilder stringBuilder, Settings settings, bool useAliases)
+    public static R<GeneratorError> Generate(IArguments arguments, StringBuilder stringBuilder, Settings settings, bool useAliases)
     {
         var argumentsBuilder = new ArgumentsBuilder
         {
@@ -28,7 +28,7 @@ internal static class CommandLineArgumentsGenerator
                 var serializeResult = option.SerializeTo(stringBuilder, settings, useAliases);
                 if (!serializeResult)
                 {
-                    return Result.Error(serializeResult.Error);
+                    return R.Error(serializeResult.Error);
                 }
 
                 if (serializeResult.Value)
@@ -63,9 +63,9 @@ internal static class CommandLineArgumentsGenerator
         }
         catch (SerializationException e)
         {
-            return Result.Error(new GeneratorError(e));
+            return R.Error(new GeneratorError(e));
         }
 
-        return Result.Success();
+        return R.Success();
     }
 }

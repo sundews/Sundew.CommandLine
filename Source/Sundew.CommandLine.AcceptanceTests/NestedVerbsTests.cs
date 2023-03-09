@@ -21,11 +21,11 @@ public class NestedVerbsTests
         const int ExpectedResult = 1;
         commandLineParser.AddVerb(
             new ExecuteVerb(),
-            verb => Result.Success(0),
+            verb => R.Success(0),
             verbBuilder =>
             {
-                verbBuilder.AddVerb(new TestsVerb(), verb => Result.Success(ExpectedResult));
-                verbBuilder.AddVerb(new BuildVerb(), verb => Result.Success(2));
+                verbBuilder.AddVerb(new TestsVerb(), verb => R.Success(ExpectedResult));
+                verbBuilder.AddVerb(new BuildVerb(), verb => R.Success(2));
             });
 
         var result = commandLineParser.Parse("execute tests");

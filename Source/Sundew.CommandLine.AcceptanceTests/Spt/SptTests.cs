@@ -30,7 +30,7 @@ public class SptTests
         var commandLineParser = new CommandLineParser<int, int>();
         commandLineParser.AddVerb(new UpdateVerb(), ExecuteAsync);
         commandLineParser.AddVerb(new AwaitPublishVerb(), ExecuteAsync);
-        commandLineParser.AddVerb(new PruneLocalSourceVerb(), v => Result.Error(ParserError.From(-1)), builder =>
+        commandLineParser.AddVerb(new PruneLocalSourceVerb(), v => R.Error(ParserError.From(-1)), builder =>
         {
             builder.AddVerb(new AllVerb(), ExecuteAsync);
         });
@@ -73,8 +73,8 @@ public class SptTests
 ");
     }
 
-    private static Result<int, ParserError<int>> ExecuteAsync(object arg)
+    private static R<int, ParserError<int>> ExecuteAsync(object arg)
     {
-        return Result.Error(ParserError.From(-1));
+        return R.Error(ParserError.From(-1));
     }
 }

@@ -23,7 +23,7 @@ public class InitTests
 
         var commandLineGenerator = new CommandLineGenerator();
         var commandLineParser = new CommandLineParser<int, int>();
-        var init = commandLineParser.AddVerb(new Init(), initVerb => Result.Success(expectedResult));
+        var init = commandLineParser.AddVerb(new Init(), initVerb => R.Success(expectedResult));
 
         var generateResult = commandLineGenerator.Generate(new Init(expectedDirectory)
         {

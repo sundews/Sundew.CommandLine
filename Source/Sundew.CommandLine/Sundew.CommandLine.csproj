@@ -44,7 +44,7 @@ Features:
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="6.0.0">
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="7.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -56,9 +56,9 @@ Features:
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Sundew.Base.Collections" Version="8.3.3" />
-    <PackageReference Include="Sundew.Base.Primitives" Version="8.3.3" />
-    <PackageReference Include="Sundew.Base.Text" Version="8.3.3" />
+    <PackageReference Include="Sundew.Base.Collections" Version="9.0.0-u20230309-233136-ci" />
+    <PackageReference Include="Sundew.Base.Primitives" Version="9.0.0-u20230309-233136-ci" />
+    <PackageReference Include="Sundew.Base.Text" Version="9.0.0-u20230309-233136-ci" />
     <PackageReference Include="Sundew.Packaging.Publish" Version="8.1.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

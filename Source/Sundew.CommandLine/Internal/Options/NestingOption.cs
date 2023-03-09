@@ -66,7 +66,7 @@ internal class NestingOption<TOptions> : IOption
     public IReadOnlyList<string> HelpLines { get; }
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2208:Instantiate argument exceptions correctly", Justification = "It's the proposed way of handling missing cases for enum switches.")]
-    public Result<bool, GeneratorError> SerializeTo(StringBuilder stringBuilder, Settings settings, bool useAliases)
+    public R<bool, GeneratorError> SerializeTo(StringBuilder stringBuilder, Settings settings, bool useAliases)
     {
         var actualOption = this.options == null && this.IsRequired ? this.getDefault() : this.options;
         if (actualOption != null)
@@ -77,7 +77,7 @@ internal class NestingOption<TOptions> : IOption
 
             if (result)
             {
-                return result.WithValue(true);
+                return result.To(true);
             }
 
             var error = result.Error;
@@ -87,8 +87,8 @@ internal class NestingOption<TOptions> : IOption
                     this,
                     string.Format(settings.CultureInfo, Constants.NestedArgumentSerializationFormat, this.Usage, this.options, error.SerializationException),
                     error.SerializationException!),
-                GeneratorErrorType.RequiredOptionMissing => result.Convert(false, innerGeneratorError => new GeneratorError(this, innerGeneratorError)),
-                GeneratorErrorType.InnerGeneratorError => result.Convert(false, innerGeneratorError => new GeneratorError(this, innerGeneratorError)),
+                GeneratorErrorType.RequiredOptionMissing => result.To(false, innerGeneratorError => new GeneratorError(this, innerGeneratorError)),
+                GeneratorErrorType.InnerGeneratorError => result.To(false, innerGeneratorError => new GeneratorError(this, innerGeneratorError)),
                 _ => throw new ArgumentOutOfRangeException(
                     nameof(error.Type),
                     error.Type,
@@ -96,11 +96,11 @@ internal class NestingOption<TOptions> : IOption
             };
         }
 
-        return Result.Success(false);
+        return R.Success(false);
     }
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2208:Instantiate argument exceptions correctly", Justification = "It's the proposed way of handling missing cases for enum switches.")]
-    public Result.IfError<ParserError> DeserializeFrom(
+    public R<ParserError> DeserializeFrom(
         CommandLineArgumentsParser commandLineArgumentsParser,
         ArgumentList argumentList,
         ReadOnlySpan<char> value,
@@ -119,15 +119,15 @@ internal class NestingOption<TOptions> : IOption
         switch (error.Type)
         {
             case ParserErrorType.Info:
-                return result.ConvertError(innerParserError => new ParserError(innerParserError, string.Format(settings.CultureInfo, Constants.InnerInfoErrorFormat, this.Usage, argumentText)));
+                return result.With(innerParserError => new ParserError(innerParserError, string.Format(settings.CultureInfo, Constants.InnerInfoErrorFormat, this.Usage, argumentText)));
             case ParserErrorType.InnerParserError:
-                return result.ConvertError(innerParserError => new ParserError(innerParserError, string.Format(settings.CultureInfo, Constants.InnerParserErrorFormat, this.Usage, argumentText)));
+                return result.With(innerParserError => new ParserError(innerParserError, string.Format(settings.CultureInfo, Constants.InnerParserErrorFormat, this.Usage, argumentText)));
             case ParserErrorType.RequiredArgumentMissing:
-                return result.ConvertError(innerParserError => new ParserError(innerParserError, string.Format(settings.CultureInfo, Constants.InnerRequiredErrorFormat, this.Usage, argumentText)));
+                return result.With(innerParserError => new ParserError(innerParserError, string.Format(settings.CultureInfo, Constants.InnerRequiredErrorFormat, this.Usage, argumentText)));
             case ParserErrorType.OptionArgumentMissing:
-                return result.ConvertError(innerParserError => new ParserError(innerParserError, string.Format(settings.CultureInfo, Constants.InnerOptionArgumentErrorFormat, this.Usage, argumentText)));
+                return result.With(innerParserError => new ParserError(innerParserError, string.Format(settings.CultureInfo, Constants.InnerOptionArgumentErrorFormat, this.Usage, argumentText)));
             case ParserErrorType.UnknownOption:
-                return result.ConvertError(innerParserError => new ParserError(innerParserError, string.Format(settings.CultureInfo, Constants.InnerInvalidOptionFormat, this.Usage, argumentText)));
+                return result.With(innerParserError => new ParserError(innerParserError, string.Format(settings.CultureInfo, Constants.InnerInvalidOptionFormat, this.Usage, argumentText)));
             case ParserErrorType.OnlySingleValueAllowed:
                 return result;
             case ParserErrorType.HelpRequested:
@@ -187,12 +187,12 @@ internal class NestingOption<TOptions> : IOption
         stringBuilder.Append(Constants.DefaultText + Constants.SeeBelowText);
     }
 
-    private static Result.IfError<GeneratorError> SerializeValue(TOptions options, StringBuilder stringBuilder, Settings settings, bool useAliases)
+    private static R<GeneratorError> SerializeValue(TOptions options, StringBuilder stringBuilder, Settings settings, bool useAliases)
     {
         return CommandLineArgumentsGenerator.Generate(options, stringBuilder, settings, useAliases);
     }
 
-    private Result.IfError<ParserError> DeserializeValue(CommandLineArgumentsParser commandLineArgumentsParser, ArgumentList argumentList, TOptions options, Settings settings)
+    private R<ParserError> DeserializeValue(CommandLineArgumentsParser commandLineArgumentsParser, ArgumentList argumentList, TOptions options, Settings settings)
     {
         this.argumentsBuilder.PrepareBuilder(options, true);
         return commandLineArgumentsParser.Parse(this.argumentsBuilder, settings, argumentList, true);

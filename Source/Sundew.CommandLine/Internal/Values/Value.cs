@@ -61,11 +61,11 @@ internal class Value : IValue
         this.deserialize(this.defaultValue.AsSpan(), cultureInfo);
     }
 
-    public Result.IfError<ParserError> DeserializeFrom(ReadOnlySpan<char> argument, ArgumentList argumentList, Settings settings)
+    public R<ParserError> DeserializeFrom(ReadOnlySpan<char> argument, ArgumentList argumentList, Settings settings)
     {
         if (this.hasBeenSet)
         {
-            return Result.Error(new ParserError(ParserErrorType.OnlySingleValueAllowed, Constants.OnlyASingleValueIsAllowedErrorText));
+            return R.Error(new ParserError(ParserErrorType.OnlySingleValueAllowed, Constants.OnlyASingleValueIsAllowedErrorText));
         }
 
         try
@@ -78,20 +78,20 @@ internal class Value : IValue
         }
 
         this.hasBeenSet = true;
-        return Result.Success();
+        return R.Success();
     }
 
-    public Result.IfError<GeneratorError> SerializeTo(StringBuilder stringBuilder, Settings settings)
+    public R<GeneratorError> SerializeTo(StringBuilder stringBuilder, Settings settings)
     {
         var serializedValue = this.SerializeValue(settings);
         if (serializedValue.IsEmpty)
         {
             if (this.IsRequired)
             {
-                return Result.Error(new GeneratorError(GeneratorErrorType.RequiredValuesMissing));
+                return R.Error(new GeneratorError(GeneratorErrorType.RequiredValuesMissing));
             }
 
-            return Result.Success();
+            return R.Success();
         }
 
         SerializationHelper.AppendQuotes(stringBuilder, this.useDoubleQuotes);
@@ -99,7 +99,7 @@ internal class Value : IValue
         stringBuilder.Append(serializedValue);
         SerializationHelper.AppendQuotes(stringBuilder, this.useDoubleQuotes);
 
-        return Result.Success();
+        return R.Success();
     }
 
     public void AppendMissingArgumentsHint(StringBuilder stringBuilder)

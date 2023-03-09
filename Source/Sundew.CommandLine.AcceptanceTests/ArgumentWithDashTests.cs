@@ -23,7 +23,7 @@ public class ArgumentWithDashTests
     {
         var commandLine = $@"-n ""{(expectedNumber < 0 ? "\\" : string.Empty)}{expectedNumber}""";
         var testee = new CommandLineParser<NumberOptions, int>();
-        testee.WithArguments(new NumberOptions(0), x => Result.Success(x));
+        testee.WithArguments(new NumberOptions(0), x => R.Success(x));
 
         var result = testee.Parse(commandLine);
 
@@ -47,7 +47,7 @@ public class ArgumentWithDashTests
     {
         var commandLine = $@"-n \-3 4 \-7";
         var testee = new CommandLineParser<NumbersOptions, int>();
-        testee.WithArguments(new NumbersOptions(), x => Result.Success(x));
+        testee.WithArguments(new NumbersOptions(), x => R.Success(x));
 
         var result = testee.Parse(commandLine);
 

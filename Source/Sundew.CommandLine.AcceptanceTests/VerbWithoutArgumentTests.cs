@@ -19,7 +19,7 @@ public class VerbWithoutArgumentTests
     {
         const int expectedResult = 97;
         var commandLineParser = new CommandLineParser<int, int>();
-        commandLineParser.AddVerb(new ParameterLessVerb(), parameterLessVerb => Result.Success(expectedResult));
+        commandLineParser.AddVerb(new ParameterLessVerb(), parameterLessVerb => R.Success(expectedResult));
 
         var result = commandLineParser.Parse(new[] { "run", "and", "fail" });
 

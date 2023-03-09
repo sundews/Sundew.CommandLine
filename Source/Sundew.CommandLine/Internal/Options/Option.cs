@@ -72,17 +72,17 @@ internal sealed class Option : IOption
 
     public Separators Separators { get; }
 
-    public Result<bool, GeneratorError> SerializeTo(StringBuilder stringBuilder, Settings settings, bool useAliases)
+    public R<bool, GeneratorError> SerializeTo(StringBuilder stringBuilder, Settings settings, bool useAliases)
     {
         var serializedValue = this.SerializeValue(settings);
         if (serializedValue.IsEmpty)
         {
             if (this.IsRequired)
             {
-                return Result.Error(new GeneratorError(this, GeneratorErrorType.RequiredOptionMissing));
+                return R.Error(new GeneratorError(this, GeneratorErrorType.RequiredOptionMissing));
             }
 
-            return Result.Success(false);
+            return R.Success(false);
         }
 
         var usedAlias = SerializationHelper.AppendNameOrAlias(stringBuilder, this.Name, this.Alias, useAliases);
@@ -92,10 +92,10 @@ internal sealed class Option : IOption
         stringBuilder.Append(serializedValue);
         SerializationHelper.AppendQuotes(stringBuilder, this.useDoubleQuotes);
 
-        return Result.Success(true);
+        return R.Success(true);
     }
 
-    public Result.IfError<ParserError> DeserializeFrom(
+    public R<ParserError> DeserializeFrom(
         CommandLineArgumentsParser commandLineArgumentsParser,
         ArgumentList argumentList,
         ReadOnlySpan<char> value,
@@ -104,7 +104,7 @@ internal sealed class Option : IOption
         try
         {
             this.deserialize(value, settings.CultureInfo);
-            return Result.Success();
+            return R.Success();
         }
         catch (Exception e)
         {

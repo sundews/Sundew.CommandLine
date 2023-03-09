@@ -13,9 +13,9 @@ using Sundew.Base.Primitives.Computation;
 
 internal interface IOption : INamedArgumentInfo, IArgumentHelpInfo, IArgumentMissingInfo
 {
-    Result<bool, GeneratorError> SerializeTo(StringBuilder stringBuilder, Settings settings, bool useAliases);
+    R<bool, GeneratorError> SerializeTo(StringBuilder stringBuilder, Settings settings, bool useAliases);
 
-    Result.IfError<ParserError> DeserializeFrom(CommandLineArgumentsParser commandLineArgumentsParser, ArgumentList argumentList, ReadOnlySpan<char> value, Settings settings);
+    R<ParserError> DeserializeFrom(CommandLineArgumentsParser commandLineArgumentsParser, ArgumentList argumentList, ReadOnlySpan<char> value, Settings settings);
 
     void AppendDefaultText(StringBuilder stringBuilder, Settings settings, bool isNested);
 }

@@ -14,12 +14,12 @@ using Sundew.CommandLine.Internal.Helpers;
 
 internal class ArgumentsAction<TSuccess, TError> : IArgumentsBuilderProvider
 {
-    public ArgumentsAction(IArguments arguments, Func<IArguments, Result<TSuccess, ParserError<TError>>> handler)
-        : this(arguments, arguments => new ValueTask<Result<TSuccess, ParserError<TError>>>(handler(arguments)))
+    public ArgumentsAction(IArguments arguments, Func<IArguments, R<TSuccess, ParserError<TError>>> handler)
+        : this(arguments, arguments => new ValueTask<R<TSuccess, ParserError<TError>>>(handler(arguments)))
     {
     }
 
-    public ArgumentsAction(IArguments arguments, Func<IArguments, ValueTask<Result<TSuccess, ParserError<TError>>>> handler)
+    public ArgumentsAction(IArguments arguments, Func<IArguments, ValueTask<R<TSuccess, ParserError<TError>>>> handler)
     {
         this.Arguments = arguments;
         this.Handler = handler;
@@ -32,5 +32,5 @@ internal class ArgumentsAction<TSuccess, TError> : IArgumentsBuilderProvider
 
     public string[] HelpLines { get; }
 
-    public Func<IArguments, ValueTask<Result<TSuccess, ParserError<TError>>>> Handler { get; }
+    public Func<IArguments, ValueTask<R<TSuccess, ParserError<TError>>>> Handler { get; }
 }

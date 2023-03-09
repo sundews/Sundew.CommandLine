@@ -25,7 +25,7 @@ public interface ICommandLineBuilder<TSuccess, TError>
     /// <param name="verb">The verb.</param>
     /// <param name="verbHandler">The verb handler.</param>
     /// <returns>The verb.</returns>
-    TVerb AddVerb<TVerb>(TVerb verb, Func<TVerb, Result<TSuccess, ParserError<TError>>> verbHandler)
+    TVerb AddVerb<TVerb>(TVerb verb, Func<TVerb, R<TSuccess, ParserError<TError>>> verbHandler)
         where TVerb : IVerb;
 
     /// <summary>Adds the verb.</summary>
@@ -34,7 +34,7 @@ public interface ICommandLineBuilder<TSuccess, TError>
     /// <param name="verbHandler">The verb handler.</param>
     /// <param name="verbBuilderAction">The verb builder action.</param>
     /// <returns>The verb.</returns>
-    TVerb AddVerb<TVerb>(TVerb verb, Func<TVerb, Result<TSuccess, ParserError<TError>>> verbHandler, Action<IVerbBuilder<TSuccess, TError>> verbBuilderAction)
+    TVerb AddVerb<TVerb>(TVerb verb, Func<TVerb, R<TSuccess, ParserError<TError>>> verbHandler, Action<IVerbBuilder<TSuccess, TError>> verbBuilderAction)
         where TVerb : IVerb;
 
     /// <summary>
@@ -44,7 +44,7 @@ public interface ICommandLineBuilder<TSuccess, TError>
     /// <param name="arguments">The arguments.</param>
     /// <param name="argumentsHandler">The arguments handler.</param>
     /// <returns>The arguments.</returns>
-    TArguments WithArguments<TArguments>(TArguments arguments, Func<TArguments, Result<TSuccess, ParserError<TError>>> argumentsHandler)
+    TArguments WithArguments<TArguments>(TArguments arguments, Func<TArguments, R<TSuccess, ParserError<TError>>> argumentsHandler)
         where TArguments : IArguments;
 
     /// <summary>
@@ -54,7 +54,7 @@ public interface ICommandLineBuilder<TSuccess, TError>
     /// <param name="verb">The verb.</param>
     /// <param name="verbHandler">The verb handler.</param>
     /// <returns>The verb.</returns>
-    TVerb AddVerb<TVerb>(TVerb verb, Func<TVerb, ValueTask<Result<TSuccess, ParserError<TError>>>> verbHandler)
+    TVerb AddVerb<TVerb>(TVerb verb, Func<TVerb, ValueTask<R<TSuccess, ParserError<TError>>>> verbHandler)
         where TVerb : IVerb;
 
     /// <summary>Adds the verb.</summary>
@@ -63,7 +63,7 @@ public interface ICommandLineBuilder<TSuccess, TError>
     /// <param name="verbHandler">The verb handler.</param>
     /// <param name="verbBuilderAction">The verb builder function.</param>
     /// <returns>The verb.</returns>
-    TVerb AddVerb<TVerb>(TVerb verb, Func<TVerb, ValueTask<Result<TSuccess, ParserError<TError>>>> verbHandler, Action<IVerbBuilder<TSuccess, TError>>? verbBuilderAction)
+    TVerb AddVerb<TVerb>(TVerb verb, Func<TVerb, ValueTask<R<TSuccess, ParserError<TError>>>> verbHandler, Action<IVerbBuilder<TSuccess, TError>>? verbBuilderAction)
         where TVerb : IVerb;
 
     /// <summary>
@@ -73,6 +73,6 @@ public interface ICommandLineBuilder<TSuccess, TError>
     /// <param name="arguments">The arguments.</param>
     /// <param name="argumentsHandler">The arguments handler.</param>
     /// <returns>The arguments.</returns>
-    TArguments WithArguments<TArguments>(TArguments arguments, Func<TArguments, ValueTask<Result<TSuccess, ParserError<TError>>>> argumentsHandler)
+    TArguments WithArguments<TArguments>(TArguments arguments, Func<TArguments, ValueTask<R<TSuccess, ParserError<TError>>>> argumentsHandler)
         where TArguments : IArguments;
 }

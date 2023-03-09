@@ -19,7 +19,7 @@ public class CommandLineBatcherTests
     public void Parse_Then_BatchArgumentsShouldBeAsExpected()
     {
         var commandLineParser = new CommandLineParser<int, int>();
-        var batchArguments = commandLineParser.WithArguments(new BatchArguments(), arguments => Result.Success(0));
+        var batchArguments = commandLineParser.WithArguments(new BatchArguments(), arguments => R.Success(0));
 
         var result = commandLineParser.Parse(@"-c ""git|tag -a {0}_{1} -m \""Release: {1} {0}\"""" ""git|push https://github.com {0}_{1}"" -b ""1.0.1"" Sundew.CommandLine");
 
@@ -37,7 +37,7 @@ public class CommandLineBatcherTests
     public void Parse_When_ChoiceValueIsMissing_Then_BatchArgumentsShouldBeAsExpected()
     {
         var commandLineParser = new CommandLineParser<int, int>();
-        commandLineParser.WithArguments(new BatchArguments(), arguments => Result.Success(0));
+        commandLineParser.WithArguments(new BatchArguments(), arguments => R.Success(0));
 
         var result = commandLineParser.Parse(string.Empty);
 
@@ -55,8 +55,8 @@ public class CommandLineBatcherTests
     public void CreateHelpText_Then_ResultShouldBeExpectedResult()
     {
         var commandLineParser = new CommandLineParser<int, int>();
-        commandLineParser.AddVerb(new MatchVerb(), verb => Result.Success(0));
-        commandLineParser.WithArguments(new BatchArguments(), arguments => Result.Success(0));
+        commandLineParser.AddVerb(new MatchVerb(), verb => R.Success(0));
+        commandLineParser.WithArguments(new BatchArguments(), arguments => R.Success(0));
 
         var result = commandLineParser.CreateHelpText();
 

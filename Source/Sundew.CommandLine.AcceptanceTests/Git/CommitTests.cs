@@ -22,7 +22,7 @@ public class CommitTests
 
         var commandLineGenerator = new CommandLineGenerator();
         var commandLineParser = new CommandLineParser<int, int>();
-        var push = commandLineParser.AddVerb(new Commit(), pushVerb => Result.Success(expectedResult));
+        var push = commandLineParser.AddVerb(new Commit(), pushVerb => R.Success(expectedResult));
 
         var generateResult = commandLineGenerator.Generate(new Commit(expectedMessage), true);
         var parseResult = commandLineParser.Parse(generateResult.Value);
@@ -44,7 +44,7 @@ public class CommitTests
                        to help the user describe the commit by reminding what changes the commit has.
 ";
         var commandLineParser = new CommandLineParser<int, int>();
-        commandLineParser.AddVerb(new Commit(), verb => Result.Success(0));
+        commandLineParser.AddVerb(new Commit(), verb => R.Success(0));
 
         var result = commandLineParser.CreateHelpText();
 

@@ -28,7 +28,7 @@ public class InvalidConfigurationTests
     public void Parse_When_VerbsAreConfiguredButNoArgumentsAndArgumentIsNotAVerb_Then_ResultIsSuccessShouldBeFalse()
     {
         var testee = new CommandLineParser<int, int>();
-        testee.AddVerb(new Verbs.BuildVerb(), verb => Result.Success(0));
+        testee.AddVerb(new Verbs.BuildVerb(), verb => R.Success(0));
 
         var result = testee.Parse("test");
 

@@ -16,12 +16,22 @@ using Xunit;
 public class StringExtensionTests
 {
     [Fact]
-    public void SplitBasedCommandLineTokenizer_Then_QuotesAreNotProperlyTerminated_Then_ResultShouldContainRemainderInLastElement()
+    public void SplitBasedCommandLineTokenizer_When_QuotesAreNotProperlyTerminated_Then_ResultShouldContainRemainderInLastElement()
     {
         var commandLine = $@"-fl --max-size ""4000 -cl";
 
         var result = commandLine.AsMemory().ParseCommandLineArguments().ToArray();
 
         result.Select(x => x.ToString()).Should().Equal("-fl", "--max-size", "4000 -cl");
+    }
+
+    [Fact]
+    public void SplitBasedCommandLineTokenizer_When_TextContainsAdditionalSpace_Then_ResultShouldBeProperlyTokenized()
+    {
+        var commandLine = $@"-fl  max-size -cl";
+
+        var result = commandLine.AsMemory().ParseCommandLineArguments().ToArray();
+
+        result.Select(x => x.ToString()).Should().Equal("-fl", "max-size", "-cl");
     }
 }

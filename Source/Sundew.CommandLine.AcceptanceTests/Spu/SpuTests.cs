@@ -56,7 +56,7 @@ public class SpuTests
 ";
         var testee = new Arguments(new List<PackageId> { new("Sundew.Base", null) }, new List<string> { "Sundew.CommandLine" });
         var commandLineParser = new CommandLineParser<int, int>();
-        commandLineParser.WithArguments(testee, arguments => Result.Success(0));
+        commandLineParser.WithArguments(testee, arguments => R.Success(0));
 
         var result = commandLineParser.CreateHelpText();
 
@@ -70,7 +70,7 @@ public class SpuTests
         const string ExpectedProject = "Sundew.CommandLine.Tests";
         var testee = new Arguments(new List<PackageId> { new("Sundew.Base", null) }, new List<string> { "Sundew.CommandLine" });
         var commandLineParser = new CommandLineParser<int, int>();
-        commandLineParser.WithArguments(testee, arguments => Result.Success(0));
+        commandLineParser.WithArguments(testee, arguments => R.Success(0));
 
         commandLineParser.Parse($"-id {ExpectedPackageId} -p {ExpectedProject}");
 
@@ -86,7 +86,7 @@ public class SpuTests
         const string ExpectedProjectName = "Sundew.CommandLine";
         var testee = new Arguments(new List<PackageId> { new(ExpectedPackageId, null) }, new List<string> { ExpectedProjectName });
         var commandLineParser = new CommandLineParser<int, int>();
-        commandLineParser.WithArguments(testee, arguments => Result.Success(0));
+        commandLineParser.WithArguments(testee, arguments => R.Success(0));
 
         commandLineParser.Parse($@"-d ""{ExpectedDirectory}""");
 

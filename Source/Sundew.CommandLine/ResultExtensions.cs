@@ -18,7 +18,7 @@ public static class ResultExtensions
     /// <typeparam name="TError">The type of the error.</typeparam>
     /// <param name="result">The result.</param>
     /// <returns>A value indicating whether help could be useful.</returns>
-    public static bool WriteToConsole<TValue, TError>(this Result<TValue, ParserError<TError>> result)
+    public static bool WriteToConsole<TValue, TError>(this R<TValue, ParserError<TError>> result)
     {
         if (result)
         {
@@ -43,7 +43,7 @@ public static class ResultExtensions
     /// <summary>Gets the exit code.</summary>
     /// <param name="result">The result.</param>
     /// <returns>The exit code.</returns>
-    public static int GetExitCode(this Result<int, ParserError<int>> result)
+    public static int GetExitCode(this R<int, ParserError<int>> result)
     {
         if (result)
         {

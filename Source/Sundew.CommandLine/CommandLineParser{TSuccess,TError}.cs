@@ -29,7 +29,7 @@ public sealed class CommandLineParser<TSuccess, TError> : ICommandLineParser<TSu
     private const string ArgumentsOrVerbsWereNotConfiguredText = "Arguments and/or verbs were not configured.";
     private const string ArgumentsWereNotConfiguredOrAnUnknownVerbWasUsedText = "Either arguments were not configured or an unknown verb was used.";
     private readonly CommandLineArgumentsParser commandLineArgumentsParser = new();
-    private readonly VerbRegistry<TSuccess, TError> verbRegistry = new(NullVerb.Instance, verb => Result.From(false, default(TSuccess)!, new ParserError<TError>(ParserErrorType.UnknownVerb, "Null verb")), null);
+    private readonly VerbRegistry<TSuccess, TError> verbRegistry = new(NullVerb.Instance, verb => R.From(false, default(TSuccess)!, new ParserError<TError>(ParserErrorType.UnknownVerb, "Null verb")), null);
     private ArgumentsAction<TSuccess, TError>? argumentsAction;
 
     /// <summary>
@@ -61,7 +61,7 @@ public sealed class CommandLineParser<TSuccess, TError> : ICommandLineParser<TSu
     /// <param name="verb">The verb.</param>
     /// <param name="verbHandler">The verb handler.</param>
     /// <returns>The verb.</returns>
-    public TVerb AddVerb<TVerb>(TVerb verb, Func<TVerb, Result<TSuccess, ParserError<TError>>> verbHandler)
+    public TVerb AddVerb<TVerb>(TVerb verb, Func<TVerb, R<TSuccess, ParserError<TError>>> verbHandler)
         where TVerb : IVerb
     {
         return this.AddVerb(verb, verbHandler, null);
@@ -73,7 +73,7 @@ public sealed class CommandLineParser<TSuccess, TError> : ICommandLineParser<TSu
     /// <param name="verbHandler">The verb handler.</param>
     /// <param name="verbBuilderAction">The verb builder function.</param>
     /// <returns>The verb.</returns>
-    public TVerb AddVerb<TVerb>(TVerb verb, Func<TVerb, Result<TSuccess, ParserError<TError>>> verbHandler, Action<IVerbBuilder<TSuccess, TError>>? verbBuilderAction)
+    public TVerb AddVerb<TVerb>(TVerb verb, Func<TVerb, R<TSuccess, ParserError<TError>>> verbHandler, Action<IVerbBuilder<TSuccess, TError>>? verbBuilderAction)
         where TVerb : IVerb
     {
         this.verbRegistry.AddVerb(verb, verbHandler, verbBuilderAction);
@@ -87,7 +87,7 @@ public sealed class CommandLineParser<TSuccess, TError> : ICommandLineParser<TSu
     /// <param name="verb">The verb.</param>
     /// <param name="verbHandler">The verb handler.</param>
     /// <returns>The verb.</returns>
-    public TVerb AddVerb<TVerb>(TVerb verb, Func<TVerb, ValueTask<Result<TSuccess, ParserError<TError>>>> verbHandler)
+    public TVerb AddVerb<TVerb>(TVerb verb, Func<TVerb, ValueTask<R<TSuccess, ParserError<TError>>>> verbHandler)
         where TVerb : IVerb
     {
         return this.AddVerb(verb, verbHandler, null);
@@ -99,7 +99,7 @@ public sealed class CommandLineParser<TSuccess, TError> : ICommandLineParser<TSu
     /// <param name="verbHandler">The verb handler.</param>
     /// <param name="verbBuilderAction">The verb builder function.</param>
     /// <returns>The verb.</returns>
-    public TVerb AddVerb<TVerb>(TVerb verb, Func<TVerb, ValueTask<Result<TSuccess, ParserError<TError>>>> verbHandler, Action<IVerbBuilder<TSuccess, TError>>? verbBuilderAction)
+    public TVerb AddVerb<TVerb>(TVerb verb, Func<TVerb, ValueTask<R<TSuccess, ParserError<TError>>>> verbHandler, Action<IVerbBuilder<TSuccess, TError>>? verbBuilderAction)
         where TVerb : IVerb
     {
         this.verbRegistry.AddVerb(verb, verbHandler, verbBuilderAction);
@@ -113,7 +113,7 @@ public sealed class CommandLineParser<TSuccess, TError> : ICommandLineParser<TSu
     /// <param name="arguments">The arguments.</param>
     /// <param name="argumentsHandler">The arguments handler.</param>
     /// <returns>The arguments.</returns>
-    public TArguments WithArguments<TArguments>(TArguments arguments, Func<TArguments, Result<TSuccess, ParserError<TError>>> argumentsHandler)
+    public TArguments WithArguments<TArguments>(TArguments arguments, Func<TArguments, R<TSuccess, ParserError<TError>>> argumentsHandler)
         where TArguments : IArguments
     {
         this.argumentsAction = new ArgumentsAction<TSuccess, TError>(arguments, x => argumentsHandler((TArguments)x));
@@ -127,7 +127,7 @@ public sealed class CommandLineParser<TSuccess, TError> : ICommandLineParser<TSu
     /// <param name="arguments">The arguments.</param>
     /// <param name="argumentsHandler">The arguments handler.</param>
     /// <returns>The arguments.</returns>
-    public TArguments WithArguments<TArguments>(TArguments arguments, Func<TArguments, ValueTask<Result<TSuccess, ParserError<TError>>>> argumentsHandler)
+    public TArguments WithArguments<TArguments>(TArguments arguments, Func<TArguments, ValueTask<R<TSuccess, ParserError<TError>>>> argumentsHandler)
         where TArguments : IArguments
     {
         this.argumentsAction = new ArgumentsAction<TSuccess, TError>(arguments, x => argumentsHandler((TArguments)x));
@@ -139,7 +139,7 @@ public sealed class CommandLineParser<TSuccess, TError> : ICommandLineParser<TSu
     /// </summary>
     /// <param name="arguments">The arguments.</param>
     /// <returns>The parser result.</returns>
-    public ValueTask<Result<TSuccess, ParserError<TError>>> ParseAsync(IReadOnlyList<string> arguments)
+    public ValueTask<R<TSuccess, ParserError<TError>>> ParseAsync(IReadOnlyList<string> arguments)
     {
         return this.ParseAsync(arguments.ToArray(x => x.AsMemory()), 0);
     }
@@ -149,7 +149,7 @@ public sealed class CommandLineParser<TSuccess, TError> : ICommandLineParser<TSu
     /// </summary>
     /// <param name="arguments">The arguments.</param>
     /// <returns>The parser result.</returns>
-    public ValueTask<Result<TSuccess, ParserError<TError>>> ParseAsync(IReadOnlyList<ReadOnlyMemory<char>> arguments)
+    public ValueTask<R<TSuccess, ParserError<TError>>> ParseAsync(IReadOnlyList<ReadOnlyMemory<char>> arguments)
     {
         return this.ParseAsync(arguments, 0);
     }
@@ -157,7 +157,7 @@ public sealed class CommandLineParser<TSuccess, TError> : ICommandLineParser<TSu
     /// <summary>Parses the specified arguments.</summary>
     /// <param name="arguments">The arguments.</param>
     /// <returns>The parser result.</returns>
-    public ValueTask<Result<TSuccess, ParserError<TError>>> ParseAsync(string arguments)
+    public ValueTask<R<TSuccess, ParserError<TError>>> ParseAsync(string arguments)
     {
         return this.ParseAsync(arguments, 0);
     }
@@ -168,7 +168,7 @@ public sealed class CommandLineParser<TSuccess, TError> : ICommandLineParser<TSu
     /// <param name="arguments">The arguments.</param>
     /// <param name="startIndex">The argument index at which to start parsing.</param>
     /// <returns>The parser result.</returns>
-    public ValueTask<Result<TSuccess, ParserError<TError>>> ParseAsync(string arguments, int startIndex)
+    public ValueTask<R<TSuccess, ParserError<TError>>> ParseAsync(string arguments, int startIndex)
     {
         var argumentArray = arguments.AsMemory().ParseCommandLineArguments().ToArray();
         return this.ParseAsync(argumentArray, startIndex);
@@ -180,11 +180,11 @@ public sealed class CommandLineParser<TSuccess, TError> : ICommandLineParser<TSu
     /// <param name="arguments">The arguments.</param>
     /// <param name="startIndex">The start index.</param>
     /// <returns>The parser result.</returns>
-    public async ValueTask<Result<TSuccess, ParserError<TError>>> ParseAsync(IReadOnlyList<ReadOnlyMemory<char>> arguments, int startIndex)
+    public async ValueTask<R<TSuccess, ParserError<TError>>> ParseAsync(IReadOnlyList<ReadOnlyMemory<char>> arguments, int startIndex)
     {
         if (startIndex < 0)
         {
-            return Result.Error(new ParserError<TError>(ParserErrorType.InvalidStartIndex, $"StartIndex must be greater than 0 (Actual: {startIndex})."));
+            return R.Error(new ParserError<TError>(ParserErrorType.InvalidStartIndex, $"StartIndex must be greater than 0 (Actual: {startIndex})."));
         }
 
         var argumentList = new ArgumentList(arguments, startIndex);
@@ -211,25 +211,25 @@ public sealed class CommandLineParser<TSuccess, TError> : ICommandLineParser<TSu
             }
         }
 
-        Result<TSuccess, ParserError<TError>> result;
+        R<TSuccess, ParserError<TError>> result;
         if (this.argumentsAction == null)
         {
             if (this.verbRegistry.HasVerbs)
             {
                 if (Constants.HelpRequestTexts.Contains(argumentList.FirstOrDefault(), ReadOnlyMemoryCharEqualityComparer.Instance))
                 {
-                    result = Result.Error(new ParserError<TError>(ParserErrorType.HelpRequested, CommandLineArgumentsParser.HelpRequestedText));
+                    result = R.Error(new ParserError<TError>(ParserErrorType.HelpRequested, CommandLineArgumentsParser.HelpRequestedText));
                 }
                 else
                 {
-                    result = Result.Error(new ParserError<TError>(
+                    result = R.Error(new ParserError<TError>(
                         ParserErrorType.ArgumentsNotConfiguredOrUnknownVerb,
                         ArgumentsWereNotConfiguredOrAnUnknownVerbWasUsedText));
                 }
             }
             else
             {
-                result = Result.Error(new ParserError<TError>(
+                result = R.Error(new ParserError<TError>(
                     ParserErrorType.ArgumentsAndVerbsAreNotConfigured, ArgumentsOrVerbsWereNotConfiguredText));
             }
         }
@@ -246,7 +246,7 @@ public sealed class CommandLineParser<TSuccess, TError> : ICommandLineParser<TSu
     /// </summary>
     /// <param name="arguments">The arguments.</param>
     /// <returns>The parser result.</returns>
-    public Result<TSuccess, ParserError<TError>> Parse(IReadOnlyList<string> arguments)
+    public R<TSuccess, ParserError<TError>> Parse(IReadOnlyList<string> arguments)
     {
         return this.Parse(arguments.ToArray(x => x.AsMemory()), 0);
     }
@@ -256,7 +256,7 @@ public sealed class CommandLineParser<TSuccess, TError> : ICommandLineParser<TSu
     /// </summary>
     /// <param name="arguments">The arguments.</param>
     /// <returns>The parser result.</returns>
-    public Result<TSuccess, ParserError<TError>> Parse(IReadOnlyList<ReadOnlyMemory<char>> arguments)
+    public R<TSuccess, ParserError<TError>> Parse(IReadOnlyList<ReadOnlyMemory<char>> arguments)
     {
         return this.Parse(arguments, 0);
     }
@@ -264,7 +264,7 @@ public sealed class CommandLineParser<TSuccess, TError> : ICommandLineParser<TSu
     /// <summary>Parses the specified arguments.</summary>
     /// <param name="arguments">The arguments.</param>
     /// <returns>The parser result.</returns>
-    public Result<TSuccess, ParserError<TError>> Parse(string arguments)
+    public R<TSuccess, ParserError<TError>> Parse(string arguments)
     {
         return this.Parse(arguments, 0);
     }
@@ -275,7 +275,7 @@ public sealed class CommandLineParser<TSuccess, TError> : ICommandLineParser<TSu
     /// <param name="arguments">The arguments.</param>
     /// <param name="startIndex">The argument index at which to start parsing.</param>
     /// <returns>The parser result.</returns>
-    public Result<TSuccess, ParserError<TError>> Parse(string arguments, int startIndex)
+    public R<TSuccess, ParserError<TError>> Parse(string arguments, int startIndex)
     {
         var argumentArray = arguments.AsMemory().ParseCommandLineArguments().ToArray();
         return this.Parse(argumentArray, startIndex);
@@ -287,7 +287,7 @@ public sealed class CommandLineParser<TSuccess, TError> : ICommandLineParser<TSu
     /// <param name="arguments">The arguments.</param>
     /// <param name="startIndex">The start index.</param>
     /// <returns>The parser result.</returns>
-    public Result<TSuccess, ParserError<TError>> Parse(IReadOnlyList<string> arguments, int startIndex)
+    public R<TSuccess, ParserError<TError>> Parse(IReadOnlyList<string> arguments, int startIndex)
     {
         return this.Parse(arguments.ToArray(x => x.AsMemory()), startIndex);
     }
@@ -298,7 +298,7 @@ public sealed class CommandLineParser<TSuccess, TError> : ICommandLineParser<TSu
     /// <param name="arguments">The arguments.</param>
     /// <param name="startIndex">The start index.</param>
     /// <returns>The parser result.</returns>
-    public Result<TSuccess, ParserError<TError>> Parse(IReadOnlyList<ReadOnlyMemory<char>> arguments, int startIndex)
+    public R<TSuccess, ParserError<TError>> Parse(IReadOnlyList<ReadOnlyMemory<char>> arguments, int startIndex)
     {
         var parseTask = this.ParseAsync(arguments, startIndex).AsTask();
         parseTask.Wait();
@@ -314,8 +314,8 @@ public sealed class CommandLineParser<TSuccess, TError> : ICommandLineParser<TSu
         return CommandLineHelpGenerator.CreateHelpText(this.verbRegistry, this.argumentsAction, this.Settings);
     }
 
-    private static Result<TSuccess, ParserError<TError>> CheckResultForHelpRequestedError(
-        Result<TSuccess, ParserError<TError>> result,
+    private static R<TSuccess, ParserError<TError>> CheckResultForHelpRequestedError(
+        R<TSuccess, ParserError<TError>> result,
         VerbRegistry<TSuccess, TError> verbRegistry,
         ArgumentsAction<TSuccess, TError>? argumentsAction,
         Settings settings)
@@ -324,18 +324,18 @@ public sealed class CommandLineParser<TSuccess, TError> : ICommandLineParser<TSu
         {
             if (result.Error.Type == ParserErrorType.HelpRequested)
             {
-                return Result.Error(new ParserError<TError>(ParserErrorType.HelpRequested, CommandLineHelpGenerator.CreateHelpText(verbRegistry, argumentsAction, settings)));
+                return R.Error(new ParserError<TError>(ParserErrorType.HelpRequested, CommandLineHelpGenerator.CreateHelpText(verbRegistry, argumentsAction, settings)));
             }
         }
 
         return result;
     }
 
-    private ValueTask<Result<TSuccess, ParserError<TError>>> ParseArguments<TArguments>(
+    private ValueTask<R<TSuccess, ParserError<TError>>> ParseArguments<TArguments>(
         ArgumentList argumentList,
         IArgumentsBuilderProvider argumentsBuilderProvider,
         TArguments argumentsDefinition,
-        Func<TArguments, ValueTask<Result<TSuccess, ParserError<TError>>>> argumentsHandler)
+        Func<TArguments, ValueTask<R<TSuccess, ParserError<TError>>>> argumentsHandler)
         where TArguments : IArguments
     {
         var argumentsBuilder = argumentsBuilderProvider.Builder;
@@ -344,7 +344,7 @@ public sealed class CommandLineParser<TSuccess, TError> : ICommandLineParser<TSu
         var result = this.commandLineArgumentsParser.Parse(argumentsBuilder, this.Settings, argumentList, false);
         if (!result)
         {
-            return result.Convert(default(TSuccess)!, parserError => new ParserError<TError>(parserError));
+            return result.To(default(TSuccess)!, parserError => new ParserError<TError>(parserError));
         }
 
         return argumentsHandler(argumentsDefinition);
