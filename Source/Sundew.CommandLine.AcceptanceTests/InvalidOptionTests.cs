@@ -19,7 +19,7 @@ public class InvalidOptionTests
         var commandLine = "-d";
 
         var testee = new CommandLineParser<int, int>();
-        testee.WithArguments(new Arguments(), arguments => Result.Success(40));
+        testee.WithArguments(new Arguments(), arguments => R.Success(40));
 
         var result = testee.Parse(commandLine);
 
@@ -34,7 +34,7 @@ public class InvalidOptionTests
         var commandLine = "-n Hi -d 43";
 
         var testee = new CommandLineParser<int, int>();
-        testee.WithArguments(new Arguments(), arguments => Result.Success(40));
+        testee.WithArguments(new Arguments(), arguments => R.Success(40));
 
         var result = testee.Parse(commandLine);
 

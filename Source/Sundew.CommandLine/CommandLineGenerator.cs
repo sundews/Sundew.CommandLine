@@ -41,7 +41,7 @@ public sealed class CommandLineGenerator : ICommandLineGenerator
     /// <summary>Generates the specified verb.</summary>
     /// <param name="verb">The verb.</param>
     /// <returns>The generator result.</returns>
-    public Result<string, GeneratorError> Generate(IVerb verb)
+    public R<string, GeneratorError> Generate(IVerb verb)
     {
         return this.Generate(verb, false);
     }
@@ -50,11 +50,11 @@ public sealed class CommandLineGenerator : ICommandLineGenerator
     /// <param name="verb">The verb.</param>
     /// <param name="useAliases">if set to <c>true</c> [use aliases].</param>
     /// <returns>The generator result.</returns>
-    public Result<string, GeneratorError> Generate(IVerb? verb, bool useAliases)
+    public R<string, GeneratorError> Generate(IVerb? verb, bool useAliases)
     {
         if (verb == null)
         {
-            return Result.Error(new GeneratorError(GeneratorErrorType.VerbsMissing));
+            return R.Error(new GeneratorError(GeneratorErrorType.VerbsMissing));
         }
 
         var stringBuilder = new StringBuilder();
@@ -68,13 +68,13 @@ public sealed class CommandLineGenerator : ICommandLineGenerator
         }
 
         return CommandLineArgumentsGenerator.Generate(verb, stringBuilder, this.Settings, useAliases)
-            .WithValue(stringBuilder.ToString());
+            .To(stringBuilder.ToString());
     }
 
     /// <summary>Generates the specified verb.</summary>
     /// <param name="arguments">The arguments.</param>
     /// <returns>The generator result.</returns>
-    public Result<string, GeneratorError> Generate(IArguments arguments)
+    public R<string, GeneratorError> Generate(IArguments arguments)
     {
         return this.Generate(arguments, false);
     }
@@ -83,10 +83,10 @@ public sealed class CommandLineGenerator : ICommandLineGenerator
     /// <param name="arguments">The arguments.</param>
     /// <param name="useAliases">if set to <c>true</c> [use aliases].</param>
     /// <returns>The generator result.</returns>
-    public Result<string, GeneratorError> Generate(IArguments arguments, bool useAliases)
+    public R<string, GeneratorError> Generate(IArguments arguments, bool useAliases)
     {
         var stringBuilder = new StringBuilder();
         return CommandLineArgumentsGenerator.Generate(arguments, stringBuilder, this.Settings, useAliases)
-            .WithValue(stringBuilder.ToString());
+            .To(stringBuilder.ToString());
     }
 }

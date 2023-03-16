@@ -23,7 +23,7 @@ public class AupliCommandLineTests
         var commandLineParser = new CommandLineParser<Options, int>();
         commandLineParser.WithArguments(
             new Options(false, false, new FileLogOptions(@"Logs\Aupli.log")),
-            options => Result.Success(options));
+            options => R.Success(options));
 
         var result = commandLineParser.Parse(commandLine);
 
@@ -41,7 +41,7 @@ public class AupliCommandLineTests
         var commandLineParser = new CommandLineParser<Options, int>();
         commandLineParser.WithArguments(
             new Options(false, false),
-            options => Result.Success(options));
+            options => R.Success(options));
 
         var result = commandLineParser.Parse(commandLine);
 
@@ -57,7 +57,7 @@ public class AupliCommandLineTests
         var commandLineParser = new CommandLineParser<Options, int>();
         commandLineParser.WithArguments(
             new Options(false, false),
-            options => Result.Success(options));
+            options => R.Success(options));
 
         var result = commandLineParser.Parse(commandLine);
 
@@ -93,7 +93,7 @@ public class AupliCommandLineTests
   -s   | --shutdown    | Allows Aupli to shutdown the device when closing.
 ";
         var commandLineParser = new CommandLineParser<Options, int>();
-        commandLineParser.WithArguments(new Options(false, false), options => Result.Success(options));
+        commandLineParser.WithArguments(new Options(false, false), options => R.Success(options));
 
         var helpText = commandLineParser.CreateHelpText();
 
@@ -114,7 +114,7 @@ public class AupliCommandLineTests
   -s   | --shutdown    | Allows Aupli to shutdown the device when closing.
 ";
         var commandLineParser = new CommandLineParser<Options, int>();
-        commandLineParser.WithArguments(new Options(false, false, new FileLogOptions(expectedPath)), options => Result.Success(options));
+        commandLineParser.WithArguments(new Options(false, false, new FileLogOptions(expectedPath)), options => R.Success(options));
 
         var helpText = commandLineParser.CreateHelpText();
 
@@ -134,7 +134,7 @@ public class AupliCommandLineTests
   -s   | --shutdown    | Allows Aupli to shutdown the device when closing.
 ";
         var commandLineParser = new CommandLineParser<Options, int>();
-        commandLineParser.WithArguments(new Options(false, false), options => Result.Success(options));
+        commandLineParser.WithArguments(new Options(false, false), options => R.Success(options));
         var parserResult = commandLineParser.Parse("-?");
 
         var result = parserResult.Error.ToString();
@@ -148,7 +148,7 @@ public class AupliCommandLineTests
         string expectedText = $@"Error:
   The verb <empty> is unknown.";
         var commandLineParser = new CommandLineParser<Options, int>();
-        commandLineParser.WithArguments(new Options(false, false), options => Result.Success(options));
+        commandLineParser.WithArguments(new Options(false, false), options => R.Success(options));
         var parserResult = commandLineParser.Parse($@"-fl """"");
 
         var result = parserResult.Error.ToString();
@@ -164,7 +164,7 @@ public class AupliCommandLineTests
     The required options were missing:
      -lp/--log-path";
         var commandLineParser = new CommandLineParser<Options, int>();
-        commandLineParser.WithArguments(new Options(false, false), options => Result.Success(options));
+        commandLineParser.WithArguments(new Options(false, false), options => R.Success(options));
         var parserResult = commandLineParser.Parse($@"-fl -ms 3");
 
         var result = parserResult.Error.ToString();
@@ -178,7 +178,7 @@ public class AupliCommandLineTests
         string expectedText = $@"Error:
   The argument for the option: -lp/--log-path is missing.";
         var commandLineParser = new CommandLineParser<FileLogOptions, int>();
-        commandLineParser.WithArguments(new FileLogOptions(string.Empty), options => Result.Success(options));
+        commandLineParser.WithArguments(new FileLogOptions(string.Empty), options => R.Success(options));
         var parserResult = commandLineParser.Parse($@"-lp");
 
         var result = parserResult.Error.ToString();
@@ -190,7 +190,7 @@ public class AupliCommandLineTests
     public void Given_a_commandline_with_an_option_with_an_empty_argument_Then_Result_should_have_empty_string()
     {
         var commandLineParser = new CommandLineParser<FileLogOptions, int>();
-        var fileLogOptions = commandLineParser.WithArguments(new FileLogOptions(string.Empty), options => Result.Success(options));
+        var fileLogOptions = commandLineParser.WithArguments(new FileLogOptions(string.Empty), options => R.Success(options));
 
         var parserResult = commandLineParser.Parse($@"-lp """"");
 
@@ -206,7 +206,7 @@ public class AupliCommandLineTests
         var commandLine = $@"-lp ""c:\temp\log.txt"" --max-size {ExpectedMaxLogFileSizeInBytes} --max-files 2";
 
         var commandLineParser = new CommandLineParser<FileLogOptions, int>();
-        commandLineParser.WithArguments(new FileLogOptions(string.Empty), options => Result.Success(options));
+        commandLineParser.WithArguments(new FileLogOptions(string.Empty), options => R.Success(options));
         commandLineParser.Parse(commandLine);
 
         var result = commandLineParser.Parse($@"-lp ""{expectedLogPath}""");

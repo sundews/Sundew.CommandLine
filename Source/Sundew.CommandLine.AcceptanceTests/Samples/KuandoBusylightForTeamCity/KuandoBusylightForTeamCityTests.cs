@@ -25,7 +25,7 @@ public class KuandoBusylightForTeamCityTests
     {
         var commandLine = $@"-h {ExpectedHost} -b {ExpectedBuildTypeId} -c -u {ExpectedUserName} -p {ExpectedPassword} -d ""\{ExpectedDevice}""";
         var testee = new CommandLineParser<RunOptions, int>();
-        testee.WithArguments(new RunOptions(), options => Result.Success(options));
+        testee.WithArguments(new RunOptions(), options => R.Success(options));
 
         var result = testee.Parse(commandLine);
 
@@ -52,7 +52,7 @@ public class KuandoBusylightForTeamCityTests
 ";
 
         var testee = new CommandLineParser<RunOptions, int>();
-        testee.WithArguments(new RunOptions(), options => Result.Success(options));
+        testee.WithArguments(new RunOptions(), options => R.Success(options));
 
         var result = testee.CreateHelpText();
 
@@ -64,7 +64,7 @@ public class KuandoBusylightForTeamCityTests
     {
         var commandLine = $@"-h {ExpectedHost} -b {ExpectedBuildTypeId} -c -u {ExpectedUserName} -p {ExpectedPassword} -d ""\{ExpectedDevice}""";
         var testee = new CommandLineParser<RunOptions, int>();
-        testee.WithArguments(new RunOptions(), options => Result.Success(options));
+        testee.WithArguments(new RunOptions(), options => R.Success(options));
         var expectedResult = testee.CreateHelpText();
         testee.Parse(commandLine);
 
@@ -84,10 +84,10 @@ public class KuandoBusylightForTeamCityTests
         {
             if (isSuccess)
             {
-                return Result.Success(0);
+                return R.Success(0);
             }
 
-            return Result.Error(new ParserError<int>(1));
+            return R.Error(new ParserError<int>(1));
         });
         var parserResult = testee.Parse(commandLine);
 

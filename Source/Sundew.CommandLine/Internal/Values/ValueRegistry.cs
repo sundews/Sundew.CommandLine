@@ -43,9 +43,9 @@ internal class ValueRegistry : IEnumerable<IValue>
         this.values.Add(value);
     }
 
-    public Result.IfError<ParserError> DeserializeFrom(ArgumentsBuilder argumentsBuilder, ArgumentList argumentList, Settings settings)
+    public R<ParserError> DeserializeFrom(ArgumentsBuilder argumentsBuilder, ArgumentList argumentList, Settings settings)
     {
-        Result.IfError<ParserError> result = Result.Success();
+        R<ParserError> result = R.Success();
         var valueIndex = 0;
         foreach (var argument in argumentList)
         {
@@ -66,9 +66,9 @@ internal class ValueRegistry : IEnumerable<IValue>
         return result;
     }
 
-    public Result.IfError<GeneratorError> SerializeTo(StringBuilder stringBuilder, Settings settings)
+    public R<GeneratorError> SerializeTo(StringBuilder stringBuilder, Settings settings)
     {
-        Result.IfError<GeneratorError> result = Result.Success();
+        R<GeneratorError> result = R.Success();
         foreach (var value in this.values)
         {
             result = value.SerializeTo(stringBuilder, settings);

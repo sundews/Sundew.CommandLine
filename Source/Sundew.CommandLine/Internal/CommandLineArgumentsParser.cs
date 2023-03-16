@@ -18,7 +18,7 @@ internal class CommandLineArgumentsParser
 {
     internal const string HelpRequestedText = "Help requested";
 
-    public Result.IfError<ParserError> Parse(
+    public R<ParserError> Parse(
         ArgumentsBuilder argumentsBuilder,
         Settings settings,
         ArgumentList argumentList,
@@ -28,7 +28,7 @@ internal class CommandLineArgumentsParser
         {
             argumentsBuilder.CultureInfo = settings.CultureInfo;
             argumentsBuilder.Separators = settings.Separators;
-            Result.IfError<ParserError>? currentResult = null;
+            R<ParserError>? currentResult = null;
             foreach (var argumentMemory in argumentList)
             {
                 var argument = argumentMemory.Span;
@@ -63,7 +63,7 @@ internal class CommandLineArgumentsParser
                         }
                         else
                         {
-                            return Result.Error(new ParserError(
+                            return R.Error(new ParserError(
                                 ParserErrorType.OptionArgumentMissing,
                                 string.Format(settings.CultureInfo, Constants.OptionArgumentMissingFormat, option.Usage)));
                         }
@@ -97,24 +97,24 @@ internal class CommandLineArgumentsParser
                             return currentResult.Value;
                         }
 
-                        return Result.Error(new ParserError(
+                        return R.Error(new ParserError(
                             ParserErrorType.UnknownOption,
                             string.Format(settings.CultureInfo, Constants.UnknownOptionFormat, argument.ToString())));
                     }
                     else if (Constants.HelpRequestTexts.Contains(argumentMemory, ReadOnlyMemoryCharEqualityComparer.Instance))
                     {
-                        return Result.Error(new ParserError(ParserErrorType.HelpRequested, HelpRequestedText));
+                        return R.Error(new ParserError(ParserErrorType.HelpRequested, HelpRequestedText));
                     }
                     else
                     {
-                        return Result.Error(new ParserError(
+                        return R.Error(new ParserError(
                             ParserErrorType.UnknownOption,
                             string.Format(settings.CultureInfo, Constants.UnknownOptionFormat, argument.ToString())));
                     }
                 }
                 else if (Constants.HelpRequestTexts.Contains(argumentMemory, ReadOnlyMemoryCharEqualityComparer.Instance))
                 {
-                    return Result.Error(new ParserError(ParserErrorType.HelpRequested, HelpRequestedText));
+                    return R.Error(new ParserError(ParserErrorType.HelpRequested, HelpRequestedText));
                 }
                 else if (argumentsBuilder.Values.HasValues)
                 {
@@ -122,13 +122,13 @@ internal class CommandLineArgumentsParser
                 }
                 else
                 {
-                    return Result.Error(new ParserError(ParserErrorType.UnknownVerb, argument.IsEmpty ? Constants.Empty : argument.ToString()));
+                    return R.Error(new ParserError(ParserErrorType.UnknownVerb, argument.IsEmpty ? Constants.Empty : argument.ToString()));
                 }
             }
         }
         catch (SerializationException e)
         {
-            return Result.Error(new ParserError(e));
+            return R.Error(new ParserError(e));
         }
 
         if (argumentsBuilder.RequiredArguments.Any())
@@ -136,7 +136,7 @@ internal class CommandLineArgumentsParser
             return CreateRequiredOptionMissingResult(argumentsBuilder);
         }
 
-        return Result.Success();
+        return R.Success();
     }
 
     internal static ReadOnlySpan<char> RemoveValueEscapeIfNeeded(ReadOnlySpan<char> span)
@@ -153,9 +153,9 @@ internal class CommandLineArgumentsParser
         return span;
     }
 
-    private static Result.IfError<ParserError> CreateRequiredOptionMissingResult(ArgumentsBuilder argumentsBuilder)
+    private static R<ParserError> CreateRequiredOptionMissingResult(ArgumentsBuilder argumentsBuilder)
     {
-        return Result.Error(
+        return R.Error(
             new ParserError(
                 ParserErrorType.RequiredArgumentMissing,
                 GetMissingArguments(argumentsBuilder.RequiredArguments)));

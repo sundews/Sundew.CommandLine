@@ -70,18 +70,18 @@ internal sealed class ListValue<TValue> : IValue, IListSerializationInfo<TValue>
         this.List.AddRange(this.DefaultList);
     }
 
-    public Result.IfError<GeneratorError> SerializeTo(StringBuilder stringBuilder, Settings settings)
+    public R<GeneratorError> SerializeTo(StringBuilder stringBuilder, Settings settings)
     {
         var wasSerialized = SerializationHelper.SerializeTo(this, this.List, stringBuilder, settings, null);
         if (!wasSerialized && this.IsRequired)
         {
-            return Result.Error(new GeneratorError(GeneratorErrorType.RequiredValuesMissing));
+            return R.Error(new GeneratorError(GeneratorErrorType.RequiredValuesMissing));
         }
 
-        return Result.Success();
+        return R.Success();
     }
 
-    public Result.IfError<ParserError> DeserializeFrom(ReadOnlySpan<char> value, ArgumentList argumentList, Settings settings)
+    public R<ParserError> DeserializeFrom(ReadOnlySpan<char> value, ArgumentList argumentList, Settings settings)
     {
         this.List.Clear();
         SerializationHelper.DeserializeTo(this.List, this.deserialize, value, settings);
@@ -93,7 +93,7 @@ internal sealed class ListValue<TValue> : IValue, IListSerializationInfo<TValue>
             }
         }
 
-        return Result.Success();
+        return R.Success();
     }
 
     public void AppendMissingArgumentsHint(StringBuilder stringBuilder)

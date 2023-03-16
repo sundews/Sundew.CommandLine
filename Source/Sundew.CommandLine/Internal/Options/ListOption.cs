@@ -77,7 +77,7 @@ internal class ListOption<TValue> : IOption, IListSerializationInfo<TValue>
 
     public bool IsChoice => this.Owner != null;
 
-    public Result<bool, GeneratorError> SerializeTo(StringBuilder stringBuilder, Settings settings, bool useAliases)
+    public R<bool, GeneratorError> SerializeTo(StringBuilder stringBuilder, Settings settings, bool useAliases)
     {
         var wasSerialized = SerializationHelper.SerializeTo(this, this.List, stringBuilder, settings, () =>
         {
@@ -86,13 +86,13 @@ internal class ListOption<TValue> : IOption, IListSerializationInfo<TValue>
         });
         if (!wasSerialized && this.IsRequired)
         {
-            return Result.Error(new GeneratorError(this, GeneratorErrorType.RequiredOptionMissing));
+            return R.Error(new GeneratorError(this, GeneratorErrorType.RequiredOptionMissing));
         }
 
-        return Result.Success(wasSerialized);
+        return R.Success(wasSerialized);
     }
 
-    public Result.IfError<ParserError> DeserializeFrom(
+    public R<ParserError> DeserializeFrom(
         CommandLineArgumentsParser commandLineArgumentsParser,
         ArgumentList argumentList,
         ReadOnlySpan<char> value,
@@ -155,9 +155,9 @@ internal class ListOption<TValue> : IOption, IListSerializationInfo<TValue>
         }
     }
 
-    private Result.IfError<ParserError> DeserializeFrom(ReadOnlySpan<char> value, Settings settings)
+    private R<ParserError> DeserializeFrom(ReadOnlySpan<char> value, Settings settings)
     {
         SerializationHelper.DeserializeTo(this.List, this.deserialize, value, settings);
-        return Result.Success();
+        return R.Success();
     }
 }

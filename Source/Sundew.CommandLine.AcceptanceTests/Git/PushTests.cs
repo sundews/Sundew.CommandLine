@@ -23,7 +23,7 @@ public class PushTests
 
         var commandLineGenerator = new CommandLineGenerator();
         var commandLineParser = new CommandLineParser<int, int>();
-        var push = commandLineParser.AddVerb(new Push(), pushVerb => Result.Success(expectedResult));
+        var push = commandLineParser.AddVerb(new Push(), pushVerb => R.Success(expectedResult));
 
         var generateResult = commandLineGenerator.Generate(new Push(new Repository(expectedRepository, new Refspec(expectedRefspec))));
         var parseResult = commandLineParser.Parse(generateResult.Value);
@@ -46,7 +46,7 @@ public class PushTests
      <repository refspec> | The repository and refspec.                                                                                        | Default: [none]
 ";
         var commandLineParser = new CommandLineParser<int, int>();
-        commandLineParser.AddVerb(new Push(), verb => Result.Success(0));
+        commandLineParser.AddVerb(new Push(), verb => R.Success(0));
 
         var result = commandLineParser.CreateHelpText();
 

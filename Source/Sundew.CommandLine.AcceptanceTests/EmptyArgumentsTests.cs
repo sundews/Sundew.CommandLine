@@ -19,7 +19,7 @@ public class EmptyArgumentsTests
     public void Given_a_purely_optional_commandline_parsing_null_or_an_empty_string_should_succeed(string commandLine)
     {
         var testee = new CommandLineParser<Args, int>();
-        testee.WithArguments(new Args(), args => Result.Success(args));
+        testee.WithArguments(new Args(), args => R.Success(args));
         var result = testee.Parse(commandLine);
 
         result.Value.IsOn.Should().BeFalse();

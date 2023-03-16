@@ -1,6 +1,6 @@
 # Sundew.CommandLine
 
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/hugener/Sundew.CommandLine/.NET?label=GitHub%20Actions&logo=github)
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/sundews/Sundew.CommandLine/.github/workflows/dotnet.yml?branch=main&label=GitHub%20Actions&logo=github
 ![Nuget](https://img.shields.io/nuget/v/Sundew.CommandLine)
 
 ## Features

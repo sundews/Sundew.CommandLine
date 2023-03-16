@@ -20,7 +20,7 @@ internal class VerbRegistry<TSuccess, TError> : IVerbBuilder<TSuccess, TError>, 
     private readonly Dictionary<ReadOnlyMemory<char>, VerbRegistry<TSuccess, TError>> verbRegistries = new(ReadOnlyMemoryCharEqualityComparer.Instance);
     private readonly List<VerbRegistry<TSuccess, TError>> helpVerbses = new();
 
-    public VerbRegistry(IVerb verb, Func<IVerb, ValueTask<Result<TSuccess, ParserError<TError>>>> handler, Action<IVerbBuilder<TSuccess, TError>>? verbBuilderAction)
+    public VerbRegistry(IVerb verb, Func<IVerb, ValueTask<R<TSuccess, ParserError<TError>>>> handler, Action<IVerbBuilder<TSuccess, TError>>? verbBuilderAction)
     {
         this.Verb = verb;
         this.Handler = handler;
@@ -38,13 +38,13 @@ internal class VerbRegistry<TSuccess, TError> : IVerbBuilder<TSuccess, TError>, 
 
     public IVerb Verb { get; }
 
-    public Func<IVerb, ValueTask<Result<TSuccess, ParserError<TError>>>> Handler { get; }
+    public Func<IVerb, ValueTask<R<TSuccess, ParserError<TError>>>> Handler { get; }
 
     public string[] HelpLines { get; }
 
     public TVerb AddVerb<TVerb>(
         TVerb verb,
-        Func<TVerb, Result<TSuccess, ParserError<TError>>> verbHandler)
+        Func<TVerb, R<TSuccess, ParserError<TError>>> verbHandler)
         where TVerb : IVerb
     {
         this.AddVerb(verb, verbHandler, null);
@@ -53,7 +53,7 @@ internal class VerbRegistry<TSuccess, TError> : IVerbBuilder<TSuccess, TError>, 
 
     public TVerb AddVerb<TVerb>(
         TVerb verb,
-        Func<TVerb, ValueTask<Result<TSuccess, ParserError<TError>>>> verbHandler)
+        Func<TVerb, ValueTask<R<TSuccess, ParserError<TError>>>> verbHandler)
         where TVerb : IVerb
     {
         this.AddVerb(verb, verbHandler, null);
@@ -62,20 +62,20 @@ internal class VerbRegistry<TSuccess, TError> : IVerbBuilder<TSuccess, TError>, 
 
     public TVerb AddVerb<TVerb>(
         TVerb verb,
-        Func<TVerb, Result<TSuccess, ParserError<TError>>> verbHandler,
+        Func<TVerb, R<TSuccess, ParserError<TError>>> verbHandler,
         Action<IVerbBuilder<TSuccess, TError>>? verbBuilderAction)
         where TVerb : IVerb
     {
         this.AddVerb(
             verb,
-            parsedVerb => new ValueTask<Result<TSuccess, ParserError<TError>>>(verbHandler(parsedVerb)),
+            parsedVerb => new ValueTask<R<TSuccess, ParserError<TError>>>(verbHandler(parsedVerb)),
             verbBuilderAction);
         return verb;
     }
 
     public TVerb AddVerb<TVerb>(
         TVerb verb,
-        Func<TVerb, ValueTask<Result<TSuccess, ParserError<TError>>>> verbHandler,
+        Func<TVerb, ValueTask<R<TSuccess, ParserError<TError>>>> verbHandler,
         Action<IVerbBuilder<TSuccess, TError>>? verbBuilderAction)
         where TVerb : IVerb
     {

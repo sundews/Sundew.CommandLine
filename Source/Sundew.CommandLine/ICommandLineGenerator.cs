@@ -17,18 +17,18 @@ public interface ICommandLineGenerator
     /// <summary>Generates the specified verb.</summary>
     /// <param name="verb">The verb.</param>
     /// <returns>The generator result.</returns>
-    Result<string, GeneratorError> Generate(IVerb verb);
+    R<string, GeneratorError> Generate(IVerb verb);
 
     /// <summary>Generates the specified use aliases.</summary>
     /// <param name="verb">The verb.</param>
     /// <param name="useAliases">if set to <c>true</c> [use aliases].</param>
     /// <returns>The generator result.</returns>
-    Result<string, GeneratorError> Generate(IVerb verb, bool useAliases);
+    R<string, GeneratorError> Generate(IVerb verb, bool useAliases);
 
     /// <summary>Generates the specified verb.</summary>
     /// <param name="arguments">The arguments.</param>
     /// <returns>The generator result.</returns>
-    Result<string, GeneratorError> Generate(IArguments arguments);
+    R<string, GeneratorError> Generate(IArguments arguments);
 
     /// <summary>
     /// Generates the specified verb.
@@ -38,5 +38,5 @@ public interface ICommandLineGenerator
     /// <returns>
     /// The generator result.
     /// </returns>
-    Result<string, GeneratorError> Generate(IArguments arguments, bool useAliases);
+    R<string, GeneratorError> Generate(IArguments arguments, bool useAliases);
 }

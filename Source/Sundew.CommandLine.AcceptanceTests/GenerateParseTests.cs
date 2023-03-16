@@ -19,7 +19,7 @@ public class GenerateParseTests
     [Fact]
     public void Given_a_commandline_that_contains_options_switches_and_values_When_parsed_Then_parsedResult_should_match_expectedResult()
     {
-        Result.Success();
+        R.Success();
         var commandLineGenerator = new CommandLineGenerator();
         var expectedResult = new RunVerb(
             new List<string> { "Collect", "Build", "Compile", "Output" },
@@ -32,7 +32,7 @@ public class GenerateParseTests
 
         var parsedResult = new RunVerb();
         var commandLineParser = new CommandLineParser<int, int>();
-        commandLineParser.AddVerb(parsedResult, verb => Result.Success(45));
+        commandLineParser.AddVerb(parsedResult, verb => R.Success(45));
         var result = commandLineParser.Parse(commandLine.Value);
 
         result.Value.Should().Be(45);
@@ -52,7 +52,7 @@ public class GenerateParseTests
 
         var parsedResult = new RunGeneratorVerb();
         var commandLineParser = new CommandLineParser<int, int>();
-        commandLineParser.AddVerb(parsedResult, runGeneratorVerb => Result.Success(23));
+        commandLineParser.AddVerb(parsedResult, runGeneratorVerb => R.Success(23));
         var parseResult = commandLineParser.Parse(commandLineResult.Value);
 
         parseResult.Value.Should().Be(23);
