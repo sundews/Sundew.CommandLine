@@ -6,6 +6,12 @@
    <LangVersion>preview</LangVersion>
    <Nullable>enable</Nullable>
    <SppGetLatestVersionSources>https://api.nuget.org/v3/index.json</SppGetLatestVersionSources>
+   <PackageReadmeFile>docs/README.md</PackageReadmeFile>
  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md" Pack="true" PackagePath="\docs"/>
+  </ItemGroup>
+
   <Import Project="Directory.Build.props.user" Condition="Exists('Directory.Build.props.user')"/>
 </Project>
