@@ -36,10 +36,6 @@ Features:
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="stylecop.json" />
-  </ItemGroup>
-
-  <ItemGroup>
     <AdditionalFiles Include="stylecop.json" />
   </ItemGroup>
 
@@ -56,10 +52,10 @@ Features:
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Sundew.Base.Collections" Version="9.0.1" />
-    <PackageReference Include="Sundew.Base.Primitives" Version="9.0.1" />
-    <PackageReference Include="Sundew.Base.Text" Version="9.0.1" />
-    <PackageReference Include="Sundew.Packaging.Publish" Version="8.1.1">
+    <PackageReference Include="Sundew.Base.Collections" Version="10.0.1" />
+    <PackageReference Include="Sundew.Base.Primitives" Version="10.0.1" />
+    <PackageReference Include="Sundew.Base.Text" Version="10.0.1" />
+    <PackageReference Include="Sundew.Packaging.Publish" Version="8.2.1">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
