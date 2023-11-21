@@ -24,6 +24,6 @@ public class VerbWithoutArgumentTests
         var result = commandLineParser.Parse(new[] { "run", "and", "fail" });
 
         result.IsSuccess.Should().BeFalse();
-        result.Error.Type.Should().Be(ParserErrorType.UnknownVerb);
+        result.Error!.Type.Should().Be(ParserErrorType.UnknownVerb);
     }
 }

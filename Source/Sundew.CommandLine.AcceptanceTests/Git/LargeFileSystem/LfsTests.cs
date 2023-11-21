@@ -30,7 +30,7 @@ public class LfsTests
         });
 
         var generateResult = commandLineGenerator.Generate(new Lfs(new Track(expectedPattern)));
-        var parseResult = commandLineParser.Parse(generateResult.Value);
+        var parseResult = commandLineParser.Parse(generateResult.Value!);
 
         parseResult.IsSuccess.Should().BeTrue();
         parseResult.Value.Should().Be(expectedResult);
@@ -45,7 +45,7 @@ public class LfsTests
         var parseResult = commandLineParser.Parse("lfs adsldasdas");
 
         parseResult.IsSuccess.Should().BeFalse();
-        parseResult.Error.Type.Should().Be(ParserErrorType.UnknownVerb);
+        parseResult.Error!.Type.Should().Be(ParserErrorType.UnknownVerb);
     }
 
     [Fact]
@@ -86,7 +86,7 @@ public class LfsTests
         var parseResult = commandLineParser.Parse($"lfs track {helpArgument}");
 
         parseResult.IsSuccess.Should().BeFalse();
-        parseResult.Error.Type.Should().Be(ParserErrorType.HelpRequested);
+        parseResult.Error!.Type.Should().Be(ParserErrorType.HelpRequested);
         parseResult.Error.Message.Should().Be(expectedHelpText);
     }
 

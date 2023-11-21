@@ -36,11 +36,17 @@ Features:
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Internal\Choices\**" />
+    <EmbeddedResource Remove="Internal\Choices\**" />
+    <None Remove="Internal\Choices\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <AdditionalFiles Include="stylecop.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="7.0.1">
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="8.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -52,18 +58,14 @@ Features:
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Sundew.Base.Collections" Version="10.0.1" />
-    <PackageReference Include="Sundew.Base.Primitives" Version="10.0.1" />
-    <PackageReference Include="Sundew.Base.Text" Version="10.0.1" />
-    <PackageReference Include="Sundew.Packaging.Publish" Version="8.2.1">
+    <PackageReference Include="Sundew.Base.Collections" Version="11.0.0" />
+    <PackageReference Include="Sundew.Base.Primitives" Version="11.0.0" />
+    <PackageReference Include="Sundew.Base.Text" Version="11.0.0" />
+    <PackageReference Include="Sundew.Packaging.Publish" Version="8.2.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="System.ValueTuple" Version="4.5.0" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Internal\Choices\" />
   </ItemGroup>
 
 </Project>

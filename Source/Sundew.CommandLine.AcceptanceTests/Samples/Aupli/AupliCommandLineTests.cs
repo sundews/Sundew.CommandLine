@@ -28,7 +28,7 @@ public class AupliCommandLineTests
         var result = commandLineParser.Parse(commandLine);
 
         result.IsSuccess.Should().BeTrue();
-        result.Value.AllowShutdown.Should().BeTrue();
+        result.Value!.AllowShutdown.Should().BeTrue();
         result.Value.IsLoggingToConsole.Should().BeTrue();
         result.Value.FileLogOptions?.LogPath.Should().Be(ExpectedLogPath);
         result.Value.FileLogOptions?.MaxLogFileSizeInBytes.Should().Be(ExpectedMaxLogFileSizeInBytes);
@@ -46,7 +46,7 @@ public class AupliCommandLineTests
         var result = commandLineParser.Parse(commandLine);
 
         result.IsSuccess.Should().BeFalse();
-        result.Error.Type.Should().Be(ParserErrorType.InnerParserError);
+        result.Error!.Type.Should().Be(ParserErrorType.InnerParserError);
         result.Error.InnerParserError!.Type.Should().Be(ParserErrorType.RequiredArgumentMissing);
     }
 
@@ -137,7 +137,7 @@ public class AupliCommandLineTests
         commandLineParser.WithArguments(new Options(false, false), options => R.Success(options));
         var parserResult = commandLineParser.Parse("-?");
 
-        var result = parserResult.Error.ToString();
+        var result = parserResult.Error!.ToString();
 
         result.Should().Be(expectedHelpText);
     }
@@ -151,7 +151,7 @@ public class AupliCommandLineTests
         commandLineParser.WithArguments(new Options(false, false), options => R.Success(options));
         var parserResult = commandLineParser.Parse($@"-fl """"");
 
-        var result = parserResult.Error.ToString();
+        var result = parserResult.Error!.ToString();
 
         result.Should().Be(expectedText);
     }
@@ -167,7 +167,7 @@ public class AupliCommandLineTests
         commandLineParser.WithArguments(new Options(false, false), options => R.Success(options));
         var parserResult = commandLineParser.Parse($@"-fl -ms 3");
 
-        var result = parserResult.Error.ToString();
+        var result = parserResult.Error!.ToString();
 
         result.Should().Be(expectedText);
     }
@@ -181,7 +181,7 @@ public class AupliCommandLineTests
         commandLineParser.WithArguments(new FileLogOptions(string.Empty), options => R.Success(options));
         var parserResult = commandLineParser.Parse($@"-lp");
 
-        var result = parserResult.Error.ToString();
+        var result = parserResult.Error!.ToString();
 
         result.Should().Be(expectedText);
     }
@@ -211,7 +211,7 @@ public class AupliCommandLineTests
 
         var result = commandLineParser.Parse($@"-lp ""{expectedLogPath}""");
 
-        result.Value.LogPath.Should().Be(expectedLogPath);
+        result.Value!.LogPath.Should().Be(expectedLogPath);
         result.Value.MaxLogFileSizeInBytes.Should().NotBe(ExpectedMaxLogFileSizeInBytes);
         result.Value.MaxNumberOfLogFiles.Should().Be(expectedMaxFiles);
     }

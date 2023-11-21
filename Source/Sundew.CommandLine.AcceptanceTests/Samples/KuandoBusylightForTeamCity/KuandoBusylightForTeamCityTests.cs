@@ -30,7 +30,7 @@ public class KuandoBusylightForTeamCityTests
         var result = testee.Parse(commandLine);
 
         result.IsSuccess.Should().BeTrue();
-        result.Value.HostName.Should().Be(ExpectedHost);
+        result.Value!.HostName.Should().Be(ExpectedHost);
         result.Value.BuildTypeId.Should().Be(ExpectedBuildTypeId);
         result.Value.Credentials?.UserName.Should().Be(ExpectedUserName);
         new NetworkCredential(string.Empty, result.Value.Credentials?.Password).Password.Should().Be(ExpectedPassword);

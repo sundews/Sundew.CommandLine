@@ -26,7 +26,7 @@ internal static class CommandLineArgumentsGenerator
             foreach (var option in argumentsBuilder.Options)
             {
                 var serializeResult = option.SerializeTo(stringBuilder, settings, useAliases);
-                if (!serializeResult)
+                if (serializeResult.HasError)
                 {
                     return R.Error(serializeResult.Error);
                 }

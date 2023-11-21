@@ -157,7 +157,7 @@ public sealed class CommandLineParser<TSuccess, TError> : ICommandLineParser<TSu
     /// <summary>Parses the specified arguments.</summary>
     /// <param name="arguments">The arguments.</param>
     /// <returns>The parser result.</returns>
-    public ValueTask<R<TSuccess, ParserError<TError>>> ParseAsync(string arguments)
+    public ValueTask<R<TSuccess, ParserError<TError>>> ParseAsync(string? arguments)
     {
         return this.ParseAsync(arguments, 0);
     }
@@ -168,7 +168,7 @@ public sealed class CommandLineParser<TSuccess, TError> : ICommandLineParser<TSu
     /// <param name="arguments">The arguments.</param>
     /// <param name="startIndex">The argument index at which to start parsing.</param>
     /// <returns>The parser result.</returns>
-    public ValueTask<R<TSuccess, ParserError<TError>>> ParseAsync(string arguments, int startIndex)
+    public ValueTask<R<TSuccess, ParserError<TError>>> ParseAsync(string? arguments, int startIndex)
     {
         var argumentArray = arguments.AsMemory().ParseCommandLineArguments().ToArray();
         return this.ParseAsync(argumentArray, startIndex);
@@ -264,7 +264,7 @@ public sealed class CommandLineParser<TSuccess, TError> : ICommandLineParser<TSu
     /// <summary>Parses the specified arguments.</summary>
     /// <param name="arguments">The arguments.</param>
     /// <returns>The parser result.</returns>
-    public R<TSuccess, ParserError<TError>> Parse(string arguments)
+    public R<TSuccess, ParserError<TError>> Parse(string? arguments)
     {
         return this.Parse(arguments, 0);
     }
@@ -275,7 +275,7 @@ public sealed class CommandLineParser<TSuccess, TError> : ICommandLineParser<TSu
     /// <param name="arguments">The arguments.</param>
     /// <param name="startIndex">The argument index at which to start parsing.</param>
     /// <returns>The parser result.</returns>
-    public R<TSuccess, ParserError<TError>> Parse(string arguments, int startIndex)
+    public R<TSuccess, ParserError<TError>> Parse(string? arguments, int startIndex)
     {
         var argumentArray = arguments.AsMemory().ParseCommandLineArguments().ToArray();
         return this.Parse(argumentArray, startIndex);
@@ -320,7 +320,7 @@ public sealed class CommandLineParser<TSuccess, TError> : ICommandLineParser<TSu
         ArgumentsAction<TSuccess, TError>? argumentsAction,
         Settings settings)
     {
-        if (!result)
+        if (!result.IsSuccess)
         {
             if (result.Error.Type == ParserErrorType.HelpRequested)
             {

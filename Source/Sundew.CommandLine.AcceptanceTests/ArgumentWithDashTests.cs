@@ -27,7 +27,7 @@ public class ArgumentWithDashTests
 
         var result = testee.Parse(commandLine);
 
-        result.Value.Number.Should().Be(expectedNumber);
+        result.Value!.Number.Should().Be(expectedNumber);
     }
 
     [Fact]
@@ -51,7 +51,7 @@ public class ArgumentWithDashTests
 
         var result = testee.Parse(commandLine);
 
-        result.Value.Numbers.Should().Equal(-3, 4, -7);
+        result.Value!.Numbers.Should().Equal(-3, 4, -7);
     }
 
     [Fact]

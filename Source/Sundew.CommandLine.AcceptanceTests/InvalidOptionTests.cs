@@ -24,7 +24,7 @@ public class InvalidOptionTests
         var result = testee.Parse(commandLine);
 
         result.IsSuccess.Should().BeFalse();
-        result.Error.Type.Should().Be(ParserErrorType.UnknownOption);
+        result.Error!.Type.Should().Be(ParserErrorType.UnknownOption);
         result.Error.Message.Should().Be(@"The option does not exist: -d");
     }
 
@@ -39,7 +39,7 @@ public class InvalidOptionTests
         var result = testee.Parse(commandLine);
 
         result.IsSuccess.Should().BeFalse();
-        result.Error.Type.Should().Be(ParserErrorType.UnknownOption);
+        result.Error!.Type.Should().Be(ParserErrorType.UnknownOption);
         result.Error.Message.Should().Be(@"The option does not exist: -d");
     }
 

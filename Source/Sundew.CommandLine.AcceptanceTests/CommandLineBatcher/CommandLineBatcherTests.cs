@@ -42,7 +42,7 @@ public class CommandLineBatcherTests
         var result = commandLineParser.Parse(string.Empty);
 
         result.IsSuccess.Should().BeFalse();
-        result.Error.Type.Should().Be(ParserErrorType.RequiredArgumentMissing);
+        result.Error!.Type.Should().Be(ParserErrorType.RequiredArgumentMissing);
         result.Error.Message.Should().Be(@"-c/--commands
 -b/--batches or -bf/--batches-files or -bsi/--batches-stdin");
         result.Error.ToString().Should().Be(@"Error:

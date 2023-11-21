@@ -21,7 +21,7 @@ public class InvalidConfigurationTests
         var result = testee.Parse("test");
 
         result.IsSuccess.Should().BeFalse();
-        result.Error.Type.Should().Be(ParserErrorType.ArgumentsAndVerbsAreNotConfigured);
+        result.Error!.Type.Should().Be(ParserErrorType.ArgumentsAndVerbsAreNotConfigured);
     }
 
     [Fact]
@@ -33,6 +33,6 @@ public class InvalidConfigurationTests
         var result = testee.Parse("test");
 
         result.IsSuccess.Should().BeFalse();
-        result.Error.Type.Should().Be(ParserErrorType.ArgumentsNotConfiguredOrUnknownVerb);
+        result.Error!.Type.Should().Be(ParserErrorType.ArgumentsNotConfiguredOrUnknownVerb);
     }
 }

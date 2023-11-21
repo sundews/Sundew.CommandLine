@@ -20,7 +20,7 @@ public static class ResultExtensions
     /// <returns>A value indicating whether help could be useful.</returns>
     public static bool WriteToConsole<TValue, TError>(this R<TValue, ParserError<TError>> result)
     {
-        if (result)
+        if (result.IsSuccess)
         {
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine(result.Value);
@@ -45,7 +45,7 @@ public static class ResultExtensions
     /// <returns>The exit code.</returns>
     public static int GetExitCode(this R<int, ParserError<int>> result)
     {
-        if (result)
+        if (result.IsSuccess)
         {
             return result.Value;
         }

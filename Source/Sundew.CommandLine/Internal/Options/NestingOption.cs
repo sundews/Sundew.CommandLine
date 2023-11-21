@@ -75,7 +75,7 @@ internal class NestingOption<TOptions> : IOption
             stringBuilder.Append(Constants.SpaceCharacter);
             var result = SerializeValue(actualOption, stringBuilder, settings, useAliases);
 
-            if (result)
+            if (result.IsSuccess)
             {
                 return result.To(true);
             }
@@ -108,7 +108,7 @@ internal class NestingOption<TOptions> : IOption
     {
         var options = this.getDefault();
         var result = this.DeserializeValue(commandLineArgumentsParser, argumentList, options, settings);
-        if (result)
+        if (result.IsSuccess)
         {
             this.setOptions(options);
             return result;
