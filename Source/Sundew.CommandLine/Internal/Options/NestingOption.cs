@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="NestingOption.cs" company="Hukano">
-// Copyright (c) Hukano. All rights reserved.
+// <copyright file="NestingOption.cs" company="Sundews">
+// Copyright (c) Sundews. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -11,7 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
-using Sundew.Base.Primitives.Computation;
+using Sundew.Base;
 using Sundew.CommandLine.Internal.Helpers;
 
 internal class NestingOption<TOptions> : IOption
@@ -77,7 +77,7 @@ internal class NestingOption<TOptions> : IOption
 
             if (result.IsSuccess)
             {
-                return result.To(true);
+                return result.With(true);
             }
 
             var error = result.Error;
@@ -87,8 +87,8 @@ internal class NestingOption<TOptions> : IOption
                     this,
                     string.Format(settings.CultureInfo, Constants.NestedArgumentSerializationFormat, this.Usage, this.options, error.SerializationException),
                     error.SerializationException!),
-                GeneratorErrorType.RequiredOptionMissing => result.To(false, innerGeneratorError => new GeneratorError(this, innerGeneratorError)),
-                GeneratorErrorType.InnerGeneratorError => result.To(false, innerGeneratorError => new GeneratorError(this, innerGeneratorError)),
+                GeneratorErrorType.RequiredOptionMissing => result.With(false, innerGeneratorError => new GeneratorError(this, innerGeneratorError)),
+                GeneratorErrorType.InnerGeneratorError => result.With(false, innerGeneratorError => new GeneratorError(this, innerGeneratorError)),
                 _ => throw new ArgumentOutOfRangeException(
                     nameof(error.Type),
                     error.Type,

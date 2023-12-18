@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard1.3</TargetFramework>
     <Authors>Kim Hugener-Ohlsen</Authors>
-    <Company>Hukano</Company>
+    <Company>Sundews</Company>
     <DocumentationFile>$(OutputPath)/$(AssemblyName).xml</DocumentationFile>
     <Description>Simple library for creating a command line.
 Features:
@@ -54,14 +54,14 @@ Features:
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.435">
+    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.507">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Sundew.Base.Collections" Version="11.0.5" />
-    <PackageReference Include="Sundew.Base.Primitives" Version="11.0.5" />
-    <PackageReference Include="Sundew.Base.Text" Version="11.0.5" />
-    <PackageReference Include="Sundew.Packaging.Publish" Version="10.0.2">
+    <PackageReference Include="Sundew.Base.Collections" Version="12.0.1" />
+    <PackageReference Include="Sundew.Base.Primitives" Version="12.0.1" />
+    <PackageReference Include="Sundew.Base.Text" Version="12.0.1" />
+    <PackageReference Include="Sundew.Packaging.Publish" Version="10.0.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

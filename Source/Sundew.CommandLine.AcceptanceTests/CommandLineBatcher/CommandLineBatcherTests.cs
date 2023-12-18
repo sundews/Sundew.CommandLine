@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="CommandLineBatcherTests.cs" company="Hukano">
-// Copyright (c) Hukano. All rights reserved.
+// <copyright file="CommandLineBatcherTests.cs" company="Sundews">
+// Copyright (c) Sundews. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -10,7 +10,7 @@ namespace Sundew.CommandLine.AcceptanceTests.CommandlineBatcher;
 using System;
 using System.Linq;
 using FluentAssertions;
-using Sundew.Base.Primitives.Computation;
+using Sundew.Base;
 using Xunit;
 
 public class CommandLineBatcherTests

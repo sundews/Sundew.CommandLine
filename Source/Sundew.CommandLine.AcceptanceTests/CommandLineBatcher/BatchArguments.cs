@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="BatchArguments.cs" company="Hukano">
-// Copyright (c) Hukano. All rights reserved.
+// <copyright file="BatchArguments.cs" company="Sundews">
+// Copyright (c) Sundews. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -11,7 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using Sundew.Base.Primitives.Numeric;
+using Sundew.Base.Numeric;
 using Sundew.Base.Text;
 using Sundew.CommandLine;
 

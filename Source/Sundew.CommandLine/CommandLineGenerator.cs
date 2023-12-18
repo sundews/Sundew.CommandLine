@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="CommandLineGenerator.cs" company="Hukano">
-// Copyright (c) Hukano. All rights reserved.
+// <copyright file="CommandLineGenerator.cs" company="Sundews">
+// Copyright (c) Sundews. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -8,7 +8,7 @@
 namespace Sundew.CommandLine;
 
 using System.Text;
-using Sundew.Base.Primitives.Computation;
+using Sundew.Base;
 using Sundew.CommandLine.Internal;
 
 /// <summary>
@@ -68,7 +68,7 @@ public sealed class CommandLineGenerator : ICommandLineGenerator
         }
 
         return CommandLineArgumentsGenerator.Generate(verb, stringBuilder, this.Settings, useAliases)
-            .To(stringBuilder.ToString());
+            .With(stringBuilder.ToString());
     }
 
     /// <summary>Generates the specified verb.</summary>
@@ -87,6 +87,6 @@ public sealed class CommandLineGenerator : ICommandLineGenerator
     {
         var stringBuilder = new StringBuilder();
         return CommandLineArgumentsGenerator.Generate(arguments, stringBuilder, this.Settings, useAliases)
-            .To(stringBuilder.ToString());
+            .With(stringBuilder.ToString());
     }
 }

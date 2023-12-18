@@ -1,6 +1,6 @@
 // --------------------------------------------------------------------------------------------------------------------
-// <copyright file="CommandLineParser{TSuccess,TError}.cs" company="Hukano">
-// Copyright (c) Hukano. All rights reserved.
+// <copyright file="CommandLineParser{TSuccess,TError}.cs" company="Sundews">
+// Copyright (c) Sundews. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -11,8 +11,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Sundew.Base;
 using Sundew.Base.Collections;
-using Sundew.Base.Primitives.Computation;
 using Sundew.CommandLine.Extensions;
 using Sundew.CommandLine.Internal;
 using Sundew.CommandLine.Internal.Verbs;
@@ -344,7 +344,7 @@ public sealed class CommandLineParser<TSuccess, TError> : ICommandLineParser<TSu
         var result = this.commandLineArgumentsParser.Parse(argumentsBuilder, this.Settings, argumentList, false);
         if (!result)
         {
-            return result.To(default(TSuccess)!, parserError => new ParserError<TError>(parserError));
+            return result.With(default(TSuccess)!, parserError => new ParserError<TError>(parserError));
         }
 
         return argumentsHandler(argumentsDefinition);

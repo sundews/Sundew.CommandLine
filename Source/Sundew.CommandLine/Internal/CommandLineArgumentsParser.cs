@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="CommandLineArgumentsParser.cs" company="Hukano">
-// Copyright (c) Hukano. All rights reserved.
+// <copyright file="CommandLineArgumentsParser.cs" company="Sundews">
+// Copyright (c) Sundews. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -11,7 +11,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Sundew.Base.Primitives.Computation;
+using Sundew.Base;
 using Sundew.Base.Text;
 
 internal class CommandLineArgumentsParser

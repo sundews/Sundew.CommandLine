@@ -1,6 +1,6 @@
 // --------------------------------------------------------------------------------------------------------------------
-// <copyright file="IVerbBuilder.cs" company="Hukano">
-// Copyright (c) Hukano. All rights reserved.
+// <copyright file="IVerbBuilder.cs" company="Sundews">
+// Copyright (c) Sundews. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -9,7 +9,7 @@ namespace Sundew.CommandLine;
 
 using System;
 using System.Threading.Tasks;
-using Sundew.Base.Primitives.Computation;
+using Sundew.Base;
 
 /// <summary>Interface for building verbs.</summary>
 /// <typeparam name="TSuccess">The type of the success.</typeparam>

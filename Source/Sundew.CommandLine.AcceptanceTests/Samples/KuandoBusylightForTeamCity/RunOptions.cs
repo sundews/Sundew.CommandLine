@@ -1,6 +1,6 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="RunOptions.cs" company="Hukano">
-// Copyright (c) Hukano. All rights reserved.
+// <copyright file="RunOptions.cs" company="Sundews">
+// Copyright (c) Sundews. All rights reserved.
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
@@ -9,7 +9,7 @@ namespace Sundew.CommandLine.AcceptanceTests.Samples.KuandoBusylightForTeamCity;
 
 using System;
 using System.Collections.Generic;
-using Sundew.Base.Primitives.Numeric;
+using Sundew.Base.Numeric;
 
 public class RunOptions : IArguments, IRunOptions
 {
