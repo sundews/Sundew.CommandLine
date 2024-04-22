@@ -7,7 +7,6 @@
 
 namespace Sundew.CommandLine.Internal.Values;
 
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
@@ -43,9 +42,9 @@ internal class ValueRegistry : IEnumerable<IValue>
         this.values.Add(value);
     }
 
-    public R<ParserError> DeserializeFrom(ArgumentsBuilder argumentsBuilder, ArgumentList argumentList, Settings settings)
+    public RwE<ParserError> DeserializeFrom(ArgumentsBuilder argumentsBuilder, ArgumentList argumentList, Settings settings)
     {
-        R<ParserError> result = R.Success();
+        RwE<ParserError> result = R.Success();
         var valueIndex = 0;
         foreach (var argument in argumentList)
         {
@@ -66,9 +65,9 @@ internal class ValueRegistry : IEnumerable<IValue>
         return result;
     }
 
-    public R<GeneratorError> SerializeTo(StringBuilder stringBuilder, Settings settings)
+    public RwE<GeneratorError> SerializeTo(StringBuilder stringBuilder, Settings settings)
     {
-        R<GeneratorError> result = R.Success();
+        RwE<GeneratorError> result = R.Success();
         foreach (var value in this.values)
         {
             result = value.SerializeTo(stringBuilder, settings);

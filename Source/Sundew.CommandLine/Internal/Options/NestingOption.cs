@@ -100,7 +100,7 @@ internal class NestingOption<TOptions> : IOption
     }
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2208:Instantiate argument exceptions correctly", Justification = "It's the proposed way of handling missing cases for enum switches.")]
-    public R<ParserError> DeserializeFrom(
+    public RwE<ParserError> DeserializeFrom(
         CommandLineArgumentsParser commandLineArgumentsParser,
         ArgumentList argumentList,
         ReadOnlySpan<char> value,
@@ -187,12 +187,12 @@ internal class NestingOption<TOptions> : IOption
         stringBuilder.Append(Constants.DefaultText + Constants.SeeBelowText);
     }
 
-    private static R<GeneratorError> SerializeValue(TOptions options, StringBuilder stringBuilder, Settings settings, bool useAliases)
+    private static RwE<GeneratorError> SerializeValue(TOptions options, StringBuilder stringBuilder, Settings settings, bool useAliases)
     {
         return CommandLineArgumentsGenerator.Generate(options, stringBuilder, settings, useAliases);
     }
 
-    private R<ParserError> DeserializeValue(CommandLineArgumentsParser commandLineArgumentsParser, ArgumentList argumentList, TOptions options, Settings settings)
+    private RwE<ParserError> DeserializeValue(CommandLineArgumentsParser commandLineArgumentsParser, ArgumentList argumentList, TOptions options, Settings settings)
     {
         this.argumentsBuilder.PrepareBuilder(options, true);
         return commandLineArgumentsParser.Parse(this.argumentsBuilder, settings, argumentList, true);

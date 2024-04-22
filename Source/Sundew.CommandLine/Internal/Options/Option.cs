@@ -95,7 +95,7 @@ internal sealed class Option : IOption
         return R.Success(true);
     }
 
-    public R<ParserError> DeserializeFrom(
+    public RwE<ParserError> DeserializeFrom(
         CommandLineArgumentsParser commandLineArgumentsParser,
         ArgumentList argumentList,
         ReadOnlySpan<char> value,

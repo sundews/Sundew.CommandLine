@@ -92,7 +92,7 @@ internal class ListOption<TValue> : IOption, IListSerializationInfo<TValue>
         return R.Success(wasSerialized);
     }
 
-    public R<ParserError> DeserializeFrom(
+    public RwE<ParserError> DeserializeFrom(
         CommandLineArgumentsParser commandLineArgumentsParser,
         ArgumentList argumentList,
         ReadOnlySpan<char> value,
@@ -155,7 +155,7 @@ internal class ListOption<TValue> : IOption, IListSerializationInfo<TValue>
         }
     }
 
-    private R<ParserError> DeserializeFrom(ReadOnlySpan<char> value, Settings settings)
+    private RwE<ParserError> DeserializeFrom(ReadOnlySpan<char> value, Settings settings)
     {
         SerializationHelper.DeserializeTo(this.List, this.deserialize, value, settings);
         return R.Success();
