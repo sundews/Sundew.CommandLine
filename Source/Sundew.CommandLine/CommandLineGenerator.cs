@@ -68,7 +68,7 @@ public sealed class CommandLineGenerator : ICommandLineGenerator
         }
 
         return CommandLineArgumentsGenerator.Generate(verb, stringBuilder, this.Settings, useAliases)
-            .With(stringBuilder.ToString());
+            .Map(stringBuilder.ToString());
     }
 
     /// <summary>Generates the specified verb.</summary>
@@ -87,6 +87,6 @@ public sealed class CommandLineGenerator : ICommandLineGenerator
     {
         var stringBuilder = new StringBuilder();
         return CommandLineArgumentsGenerator.Generate(arguments, stringBuilder, this.Settings, useAliases)
-            .With(stringBuilder.ToString());
+            .Map(stringBuilder.ToString());
     }
 }

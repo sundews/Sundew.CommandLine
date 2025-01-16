@@ -61,7 +61,7 @@ internal class Value : IValue
         this.deserialize(this.defaultValue.AsSpan(), cultureInfo);
     }
 
-    public RwE<ParserError> DeserializeFrom(ReadOnlySpan<char> argument, ArgumentList argumentList, Settings settings)
+    public RoE<ParserError> DeserializeFrom(ReadOnlySpan<char> argument, ArgumentList argumentList, Settings settings)
     {
         if (this.hasBeenSet)
         {
@@ -81,7 +81,7 @@ internal class Value : IValue
         return R.Success();
     }
 
-    public RwE<GeneratorError> SerializeTo(StringBuilder stringBuilder, Settings settings)
+    public RoE<GeneratorError> SerializeTo(StringBuilder stringBuilder, Settings settings)
     {
         var serializedValue = this.SerializeValue(settings);
         if (serializedValue.IsEmpty)

@@ -42,9 +42,9 @@ internal class ValueRegistry : IEnumerable<IValue>
         this.values.Add(value);
     }
 
-    public RwE<ParserError> DeserializeFrom(ArgumentsBuilder argumentsBuilder, ArgumentList argumentList, Settings settings)
+    public RoE<ParserError> DeserializeFrom(ArgumentsBuilder argumentsBuilder, ArgumentList argumentList, Settings settings)
     {
-        RwE<ParserError> result = R.Success();
+        RoE<ParserError> result = R.Success();
         var valueIndex = 0;
         foreach (var argument in argumentList)
         {
@@ -65,9 +65,9 @@ internal class ValueRegistry : IEnumerable<IValue>
         return result;
     }
 
-    public RwE<GeneratorError> SerializeTo(StringBuilder stringBuilder, Settings settings)
+    public RoE<GeneratorError> SerializeTo(StringBuilder stringBuilder, Settings settings)
     {
-        RwE<GeneratorError> result = R.Success();
+        RoE<GeneratorError> result = R.Success();
         foreach (var value in this.values)
         {
             result = value.SerializeTo(stringBuilder, settings);

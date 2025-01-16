@@ -18,7 +18,7 @@ internal class CommandLineArgumentsParser
 {
     internal const string HelpRequestedText = "Help requested";
 
-    public RwE<ParserError> Parse(
+    public RoE<ParserError> Parse(
         ArgumentsBuilder argumentsBuilder,
         Settings settings,
         ArgumentList argumentList,
@@ -28,7 +28,7 @@ internal class CommandLineArgumentsParser
         {
             argumentsBuilder.CultureInfo = settings.CultureInfo;
             argumentsBuilder.Separators = settings.Separators;
-            RwE<ParserError>? currentResult = null;
+            RoE<ParserError>? currentResult = null;
             foreach (var argumentMemory in argumentList)
             {
                 var argument = argumentMemory.Span;
@@ -153,7 +153,7 @@ internal class CommandLineArgumentsParser
         return span;
     }
 
-    private static RwE<ParserError> CreateRequiredOptionMissingResult(ArgumentsBuilder argumentsBuilder)
+    private static RoE<ParserError> CreateRequiredOptionMissingResult(ArgumentsBuilder argumentsBuilder)
     {
         return R.Error(
             new ParserError(

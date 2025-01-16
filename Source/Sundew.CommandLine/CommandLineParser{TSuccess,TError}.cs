@@ -344,7 +344,7 @@ public sealed class CommandLineParser<TSuccess, TError> : ICommandLineParser<TSu
         var result = this.commandLineArgumentsParser.Parse(argumentsBuilder, this.Settings, argumentList, false);
         if (!result)
         {
-            return result.With(default(TSuccess)!, parserError => new ParserError<TError>(parserError));
+            return result.Map(default(TSuccess)!, parserError => new ParserError<TError>(parserError));
         }
 
         return argumentsHandler(argumentsDefinition);

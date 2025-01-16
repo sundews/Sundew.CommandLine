@@ -21,7 +21,7 @@ internal interface IValue : IArgumentInfo, IArgumentMissingInfo
 
     string? DefaultValueHelpText { get; }
 
-    RwE<ParserError> DeserializeFrom(ReadOnlySpan<char> argument, ArgumentList argumentList, Settings settings);
+    RoE<ParserError> DeserializeFrom(ReadOnlySpan<char> argument, ArgumentList argumentList, Settings settings);
 
-    RwE<GeneratorError> SerializeTo(StringBuilder stringBuilder, Settings settings);
+    RoE<GeneratorError> SerializeTo(StringBuilder stringBuilder, Settings settings);
 }

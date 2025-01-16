@@ -12,7 +12,7 @@ using Sundew.Base;
 
 internal static class CommandLineArgumentsGenerator
 {
-    public static RwE<GeneratorError> Generate(IArguments arguments, StringBuilder stringBuilder, Settings settings, bool useAliases)
+    public static RoE<GeneratorError> Generate(IArguments arguments, StringBuilder stringBuilder, Settings settings, bool useAliases)
     {
         var argumentsBuilder = new ArgumentsBuilder
         {

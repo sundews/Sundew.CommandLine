@@ -48,7 +48,7 @@ public class RunOptions : IArguments, IRunOptions
         argumentsBuilder.AddRequired("h", "host-name", () => this.HostName, hostName => this.HostName = hostName, "Specifies the TeamCity host name");
         argumentsBuilder.AddRequired("b", "build-type-id", () => this.BuildTypeId, buildId => this.BuildTypeId = buildId, "Specifies the TeamCity build type id");
         argumentsBuilder.AddOptional("c", "credentials", this.Credentials, () => new CredentialOptions(), options => this.Credentials = options, "Specifies the credentials to connect to TeamCity");
-        var refreshIntervalRange = new Interval<TimeSpan>(TimeSpan.FromMilliseconds(200), TimeSpan.FromMinutes(10));
+        var refreshIntervalRange = Interval.From(TimeSpan.FromMilliseconds(200), TimeSpan.FromMinutes(10));
         argumentsBuilder.AddOptional(
             "ri",
             "refresh-interval",

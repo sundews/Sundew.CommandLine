@@ -15,7 +15,7 @@ internal interface IOption : INamedArgumentInfo, IArgumentHelpInfo, IArgumentMis
 {
     R<bool, GeneratorError> SerializeTo(StringBuilder stringBuilder, Settings settings, bool useAliases);
 
-    RwE<ParserError> DeserializeFrom(CommandLineArgumentsParser commandLineArgumentsParser, ArgumentList argumentList, ReadOnlySpan<char> value, Settings settings);
+    RoE<ParserError> DeserializeFrom(CommandLineArgumentsParser commandLineArgumentsParser, ArgumentList argumentList, ReadOnlySpan<char> value, Settings settings);
 
     void AppendDefaultText(StringBuilder stringBuilder, Settings settings, bool isNested);
 }

@@ -77,7 +77,7 @@ internal class NestingOption<TOptions> : IOption
 
             if (result.IsSuccess)
             {
-                return result.With(true);
+                return result.Map(true);
             }
 
             var error = result.Error;
@@ -87,8 +87,8 @@ internal class NestingOption<TOptions> : IOption
                     this,
                     string.Format(settings.CultureInfo, Constants.NestedArgumentSerializationFormat, this.Usage, this.options, error.SerializationException),
                     error.SerializationException!),
-                GeneratorErrorType.RequiredOptionMissing => result.With(false, innerGeneratorError => new GeneratorError(this, innerGeneratorError)),
-                GeneratorErrorType.InnerGeneratorError => result.With(false, innerGeneratorError => new GeneratorError(this, innerGeneratorError)),
+                GeneratorErrorType.RequiredOptionMissing => result.Map(false, innerGeneratorError => new GeneratorError(this, innerGeneratorError)),
+                GeneratorErrorType.InnerGeneratorError => result.Map(false, innerGeneratorError => new GeneratorError(this, innerGeneratorError)),
                 _ => throw new ArgumentOutOfRangeException(
                     nameof(error.Type),
                     error.Type,
@@ -100,7 +100,7 @@ internal class NestingOption<TOptions> : IOption
     }
 
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Usage", "CA2208:Instantiate argument exceptions correctly", Justification = "It's the proposed way of handling missing cases for enum switches.")]
-    public RwE<ParserError> DeserializeFrom(
+    public RoE<ParserError> DeserializeFrom(
         CommandLineArgumentsParser commandLineArgumentsParser,
         ArgumentList argumentList,
         ReadOnlySpan<char> value,
@@ -119,15 +119,15 @@ internal class NestingOption<TOptions> : IOption
         switch (error.Type)
         {
             case ParserErrorType.Info:
-                return result.With(innerParserError => new ParserError(innerParserError, string.Format(settings.CultureInfo, Constants.InnerInfoErrorFormat, this.Usage, argumentText)));
+                return result.Map(innerParserError => new ParserError(innerParserError, string.Format(settings.CultureInfo, Constants.InnerInfoErrorFormat, this.Usage, argumentText)));
             case ParserErrorType.InnerParserError:
-                return result.With(innerParserError => new ParserError(innerParserError, string.Format(settings.CultureInfo, Constants.InnerParserErrorFormat, this.Usage, argumentText)));
+                return result.Map(innerParserError => new ParserError(innerParserError, string.Format(settings.CultureInfo, Constants.InnerParserErrorFormat, this.Usage, argumentText)));
             case ParserErrorType.RequiredArgumentMissing:
-                return result.With(innerParserError => new ParserError(innerParserError, string.Format(settings.CultureInfo, Constants.InnerRequiredErrorFormat, this.Usage, argumentText)));
+                return result.Map(innerParserError => new ParserError(innerParserError, string.Format(settings.CultureInfo, Constants.InnerRequiredErrorFormat, this.Usage, argumentText)));
             case ParserErrorType.OptionArgumentMissing:
-                return result.With(innerParserError => new ParserError(innerParserError, string.Format(settings.CultureInfo, Constants.InnerOptionArgumentErrorFormat, this.Usage, argumentText)));
+                return result.Map(innerParserError => new ParserError(innerParserError, string.Format(settings.CultureInfo, Constants.InnerOptionArgumentErrorFormat, this.Usage, argumentText)));
             case ParserErrorType.UnknownOption:
-                return result.With(innerParserError => new ParserError(innerParserError, string.Format(settings.CultureInfo, Constants.InnerInvalidOptionFormat, this.Usage, argumentText)));
+                return result.Map(innerParserError => new ParserError(innerParserError, string.Format(settings.CultureInfo, Constants.InnerInvalidOptionFormat, this.Usage, argumentText)));
             case ParserErrorType.OnlySingleValueAllowed:
                 return result;
             case ParserErrorType.HelpRequested:
@@ -187,12 +187,12 @@ internal class NestingOption<TOptions> : IOption
         stringBuilder.Append(Constants.DefaultText + Constants.SeeBelowText);
     }
 
-    private static RwE<GeneratorError> SerializeValue(TOptions options, StringBuilder stringBuilder, Settings settings, bool useAliases)
+    private static RoE<GeneratorError> SerializeValue(TOptions options, StringBuilder stringBuilder, Settings settings, bool useAliases)
     {
         return CommandLineArgumentsGenerator.Generate(options, stringBuilder, settings, useAliases);
     }
 
-    private RwE<ParserError> DeserializeValue(CommandLineArgumentsParser commandLineArgumentsParser, ArgumentList argumentList, TOptions options, Settings settings)
+    private RoE<ParserError> DeserializeValue(CommandLineArgumentsParser commandLineArgumentsParser, ArgumentList argumentList, TOptions options, Settings settings)
     {
         this.argumentsBuilder.PrepareBuilder(options, true);
         return commandLineArgumentsParser.Parse(this.argumentsBuilder, settings, argumentList, true);

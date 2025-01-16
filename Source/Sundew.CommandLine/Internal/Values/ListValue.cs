@@ -70,7 +70,7 @@ internal sealed class ListValue<TValue> : IValue, IListSerializationInfo<TValue>
         this.List.AddRange(this.DefaultList);
     }
 
-    public RwE<GeneratorError> SerializeTo(StringBuilder stringBuilder, Settings settings)
+    public RoE<GeneratorError> SerializeTo(StringBuilder stringBuilder, Settings settings)
     {
         var wasSerialized = SerializationHelper.SerializeTo(this, this.List, stringBuilder, settings, null);
         if (!wasSerialized && this.IsRequired)
@@ -81,7 +81,7 @@ internal sealed class ListValue<TValue> : IValue, IListSerializationInfo<TValue>
         return R.Success();
     }
 
-    public RwE<ParserError> DeserializeFrom(ReadOnlySpan<char> value, ArgumentList argumentList, Settings settings)
+    public RoE<ParserError> DeserializeFrom(ReadOnlySpan<char> value, ArgumentList argumentList, Settings settings)
     {
         this.List.Clear();
         SerializationHelper.DeserializeTo(this.List, this.deserialize, value, settings);

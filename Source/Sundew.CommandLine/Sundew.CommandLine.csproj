@@ -46,11 +46,11 @@ Features:
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="8.0.0">
+    <PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="9.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="PolySharp" Version="1.14.1">
+    <PackageReference Include="PolySharp" Version="1.15.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -58,9 +58,9 @@ Features:
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Sundew.Base.Collections" Version="13.0.1" />
-    <PackageReference Include="Sundew.Base.Primitives" Version="13.0.1" />
-    <PackageReference Include="Sundew.Base.Text" Version="13.0.1" />
+    <PackageReference Include="Sundew.Base.Collections" Version="14.0.0" />
+    <PackageReference Include="Sundew.Base.Primitives" Version="14.0.0" />
+    <PackageReference Include="Sundew.Base.Text" Version="14.0.0" />
     <PackageReference Include="Sundew.Packaging.Publish" Version="10.0.8">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
