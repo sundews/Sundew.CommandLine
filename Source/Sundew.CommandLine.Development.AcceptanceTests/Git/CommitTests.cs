@@ -5,16 +5,15 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.AcceptanceTests.Git;
+namespace Sundew.CommandLine.Development.AcceptanceTests.Git;
 
 using AwesomeAssertions;
 using Sundew.Base;
 using Sundew.Git.CommandLine;
-using Xunit;
 
 public class CommitTests
 {
-    [Fact]
+    [Test]
     public void GenerateAndParse_Then_ResultShouldBeExpectedResult()
     {
         const string expectedMessage = @"message";
@@ -32,7 +31,7 @@ public class CommitTests
         push.Message.Should().Be(expectedMessage);
     }
 
-    [Fact]
+    [Test]
     public void CreateHelpText_Then_ResultShouldBeExpectedResult()
     {
         const string expectedText = @"Help

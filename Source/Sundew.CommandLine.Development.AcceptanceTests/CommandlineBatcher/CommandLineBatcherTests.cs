@@ -5,17 +5,16 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.AcceptanceTests.CommandlineBatcher;
+namespace Sundew.CommandLine.Development.AcceptanceTests.CommandlineBatcher;
 
 using System;
 using System.Linq;
 using AwesomeAssertions;
 using Sundew.Base;
-using Xunit;
 
 public class CommandLineBatcherTests
 {
-    [Fact]
+    [Test]
     public void Parse_Then_BatchArgumentsShouldBeAsExpected()
     {
         var commandLineParser = new CommandLineParser<int, int>();
@@ -33,7 +32,7 @@ public class CommandLineBatcherTests
         batchArguments.Batches!.SelectMany(x => x.Arguments).Should().Equal("1.0.1", "Sundew.CommandLine");
     }
 
-    [Fact]
+    [Test]
     public void Parse_When_ChoiceValueIsMissing_Then_BatchArgumentsShouldBeAsExpected()
     {
         var commandLineParser = new CommandLineParser<int, int>();
@@ -51,7 +50,7 @@ public class CommandLineBatcherTests
    -b/--batches or -bf/--batches-files or -bsi/--batches-stdin");
     }
 
-    [Fact]
+    [Test]
     public void CreateHelpText_Then_ResultShouldBeExpectedResult()
     {
         var commandLineParser = new CommandLineParser<int, int>();

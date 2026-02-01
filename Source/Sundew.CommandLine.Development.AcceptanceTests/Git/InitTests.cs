@@ -5,16 +5,15 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.AcceptanceTests.Git;
+namespace Sundew.CommandLine.Development.AcceptanceTests.Git;
 
 using AwesomeAssertions;
 using Sundew.Base;
 using Sundew.Git.CommandLine;
-using Xunit;
 
 public class InitTests
 {
-    [Fact]
+    [Test]
     public void GenerateAndParse_Then_ResultShouldBeExpectedResult()
     {
         const string expectedDirectory = @"c:\test with space";

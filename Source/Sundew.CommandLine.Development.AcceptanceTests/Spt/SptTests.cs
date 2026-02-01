@@ -5,15 +5,14 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.AcceptanceTests.Spt;
+namespace Sundew.CommandLine.Development.AcceptanceTests.Spt;
 
 using AwesomeAssertions;
 using Sundew.Base;
-using Xunit;
 
 public class SptTests
 {
-    [Fact]
+    [Test]
     public void Given_CommandLineWithEmptyString_Then_ResultShouldContainEmptyString()
     {
         var commandLineParser = new CommandLineParser<int, int>();
@@ -24,7 +23,7 @@ public class SptTests
         updateVerb.Source.Should().BeEmpty();
     }
 
-    [Fact]
+    [Test]
     public void Given_DefaultArguments_When_CreatingHelpText_Then_ResultShouldBeExpectedHelp()
     {
         var commandLineParser = new CommandLineParser<int, int>();

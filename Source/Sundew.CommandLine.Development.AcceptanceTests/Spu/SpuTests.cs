@@ -5,18 +5,17 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.AcceptanceTests.Spu;
+namespace Sundew.CommandLine.Development.AcceptanceTests.Spu;
 
 using System;
 using System.Collections.Generic;
 using AwesomeAssertions;
 using Sundew.Base;
 using Sundew.Base.Text;
-using Xunit;
 
 public class SpuTests
 {
-    [Fact]
+    [Test]
     public void Given_NoValues_Then_ResultShouldBeEmpty()
     {
         var testee = new Arguments(new List<PackageId>(), new List<string>(), null, null, null, false);
@@ -27,7 +26,7 @@ public class SpuTests
         result.Value.Should().Be(Strings.Empty);
     }
 
-    [Fact]
+    [Test]
     public void Given_ManyValues_Then_ResultShouldBeExpectedResult()
     {
         const string ExpectedResult = @"-id Sundew.Base -p Sundew.CommandLine -s All --version 1.2.3.4 -d ""c:\with space""";
@@ -39,7 +38,7 @@ public class SpuTests
         result.Value.Should().Be(ExpectedResult);
     }
 
-    [Fact]
+    [Test]
     public void Given_DefaultArguments_When_CreatingHelpText_Then_ResultShouldBeExpectedHelp()
     {
         const string ExpectedHelp = @"Help
@@ -63,7 +62,7 @@ public class SpuTests
         result.Should().Be(ExpectedHelp);
     }
 
-    [Fact]
+    [Test]
     public void Given_DefaultArguments_When_ArgumentsAreSpecified_Then_DefaultArgumentsAreOverwritten()
     {
         const string ExpectedPackageId = "TransparentMoq";
@@ -78,7 +77,7 @@ public class SpuTests
         testee.Projects.Should().Equal(new[] { ExpectedProject });
     }
 
-    [Fact]
+    [Test]
     public void Given_DefaultArguments_When_ArgumentsNotAreSpecifies_Then_DefaultArgumentsUsed()
     {
         const string ExpectedDirectory = @"c:\with space";

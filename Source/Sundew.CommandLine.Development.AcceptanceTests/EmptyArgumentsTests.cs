@@ -5,17 +5,16 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.AcceptanceTests;
+namespace Sundew.CommandLine.Development.AcceptanceTests;
 
 using AwesomeAssertions;
 using Sundew.Base;
-using Xunit;
 
 public class EmptyArgumentsTests
 {
-    [Theory]
-    [InlineData(null)]
-    [InlineData("")]
+    [Test]
+    [Arguments(null)]
+    [Arguments("")]
     public void Given_a_purely_optional_commandline_parsing_null_or_an_empty_string_should_succeed(string? commandLine)
     {
         var testee = new CommandLineParser<Args, int>();

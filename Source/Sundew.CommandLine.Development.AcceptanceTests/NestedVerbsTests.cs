@@ -5,16 +5,15 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.AcceptanceTests;
+namespace Sundew.CommandLine.Development.AcceptanceTests;
 
 using AwesomeAssertions;
 using Sundew.Base;
-using Sundew.CommandLine.AcceptanceTests.Verbs;
-using Xunit;
+using Sundew.CommandLine.Development.AcceptanceTests.Verbs;
 
 public class NestedVerbsTests
 {
-    [Fact]
+    [Test]
     public void Given_a_command_line_with_nested_verbs_then_result_should_be_expected_result()
     {
         var commandLineParser = new CommandLineParser<int, int>();

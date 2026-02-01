@@ -5,7 +5,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.AcceptanceTests.Verbs;
+namespace Sundew.CommandLine.Development.AcceptanceTests.Verbs;
 
 public class BuildVerb : IVerb
 {

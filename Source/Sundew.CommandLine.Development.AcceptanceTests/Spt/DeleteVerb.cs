@@ -5,7 +5,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.AcceptanceTests.Spt;
+namespace Sundew.CommandLine.Development.AcceptanceTests.Spt;
 
 using System.Collections.Generic;
 using Sundew.CommandLine;

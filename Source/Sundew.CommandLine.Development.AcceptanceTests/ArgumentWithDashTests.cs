@@ -5,20 +5,19 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.AcceptanceTests;
+namespace Sundew.CommandLine.Development.AcceptanceTests;
 
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using AwesomeAssertions;
 using Sundew.Base;
-using Xunit;
 
 public class ArgumentWithDashTests
 {
-    [Theory]
-    [InlineData(-3)]
-    [InlineData(2)]
+    [Test]
+    [Arguments(-3)]
+    [Arguments(2)]
     public void Given_a_commandline_with_an_argument_starting_with_dash_Then_result_should_be_expectedResult(int expectedNumber)
     {
         var commandLine = $@"-n ""{(expectedNumber < 0 ? "\\" : string.Empty)}{expectedNumber}""";
@@ -30,7 +29,7 @@ public class ArgumentWithDashTests
         result.Value!.Number.Should().Be(expectedNumber);
     }
 
-    [Fact]
+    [Test]
     public void Given_argument_with_dashed_value_Then_result_should_be_expected_result()
     {
         var expectedResult = $@"-n \-3";
@@ -42,7 +41,7 @@ public class ArgumentWithDashTests
         result.Value.Should().Be(expectedResult);
     }
 
-    [Fact]
+    [Test]
     public void Given_a_commandline_with_arguments_starting_with_dashes_Then_result_should_be_expected_result()
     {
         var commandLine = $@"-n \-3 4 \-7";
@@ -54,7 +53,7 @@ public class ArgumentWithDashTests
         result.Value!.Numbers.Should().Equal(-3, 4, -7);
     }
 
-    [Fact]
+    [Test]
     public void Given_arguments_with_dashed_values_Then_result_should_be_expected_result()
     {
         var expectedResult = $@"-n \-3 4 \-7";

@@ -5,15 +5,14 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.AcceptanceTests;
+namespace Sundew.CommandLine.Development.AcceptanceTests;
 
 using AwesomeAssertions;
 using Sundew.Base;
-using Xunit;
 
 public class InvalidOptionTests
 {
-    [Fact]
+    [Test]
     public void Parse_When_InvalidOptionIsSpecified_Then_ResultShouldBeFalseAndErrorShouldBeUnknownOption()
     {
         var commandLine = "-d";
@@ -28,7 +27,7 @@ public class InvalidOptionTests
         result.Error.Message.Should().Be(@"The option does not exist: -d");
     }
 
-    [Fact]
+    [Test]
     public void Parse_When_UnknownOptionIsSpecified_Then_ResultShouldBeFalseAndErrorShouldBeUnknownOption()
     {
         var commandLine = "-n Hi -d 43";

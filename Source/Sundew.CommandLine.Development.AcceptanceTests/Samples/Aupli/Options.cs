@@ -5,7 +5,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.AcceptanceTests.Samples.Aupli;
+namespace Sundew.CommandLine.Development.AcceptanceTests.Samples.Aupli;
 
 /// <summary>
 /// Defines the commandLine options and parsing.

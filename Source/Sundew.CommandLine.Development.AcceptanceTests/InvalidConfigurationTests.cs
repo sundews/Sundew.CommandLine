@@ -5,15 +5,14 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.AcceptanceTests;
+namespace Sundew.CommandLine.Development.AcceptanceTests;
 
 using AwesomeAssertions;
 using Sundew.Base;
-using Xunit;
 
 public class InvalidConfigurationTests
 {
-    [Fact]
+    [Test]
     public void Parse_When_NoArgumentsNorVerbsAreConfigured_Then_ResultIsSuccessShouldBeFalse()
     {
         var testee = new CommandLineParser<int, int>();
@@ -24,7 +23,7 @@ public class InvalidConfigurationTests
         result.Error!.Type.Should().Be(ParserErrorType.ArgumentsAndVerbsAreNotConfigured);
     }
 
-    [Fact]
+    [Test]
     public void Parse_When_VerbsAreConfiguredButNoArgumentsAndArgumentIsNotAVerb_Then_ResultIsSuccessShouldBeFalse()
     {
         var testee = new CommandLineParser<int, int>();

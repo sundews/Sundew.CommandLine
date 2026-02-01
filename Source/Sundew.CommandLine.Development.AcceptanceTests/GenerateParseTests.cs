@@ -5,18 +5,17 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.AcceptanceTests;
+namespace Sundew.CommandLine.Development.AcceptanceTests;
 
 using System;
 using System.Collections.Generic;
 using AwesomeAssertions;
 using Sundew.Base;
-using Sundew.CommandLine.AcceptanceTests.Verbs;
-using Xunit;
+using Sundew.CommandLine.Development.AcceptanceTests.Verbs;
 
 public class GenerateParseTests
 {
-    [Fact]
+    [Test]
     public void Given_a_commandline_that_contains_options_switches_and_values_When_parsed_Then_parsedResult_should_match_expectedResult()
     {
         R.Success();
@@ -43,7 +42,7 @@ public class GenerateParseTests
         parsedResult.Files.Should().Equal(expectedResult.Files);
     }
 
-    [Fact]
+    [Test]
     public void Given_a_commandline_that_contains_a_single_item_option_followed_by_values_When_parsed_Then_parsedResult_should_match_expectedResult()
     {
         var commandLineGenerator = new CommandLineGenerator();

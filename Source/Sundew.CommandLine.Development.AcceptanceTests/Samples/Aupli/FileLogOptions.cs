@@ -5,7 +5,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.AcceptanceTests.Samples.Aupli;
+namespace Sundew.CommandLine.Development.AcceptanceTests.Samples.Aupli;
 
 /// <summary>
 /// Options for the file logger.

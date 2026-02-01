@@ -5,17 +5,16 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.UnitTests.Internals;
+namespace Sundew.CommandLine.Development.Tests.Internals;
 
 using System;
 using System.Linq;
 using AwesomeAssertions;
 using Sundew.CommandLine.Extensions;
-using Xunit;
 
 public class StringExtensionTests
 {
-    [Fact]
+    [Test]
     public void SplitBasedCommandLineTokenizer_When_QuotesAreNotProperlyTerminated_Then_ResultShouldContainRemainderInLastElement()
     {
         var commandLine = $@"-fl --max-size ""4000 -cl";
@@ -25,7 +24,7 @@ public class StringExtensionTests
         result.Select(x => x.ToString()).Should().Equal("-fl", "--max-size", "4000 -cl");
     }
 
-    [Fact]
+    [Test]
     public void SplitBasedCommandLineTokenizer_When_TextContainsAdditionalSpace_Then_ResultShouldBeProperlyTokenized()
     {
         var commandLine = $@"-fl  max-size -cl";

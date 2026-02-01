@@ -5,12 +5,11 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.AcceptanceTests.Samples.KuandoBusylightForTeamCity;
+namespace Sundew.CommandLine.Development.AcceptanceTests.Samples.KuandoBusylightForTeamCity;
 
 using System.Net;
 using AwesomeAssertions;
 using Sundew.Base;
-using Xunit;
 
 public class KuandoBusylightForTeamCityTests
 {
@@ -20,7 +19,7 @@ public class KuandoBusylightForTeamCityTests
     private const string ExpectedPassword = "pwd";
     private const string ExpectedDevice = @"\\?\hid#vid_27bb&pid_3bcd#6&5ed6887&0&0000#{4d1e55b2-f16f-11cf-88cb-001111000030}";
 
-    [Fact]
+    [Test]
     public void Given_a_complete_commandline_Then_parsed_result_should_be_expected_values()
     {
         var commandLine = $@"-h {ExpectedHost} -b {ExpectedBuildTypeId} -c -u {ExpectedUserName} -p {ExpectedPassword} -d ""\{ExpectedDevice}""";
@@ -37,7 +36,7 @@ public class KuandoBusylightForTeamCityTests
         result.Value.HidDeviceIds[0].Should().Be(ExpectedDevice);
     }
 
-    [Fact]
+    [Test]
     public void Given_a_configured_parser_Then_result_should_be_expected_values()
     {
         const string expectedHelpText = @"Help
@@ -59,7 +58,7 @@ public class KuandoBusylightForTeamCityTests
         result.Should().Be(expectedHelpText);
     }
 
-    [Fact]
+    [Test]
     public void Given_a_configured_parser_When_parse_is_called_Then_help_text_should_not_differ()
     {
         var commandLine = $@"-h {ExpectedHost} -b {ExpectedBuildTypeId} -c -u {ExpectedUserName} -p {ExpectedPassword} -d ""\{ExpectedDevice}""";
@@ -73,9 +72,9 @@ public class KuandoBusylightForTeamCityTests
         result.Should().Be(expectedResult);
     }
 
-    [Theory]
-    [InlineData(true, 0)]
-    [InlineData(false, 1)]
+    [Test]
+    [Arguments(true, 0)]
+    [Arguments(false, 1)]
     public void Given_a_configured_parser_Then_help_text_should_not_differ(bool isSuccess, int expectedResult)
     {
         var commandLine = $@"-h {ExpectedHost} -b {ExpectedBuildTypeId} -c -u {ExpectedUserName} -p {ExpectedPassword} -d ""\{ExpectedDevice}""";

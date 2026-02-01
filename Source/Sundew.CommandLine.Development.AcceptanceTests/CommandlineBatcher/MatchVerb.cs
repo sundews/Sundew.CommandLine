@@ -5,7 +5,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.AcceptanceTests.CommandlineBatcher;
+namespace Sundew.CommandLine.Development.AcceptanceTests.CommandlineBatcher;
 
 using System.Collections.Generic;
 using Sundew.CommandLine;

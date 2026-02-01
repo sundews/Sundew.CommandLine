@@ -5,16 +5,15 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.AcceptanceTests.Git.LargeFileSystem;
+namespace Sundew.CommandLine.Development.AcceptanceTests.Git.LargeFileSystem;
 
 using AwesomeAssertions;
 using Sundew.Base;
 using Sundew.Git.CommandLine.LargeFileSystem;
-using Xunit;
 
 public class LfsTests
 {
-    [Fact]
+    [Test]
     public void GenerateAndParse_Then_ResultShouldBeExpectedResult()
     {
         const string expectedPattern = "*.*";
@@ -37,7 +36,7 @@ public class LfsTests
         track?.Pattern.Should().Be(expectedPattern);
     }
 
-    [Fact]
+    [Test]
     public void Parse_When_VerbIsUnknown_Then_ResultShouldBeExpectedResult()
     {
         var commandLineParser = CreateParser();
@@ -48,7 +47,7 @@ public class LfsTests
         parseResult.Error!.Type.Should().Be(ParserErrorType.UnknownVerb);
     }
 
-    [Fact]
+    [Test]
     public void CreateHelpText_Then_ResultShouldBeExpectedResult()
     {
         const string expectedResult = @"Help
@@ -70,11 +69,11 @@ public class LfsTests
         result.Should().Be(expectedResult);
     }
 
-    [Theory]
-    [InlineData("-?")]
-    [InlineData("?")]
-    [InlineData("-h")]
-    [InlineData("--help")]
+    [Test]
+    [Arguments("-?")]
+    [Arguments("?")]
+    [Arguments("-h")]
+    [Arguments("--help")]
     public void Parse_When_HelpIsRequested_Then_ResultShouldBeExpectedResult(string helpArgument)
     {
         const string expectedHelpText = @"Help

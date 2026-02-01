@@ -5,7 +5,7 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.AcceptanceTests.Samples.KuandoBusylightForTeamCity;
+namespace Sundew.CommandLine.Development.AcceptanceTests.Samples.KuandoBusylightForTeamCity;
 
 using System.Security;
 

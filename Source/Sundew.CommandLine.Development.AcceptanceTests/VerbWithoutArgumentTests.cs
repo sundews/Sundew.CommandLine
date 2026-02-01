@@ -5,16 +5,15 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.AcceptanceTests;
+namespace Sundew.CommandLine.Development.AcceptanceTests;
 
 using AwesomeAssertions;
 using Sundew.Base;
-using Sundew.CommandLine.AcceptanceTests.Verbs;
-using Xunit;
+using Sundew.CommandLine.Development.AcceptanceTests.Verbs;
 
 public class VerbWithoutArgumentTests
 {
-    [Fact]
+    [Test]
     public void Given_a_commandline_that_only_contains_verbs_When_parsed_with_a_verb_that_ignores_values_Then_parsing_should_fail_with_verb_not_registered()
     {
         const int expectedResult = 97;

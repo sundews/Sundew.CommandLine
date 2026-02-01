@@ -5,18 +5,17 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.AcceptanceTests.Samples.Aupli;
+namespace Sundew.CommandLine.Development.AcceptanceTests.Samples.Aupli;
 
 using AwesomeAssertions;
 using Sundew.Base;
-using Xunit;
 
 public class AupliCommandLineTests
 {
     private const string ExpectedLogPath = @"c:\temp\log.log";
     private const long ExpectedMaxLogFileSizeInBytes = 400000;
 
-    [Fact]
+    [Test]
     public void Given_a_commandline_with_a_complex_type_Then_the_complex_type_should_be_parsed_successfully()
     {
         var commandLine = $@"-s -fl --log-path ""{ExpectedLogPath}"" --max-size {ExpectedMaxLogFileSizeInBytes} -cl";
@@ -34,7 +33,7 @@ public class AupliCommandLineTests
         result.Value.FileLogOptions?.MaxLogFileSizeInBytes.Should().Be(ExpectedMaxLogFileSizeInBytes);
     }
 
-    [Fact]
+    [Test]
     public void Given_a_commandline_with_an_optional_complex_type_with_a_required_field_When_the_complex_type_is_provided_but_its_required_argument_is_not_Then_parsing_the_command_line_should_fail()
     {
         var commandLine = $@"-s -fl --max-size {ExpectedMaxLogFileSizeInBytes} -cl";
@@ -50,7 +49,7 @@ public class AupliCommandLineTests
         result.Error.InnerParserError!.Type.Should().Be(ParserErrorType.RequiredArgumentMissing);
     }
 
-    [Fact]
+    [Test]
     public void Given_a_commandline_with_an_optional_complex_type_with_a_required_field_When_the_complex_type_is_not_provided_Then_the_command_line_should_be_parsed_successfully()
     {
         var commandLine = $@"-s -cl";
@@ -64,7 +63,7 @@ public class AupliCommandLineTests
         result.IsSuccess.Should().BeTrue();
     }
 
-    [Fact]
+    [Test]
     public void Given_options_with_a_complex_type_Then_the_commandline_should_be_generated_successfully()
     {
         var commandLineGenerator = new CommandLineGenerator();
@@ -80,7 +79,7 @@ public class AupliCommandLineTests
             .Be($@"-fl -lp ""{ExpectedLogPath}"" -ms {ExpectedMaxLogFileSizeInBytes} -mf 10 -cl -s");
     }
 
-    [Fact]
+    [Test]
     public void Given_options_with_a_complex_type_When_complex_type_is_null_Then_help_text_should_contain_indentation()
     {
         const string ExpectedHelpText = @"Help
@@ -100,7 +99,7 @@ public class AupliCommandLineTests
         helpText.Should().Be(ExpectedHelpText);
     }
 
-    [Fact]
+    [Test]
     public void Given_options_with_a_complex_type_When_complex_type_is_not_null_Then_help_text_should_contain_indentation()
     {
         const string expectedPath = @"c:\temp\log.log";
@@ -121,7 +120,7 @@ public class AupliCommandLineTests
         helpText.Should().Be(expectedHelpText);
     }
 
-    [Fact]
+    [Test]
     public void Given_the_help_commandline_Then_ResultErrorToString_should_be_the_expected_help_text()
     {
         string expectedHelpText = $@"Help
@@ -142,7 +141,7 @@ public class AupliCommandLineTests
         result.Should().Be(expectedHelpText);
     }
 
-    [Fact]
+    [Test]
     public void Given_a_commandline_without_a_required_argument_Then_ResultErrorToString_should_be_verb_not_registered()
     {
         string expectedText = $@"Error:
@@ -156,7 +155,7 @@ public class AupliCommandLineTests
         result.Should().Be(expectedText);
     }
 
-    [Fact]
+    [Test]
     public void Given_a_nested_commandline_without_a_required_argument_Then_ResultErrorToString_should_be_the_expected_text()
     {
         string expectedText = $@"Error:
@@ -172,7 +171,7 @@ public class AupliCommandLineTests
         result.Should().Be(expectedText);
     }
 
-    [Fact]
+    [Test]
     public void Given_a_commandline_with_an_option_without_an_argument_Then_ResultErrorToString_should_be_the_expected_text()
     {
         string expectedText = $@"Error:
@@ -186,7 +185,7 @@ public class AupliCommandLineTests
         result.Should().Be(expectedText);
     }
 
-    [Fact]
+    [Test]
     public void Given_a_commandline_with_an_option_with_an_empty_argument_Then_Result_should_have_empty_string()
     {
         var commandLineParser = new CommandLineParser<FileLogOptions, int>();
@@ -198,7 +197,7 @@ public class AupliCommandLineTests
         fileLogOptions.LogPath.Should().BeEmpty();
     }
 
-    [Fact]
+    [Test]
     public void Given_a_commandline_When_parsing_twice_Then_ResultErrorToString_should_be_the_expected_text()
     {
         const string expectedLogPath = @"c:\temp\log2.txt";

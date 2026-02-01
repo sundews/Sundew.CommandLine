@@ -5,16 +5,15 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace Sundew.CommandLine.AcceptanceTests.Git;
+namespace Sundew.CommandLine.Development.AcceptanceTests.Git;
 
 using AwesomeAssertions;
 using Sundew.Base;
 using Sundew.Git.CommandLine;
-using Xunit;
 
 public class PushTests
 {
-    [Fact]
+    [Test]
     public void GenerateAndParse_Then_ResultShouldBeExpectedResult()
     {
         const string expectedRepository = @"repository";
@@ -34,7 +33,7 @@ public class PushTests
         push.Repository.Refspec.ToString().Should().Be(expectedRefspec);
     }
 
-    [Fact]
+    [Test]
     public void CreateHelpText_Then_ResultShouldBeExpectedResult()
     {
         const string expectedText = @"Help
