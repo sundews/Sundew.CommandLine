@@ -3,18 +3,18 @@
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
   <ItemGroup>
-    <PackageVersion Include="AwesomeAssertions" Version="9.3.0" />
+    <PackageVersion Include="AwesomeAssertions" Version="9.6.0" />
     <PackageVersion Include="coverlet.collector" Version="6.0.4" />
-    <PackageVersion Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="10.0.102" />
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.0.1" />
-    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="10.0.102" />
-    <PackageVersion Include="NuGet.Versioning" Version="7.0.1" />
-    <PackageVersion Include="PolySharp" Version="1.15.0" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="10.0.402" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.11.0" />
+    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="10.0.402" />
+    <PackageVersion Include="NuGet.Versioning" Version="7.9.0" />
+    <PackageVersion Include="PolySharp" Version="1.16.0" />
     <PackageVersion Include="StyleCop.Analyzers.Unstable" Version="1.2.0.556" />
-    <PackageVersion Include="Sundew.Base.Collections" Version="16.0.0" />
-    <PackageVersion Include="Sundew.Base.Primitives" Version="16.0.0" />
-    <PackageVersion Include="Sundew.Base.Text" Version="16.0.0" />
-    <PackageVersion Include="Sundew.Packaging.Publish" Version="10.0.12" />
-    <PackageVersion Include="TUnit" Version="1.12.111" />
+    <PackageVersion Include="Sundew.Base.Collections" Version="17.0.0" />
+    <PackageVersion Include="Sundew.Base.Primitives" Version="17.0.0" />
+    <PackageVersion Include="Sundew.Base.Text" Version="17.0.0" />
+    <PackageVersion Include="Sundew.Packaging.Publish" Version="10.0.14" />
+    <PackageVersion Include="TUnit" Version="1.75.0" />
   </ItemGroup>
 </Project>

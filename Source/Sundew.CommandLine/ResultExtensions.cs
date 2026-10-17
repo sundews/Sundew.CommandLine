@@ -37,7 +37,7 @@ public static class ResultExtensions
             Console.ResetColor();
         }
 
-        return !result;
+        return result.IsError;
     }
 
     /// <summary>Gets the exit code.</summary>
