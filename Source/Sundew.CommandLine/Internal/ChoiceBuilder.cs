@@ -82,10 +82,10 @@ internal class ChoiceBuilder : IChoiceBuilder
         return this.AddEnum(name, alias, getEnumFunc, setEnumAction, Enum.GetValues(typeof(TEnum)).Cast<TEnum>(), helpText, separators, defaultValueText);
     }
 
-    public IChoiceBuilder AddEnum<TEnum>(string? name, string alias, Func<TEnum> getEnumFunc, Action<TEnum> setEnumAction, IEnumerable<TEnum> enumOptions, string helpText, Separators separators = default, string? defaultValueText = null)
+    public IChoiceBuilder AddEnum<TEnum>(string? name, string alias, Func<TEnum> getEnumFunc, Action<TEnum> setEnumAction, IEnumerable<TEnum> options, string helpText, Separators separators = default, string? defaultValueText = null)
         where TEnum : Enum
     {
-        var enumSerializer = new EnumSerializer<TEnum>(enumOptions);
+        var enumSerializer = new EnumSerializer<TEnum>(options);
         var actualSeparator = this.argumentsBuilder.GetActualSeparator(separators);
         var option = new Option(
             name,

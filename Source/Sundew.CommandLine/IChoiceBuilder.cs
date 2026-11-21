@@ -71,6 +71,7 @@ public interface IChoiceBuilder
     /// <param name="helpText">The help text.</param>
     /// <param name="separators">The separators.</param>
     /// <param name="defaultValueText">The default value text.</param>
+    /// <returns>This instance.</returns>
     IChoiceBuilder AddEnum<TEnum>(string? name, string alias, Func<TEnum> getEnumFunc, Action<TEnum> setEnumAction, string helpText, Separators separators = default, string? defaultValueText = null)
         where TEnum : Enum;
 
@@ -86,6 +87,7 @@ public interface IChoiceBuilder
     /// <param name="helpText">The help text.</param>
     /// <param name="separators">The separators.</param>
     /// <param name="defaultValueText">The default value text.</param>
+    /// <returns>This instance.</returns>
     IChoiceBuilder AddEnum<TEnum>(string? name, string alias, Func<TEnum> getEnumFunc, Action<TEnum> setEnumAction, IEnumerable<TEnum> options, string helpText, Separators separators = default, string? defaultValueText = null)
         where TEnum : Enum;
 

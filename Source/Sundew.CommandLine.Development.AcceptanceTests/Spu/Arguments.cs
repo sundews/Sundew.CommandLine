@@ -54,7 +54,11 @@ public class Arguments : IArguments
 
     public bool UseLocalSource
     {
-        get => this.useLocalSource;
+        get
+        {
+            return this.useLocalSource;
+        }
+
         private set
         {
             this.useLocalSource = value;

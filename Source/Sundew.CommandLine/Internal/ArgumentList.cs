@@ -23,7 +23,7 @@ internal class ArgumentList : IEnumerable<ReadOnlyMemory<char>>
         this.index = index;
     }
 
-    public bool TryPeek([MaybeNullWhen(false), NotNullWhen(true)]out ReadOnlyMemory<char> argument)
+    public bool TryPeek([MaybeNullWhen(false), NotNullWhen(true)] out ReadOnlyMemory<char> argument)
     {
         if (this.index + 1 < this.arguments.Count)
         {
@@ -35,7 +35,7 @@ internal class ArgumentList : IEnumerable<ReadOnlyMemory<char>>
         return false;
     }
 
-    public bool TryMoveNext([MaybeNullWhen(false), NotNullWhen(true)]out ReadOnlyMemory<char> argument)
+    public bool TryMoveNext([MaybeNullWhen(false), NotNullWhen(true)] out ReadOnlyMemory<char> argument)
     {
         this.index++;
         if (this.index < this.arguments.Count)

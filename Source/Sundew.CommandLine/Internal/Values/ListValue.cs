@@ -81,15 +81,15 @@ internal sealed class ListValue<TValue> : IValue, IListSerializationInfo<TValue>
         return R.Success();
     }
 
-    public RoE<ParserError> DeserializeFrom(ReadOnlySpan<char> value, ArgumentList argumentList, Settings settings)
+    public RoE<ParserError> DeserializeFrom(ReadOnlySpan<char> argument, ArgumentList argumentList, Settings settings)
     {
         this.List.Clear();
-        SerializationHelper.DeserializeTo(this.List, this.deserialize, value, settings);
+        SerializationHelper.DeserializeTo(this.List, this.deserialize, argument, settings);
         if (argumentList.TryMoveNext(out _))
         {
-            foreach (var argument in argumentList)
+            foreach (var nextArgument in argumentList)
             {
-                SerializationHelper.DeserializeTo(this.List, this.deserialize, CommandLineArgumentsParser.RemoveValueEscapeIfNeeded(argument.Span), settings);
+                SerializationHelper.DeserializeTo(this.List, this.deserialize, CommandLineArgumentsParser.RemoveValueEscapeIfNeeded(nextArgument.Span), settings);
             }
         }
 

@@ -81,10 +81,10 @@ internal sealed class ArgumentsBuilder : IArgumentsBuilder
         this.AddRequiredEnum(name, alias, getEnumFunc, setEnumAction, helpText, separators, defaultValueText);
     }
 
-    public void AddRequiredEnum<TEnum>(string? name, string alias, Func<TEnum> getEnumFunc, Action<TEnum> setEnumAction, IEnumerable<TEnum> enumOptions, string helpText, Separators separators = default, string? defaultValueText = null)
+    public void AddRequiredEnum<TEnum>(string? name, string alias, Func<TEnum> getEnumFunc, Action<TEnum> setEnumAction, IEnumerable<TEnum> options, string helpText, Separators separators = default, string? defaultValueText = null)
         where TEnum : Enum
     {
-        var enumSerializer = new EnumSerializer<TEnum>(enumOptions);
+        var enumSerializer = new EnumSerializer<TEnum>(options);
         var actualSeparator = this.GetActualSeparator(separators);
         this.AddOption(
             new Option(
@@ -146,13 +146,13 @@ internal sealed class ArgumentsBuilder : IArgumentsBuilder
         this.AddOption(option, default);
     }
 
-    public void RequireAnyOf(string name, Action<IChoiceBuilder> selectChoiceAction)
+    public void RequireAnyOf(string name, Action<IChoiceBuilder> selectChoicesAction)
     {
         var choiceArgumentInfos = new List<IArgumentInfo>();
         var requiredChoiceArgumentInfo = new RequiredChoiceArgumentInfo(name, choiceArgumentInfos, this.GetIndexAndIncrement());
         this.helpOptions.Add(requiredChoiceArgumentInfo);
         this.RequiredArguments.Add(requiredChoiceArgumentInfo);
-        selectChoiceAction(new ChoiceBuilder(this, requiredChoiceArgumentInfo, choiceArgumentInfos));
+        selectChoicesAction(new ChoiceBuilder(this, requiredChoiceArgumentInfo, choiceArgumentInfos));
     }
 
     public void AddOptional(string? name, string alias, Func<string?> serialize, Action<string> deserialize, string helpText, bool useDoubleQuotes = false, Separators separators = default, string? defaultValueText = null)
@@ -206,10 +206,10 @@ internal sealed class ArgumentsBuilder : IArgumentsBuilder
         this.AddOptionalEnum(name, alias, getEnumFunc, setEnumAction, Enum.GetValues(typeof(TEnum)).Cast<TEnum>(), helpText, separators, defaultValueText);
     }
 
-    public void AddOptionalEnum<TEnum>(string? name, string alias, Func<TEnum> getEnumFunc, Action<TEnum> setEnumAction, IEnumerable<TEnum> enumOptions, string helpText, Separators separators = default, string? defaultValueText = null)
+    public void AddOptionalEnum<TEnum>(string? name, string alias, Func<TEnum> getEnumFunc, Action<TEnum> setEnumAction, IEnumerable<TEnum> options, string helpText, Separators separators = default, string? defaultValueText = null)
         where TEnum : Enum
     {
-        var enumSerializer = new EnumSerializer<TEnum>(enumOptions);
+        var enumSerializer = new EnumSerializer<TEnum>(options);
         var actualSeparator = this.GetActualSeparator(separators);
         this.AddOption(
             new Option(
