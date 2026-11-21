@@ -14,7 +14,7 @@
     <PackageVersion Include="Sundew.Base.Collections" Version="18.0.0" />
     <PackageVersion Include="Sundew.Base.Primitives" Version="18.0.0" />
     <PackageVersion Include="Sundew.Base.Text" Version="18.0.0" />
-    <PackageVersion Include="Sundew.Packaging.Publish" Version="10.0.18-u20261117-070736-pre" />
+    <PackageVersion Include="Sundew.Packaging.Publish" Version="10.0.17" />
     <PackageVersion Include="TUnit" Version="1.87.12" />
   </ItemGroup>
 </Project>
